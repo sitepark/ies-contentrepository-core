@@ -1,0 +1,9 @@
+# eclipse
+.classpath
+.project
+.settings/
+
+# ? validate
+reports/
+
+target/
