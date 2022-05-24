@@ -5,7 +5,7 @@
 	<artifactId>ies-contentrepository-core</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<name>IES Content Repository Core</name>
-	<description>Domain und UseCase Implementierung</description>
+	<description>Domain und use-case implementations</description>
 
 	<licenses>
 		<license>
