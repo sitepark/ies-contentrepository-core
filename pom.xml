@@ -26,6 +26,23 @@
 		<developerConnection>scm:git:git@gitlab.sitepark.com:ies/ies-contentrepository-core.git</developerConnection>
 		<url>https://gitlab.sitepark.com/ies/ies-contentrepository-core/</url>
 	</scm>
+	<repositories>
+		<repository>
+			<id>central</id>
+			<name>Sitepark Maven Repository</name>
+			<layout>default</layout>
+			<url>http://develop.sitepark.com/nexus/content/groups/public</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>public.plugins</id>
+			<url>https://develop.sitepark.com/nexus/content/groups/public/</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<dependencyManagement>
 		<dependencies>
