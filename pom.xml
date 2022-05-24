@@ -21,6 +21,12 @@
 		<maven.compiler.release>11</maven.compiler.release>
 	</properties>
 
+	<scm>
+		<connection>scm:git:git@gitlab.sitepark.com:ies/ies-contentrepository-core.git</connection>
+		<developerConnection>scm:git:git@gitlab.sitepark.com:ies/ies-contentrepository-core.git</developerConnection>
+		<url>https://gitlab.sitepark.com/ies/ies-contentrepository-core/</url>
+	</scm>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
