@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.domain.entity.HistoryEntryType;
-import com.sitepark.ies.contentrepository.core.domain.entity.Identifier;
 import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItem;
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDenied;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityNotFound;
@@ -31,13 +30,13 @@ public class RecoverEntity {
 		this.searchIndex = searchIndex;
 	}
 
-	public void recover(Identifier identifier) {
+	public void recover(long id) {
 
-		Optional<RecycleBinItem> recycleBinItem = this.recycleBin.get(identifier);
-		recycleBinItem.orElseThrow(() -> new EntityNotFound(identifier));
+		Optional<RecycleBinItem> recycleBinItem = this.recycleBin.get(id);
+		recycleBinItem.orElseThrow(() -> new EntityNotFound(id));
 
 		if (!this.accessControl.isGroupCreateable(recycleBinItem.get().getParent())) {
-			throw new AccessDenied("Not allowed to recover entity " + recycleBinItem.get().getIdentifier()
+			throw new AccessDenied("Not allowed to recover entity " + recycleBinItem.get().getId()
 					+ " in group " + recycleBinItem.get().getParent());
 		}
 
@@ -45,7 +44,7 @@ public class RecoverEntity {
 
 		this.repository.store(entity);
 
-		this.historyManager.createEntry(identifier, System.currentTimeMillis(), HistoryEntryType.RESTORED);
+		this.historyManager.createEntry(id, System.currentTimeMillis(), HistoryEntryType.RESTORED);
 
 		this.searchIndex.index(entity);
 	}

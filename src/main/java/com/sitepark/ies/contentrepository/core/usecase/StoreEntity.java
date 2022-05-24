@@ -57,16 +57,20 @@ public final class StoreEntity {
 		Optional<Identifier> parent = newEntity.getParent();
 		parent.orElseThrow(() -> new ParentMissing());
 
-		if (!this.accessControl.isEntityCreateable(parent.get())) {
+		long parentId = this.repository.resolve(parent.get());
+
+		if (!this.accessControl.isEntityCreateable(parentId)) {
 			throw new AccessDenied("Not allowed to create entity in group " + parent);
 		}
 
-		Entity entityWithId = newEntity.toBuilder().identifier(Identifier.ofId(this.idGenerator.generate())).build();
+		long generatedId = this.idGenerator.generate();
+
+		Entity entityWithId = newEntity.toBuilder().identifier(Identifier.ofId(generatedId)).build();
 
 		Entity versioned = this.versioningManager.createNewVersion(entityWithId);
 
 		this.repository.store(versioned);
-		this.historyManager.createEntry(versioned.getIdentifier().get(), versioned.getVersion().get().getTimestamp(),
+		this.historyManager.createEntry(generatedId, versioned.getVersion().get().getTimestamp(),
 				HistoryEntryType.CREATED);
 		this.searchIndex.index(versioned);
 
@@ -78,14 +82,16 @@ public final class StoreEntity {
 		updateEntity.getIdentifier()
 				.orElseThrow(() -> new IllegalArgumentException("Update failed, identifier missing"));
 
-		Optional<Entity> existsEntity = this.repository.get(updateEntity.getIdentifier().get());
-		existsEntity.orElseThrow(() -> new EntityNotFound(updateEntity.getIdentifier().get()));
+		long id = this.repository.resolve(updateEntity.getIdentifier().get());
 
-		if (!this.accessControl.isEntityWritable(updateEntity.getIdentifier().get())) {
+		Optional<Entity> existsEntity = this.repository.get(id);
+		existsEntity.orElseThrow(() -> new EntityNotFound(id));
+
+		if (!this.accessControl.isEntityWritable(id)) {
 			throw new AccessDenied("Not allowed to update entity " + updateEntity.getIdentifier());
 		}
 
-		Optional<EntityLock> lock = this.lockManager.getLock(updateEntity.getIdentifier().get());
+		Optional<EntityLock> lock = this.lockManager.getLock(id);
 		lock.ifPresent(l -> {
 			throw new EntityLocked(l);
 		});
@@ -100,7 +106,7 @@ public final class StoreEntity {
 		this.repository.store(versioned);
 		this.searchIndex.index(versioned);
 
-		this.historyManager.createEntry(versioned.getIdentifier().get(), versioned.getVersion().get().getTimestamp(),
+		this.historyManager.createEntry(id, versioned.getVersion().get().getTimestamp(),
 				HistoryEntryType.UPDATED);
 
 		return versioned.getIdentifier().get();

@@ -1,11 +1,12 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
+import javax.inject.Inject;
+
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
-import com.sitepark.ies.contentrepository.core.domain.entity.HistoryEntryType;
-import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItem;
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDenied;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityLocked;
 import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmpty;
@@ -13,42 +14,41 @@ import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
 import com.sitepark.ies.contentrepository.core.port.HistoryManager;
+import com.sitepark.ies.contentrepository.core.port.MediaRepository;
 import com.sitepark.ies.contentrepository.core.port.Publisher;
 import com.sitepark.ies.contentrepository.core.port.RecycleBin;
 import com.sitepark.ies.contentrepository.core.port.SearchIndex;
+import com.sitepark.ies.contentrepository.core.port.VersioningManager;
 
-public final class RemoveEntity {
+public final class PurgeGroup {
 
 	private final ContentRepository repository;
 	private final EntityLockManager lockManager;
+	private final VersioningManager versioningManager;
 	private final HistoryManager historyManager;
 	private final AccessControl accessControl;
 	private final RecycleBin recycleBin;
 	private final SearchIndex searchIndex;
+	private final MediaRepository mediaRepository;
 	private final Publisher publisher;
 
-	protected RemoveEntity(ContentRepository repository, EntityLockManager lockManager,
-			HistoryManager historyManager, AccessControl accessControl,
-			RecycleBin recycleBin, SearchIndex searchIndex, Publisher publisher) {
+	@Inject
+	protected PurgeGroup(ContentRepository repository, EntityLockManager lockManager,
+			VersioningManager versioningManager, HistoryManager historyManager, AccessControl accessControl,
+			RecycleBin recycleBin, SearchIndex searchIndex, MediaRepository mediaRepository, Publisher publisher) {
 
 		this.repository = repository;
 		this.lockManager = lockManager;
 		this.historyManager = historyManager;
+		this.versioningManager = versioningManager;
 		this.accessControl = accessControl;
 		this.recycleBin = recycleBin;
 		this.searchIndex = searchIndex;
+		this.mediaRepository = mediaRepository;
 		this.publisher = publisher;
 	}
 
-	public void remove(long id) {
-		if (this.repository.isGroup(id)) {
-			this.removeGroup(id);
-		} else {
-			this.removeEntity(id);
-		}
-	}
-
-	public void removeGroup(long id) {
+	public void purgeGroup(long id) {
 
 		if (!this.accessControl.isGroupRemoveable(id)) {
 			throw new AccessDenied("Not allowed to remove group " + id);
@@ -65,40 +65,23 @@ public final class RemoveEntity {
 
 		this.searchIndex.remove(id);
 
-		this.repository.removeGroup(id);
-
-		this.historyManager.createEntry(id, System.currentTimeMillis(), HistoryEntryType.REMOVED);
-
-		RecycleBinItem recycleBinItem = RecycleBinItem.builder().build();
-		this.recycleBin.add(recycleBinItem);
-
-	}
-
-	public void removeEntity(long id) {
-
-		if (!this.accessControl.isEntityRemovable(id)) {
-			throw new AccessDenied("Not allowed to remove entity " + id);
-		}
-
-		Optional<Entity> entity = this.repository.get(id);
-		if (entity.isEmpty()) {
-			return;
-		}
-
-		Optional<EntityLock> lock = this.lockManager.getLock(id);
-		lock.ifPresent(l -> {
-			throw new EntityLocked(l);
-		});
-
-		this.searchIndex.remove(id);
-
 		this.publisher.depublish(id);
 
-		this.repository.removeEntity(id);
+		List<Long> mediaRefs = this.repository.getAllMediaReferences(id);
+		this.repository.removeGroup(id);
 
-		this.historyManager.createEntry(id, System.currentTimeMillis(), HistoryEntryType.REMOVED);
+		this.historyManager.purge(id);
 
-		RecycleBinItem recycleBinItem = RecycleBinItem.builder().build();
-		this.recycleBin.add(recycleBinItem);
+		List<Long> mediaRefsFromOtherVersions = this.versioningManager.getAllMediaReferences(id);
+		this.versioningManager.removeAllVersions(id);
+
+		this.recycleBin.removeByObject(id);
+
+		List<Long> allMediaRefs = new ArrayList<>();
+		allMediaRefs.addAll(mediaRefs);
+		allMediaRefs.addAll(mediaRefsFromOtherVersions);
+
+		this.mediaRepository.remove(allMediaRefs);
+
 	}
 }

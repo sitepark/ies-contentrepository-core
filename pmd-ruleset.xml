@@ -36,7 +36,13 @@
 	<rule ref="category/java/bestpractices.xml/JUnit4TestShouldUseTestAnnotation"/>
 	-->
 	<rule ref="category/java/bestpractices.xml/JUnitAssertionsShouldIncludeMessage"/>
-	<rule ref="category/java/bestpractices.xml/JUnitTestContainsTooManyAsserts"/>
+	<!--  See https://github.com/pmd/pmd/discussions/3015 -->
+	<rule
+		ref="category/java/bestpractices.xml/JUnitTestContainsTooManyAsserts">
+		<properties>
+			<property name="maximumAsserts" value="2" />
+		</properties>
+	</rule>
 	<rule ref="category/java/bestpractices.xml/JUnitTestsShouldIncludeAssert"/>
 	<rule ref="category/java/bestpractices.xml/JUnitUseExpected"/>
 	<rule ref="category/java/bestpractices.xml/LooseCoupling"/>

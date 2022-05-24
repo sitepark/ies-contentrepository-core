@@ -6,10 +6,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.eclipse.jdt.annotation.NonNull;
-
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
-import com.sitepark.ies.contentrepository.core.domain.entity.Identifier;
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDenied;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityLocked;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
@@ -50,34 +47,30 @@ public final class PurgeEntity {
 		this.publisher = publisher;
 	}
 
-	public void purge(@NonNull Identifier identifier) {
+	public void purgeEntity(long id) {
 
-		if (identifier == null) {
-			throw new IllegalArgumentException("identifier is null");
+		if (!this.accessControl.isEntityRemovable(id)) {
+			throw new AccessDenied("Not allowed to remove entity " + id);
 		}
 
-		if (!this.accessControl.isEntityRemovable(identifier)) {
-			throw new AccessDenied("Not allowed to remove entity " + identifier);
-		}
-
-		Optional<EntityLock> lock = this.lockManager.getLock(identifier);
+		Optional<EntityLock> lock = this.lockManager.getLock(id);
 		lock.ifPresent(l -> {
 			throw new EntityLocked(l);
 		});
 
-		this.searchIndex.remove(identifier);
+		this.searchIndex.remove(id);
 
-		this.publisher.depublish(identifier);
+		this.publisher.depublish(id);
 
-		List<Long> mediaRefs = this.repository.getAllMediaReferences(identifier);
-		this.repository.remove(identifier);
+		List<Long> mediaRefs = this.repository.getAllMediaReferences(id);
+		this.repository.removeEntity(id);
 
-		this.historyManager.purge(identifier);
+		this.historyManager.purge(id);
 
-		List<Long> mediaRefsFromOtherVersions = this.versioningManager.getAllMediaReferences(identifier);
-		this.versioningManager.removeAllVersions(identifier);
+		List<Long> mediaRefsFromOtherVersions = this.versioningManager.getAllMediaReferences(id);
+		this.versioningManager.removeAllVersions(id);
 
-		this.recycleBin.remove(identifier);
+		this.recycleBin.removeByObject(id);
 
 		List<Long> allMediaRefs = new ArrayList<>();
 		allMediaRefs.addAll(mediaRefs);

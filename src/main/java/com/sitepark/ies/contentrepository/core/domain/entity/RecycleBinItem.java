@@ -6,23 +6,23 @@ import java.util.List;
 
 public final class RecycleBinItem {
 
-	private final Identifier identifier;
-	private final Identifier parent;
+	private final long id;
+	private final long parent;
 	private final Entity entity;
 	private final List<RecycleBinItem> children;
 
 	private RecycleBinItem(Builder builder) {
-		this.identifier = builder.identifier;
+		this.id = builder.id;
 		this.parent = builder.parent;
 		this.entity = builder.entity;
 		this.children = builder.children;
 	}
 
-	public Identifier getIdentifier() {
-		return this.identifier;
+	public long getId() {
+		return this.id;
 	}
 
-	public Identifier getParent() {
+	public long getParent() {
 		return this.parent;
 	}
 
@@ -44,27 +44,25 @@ public final class RecycleBinItem {
 
 	public static class Builder {
 
-		private Identifier identifier;
-		private Identifier parent;
+		private long id;
+		private long parent;
 		private Entity entity;
 		private List<RecycleBinItem> children = new ArrayList<>();
 
 		private Builder() {}
 		private Builder(RecycleBinItem recycleBinItem) {
-			this.identifier = recycleBinItem.identifier;
+			this.id = recycleBinItem.id;
 			this.parent = recycleBinItem.parent;
 			this.entity = recycleBinItem.entity;
 			this.children = new ArrayList<>(recycleBinItem.children);
 		}
 
-		public Builder identifier(Identifier identifier) {
-			assert identifier != null;
-			this.identifier = identifier;
+		public Builder identifier(long id) {
+			this.id = id;
 			return this;
 		}
 
-		public Builder parent(Identifier parent) {
-			assert parent != null;
+		public Builder parent(long parent) {
 			this.parent = parent;
 			return this;
 		}
