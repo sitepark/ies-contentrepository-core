@@ -2,7 +2,6 @@ package com.sitepark.ies.contentrepository.core.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -20,7 +19,7 @@ import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
 import com.sitepark.ies.contentrepository.core.port.HistoryManager;
-import com.sitepark.ies.contentrepository.core.port.MediaRepository;
+import com.sitepark.ies.contentrepository.core.port.MediaReferenceManager;
 import com.sitepark.ies.contentrepository.core.port.Publisher;
 import com.sitepark.ies.contentrepository.core.port.RecycleBin;
 import com.sitepark.ies.contentrepository.core.port.SearchIndex;
@@ -93,7 +92,7 @@ class PurgeEntityTest {
 
 		RecycleBin recycleBin = mock(RecycleBin.class);
 		SearchIndex searchIndex = mock(SearchIndex.class);
-		MediaRepository mediaRepository = mock(MediaRepository.class);
+		MediaReferenceManager mediaReferenceManager = mock(MediaReferenceManager.class);
 		Publisher publisher = mock(Publisher.class);
 
 		PurgeEntity purgeEntity = new PurgeEntity(
@@ -104,26 +103,26 @@ class PurgeEntityTest {
 				accessControl,
 				recycleBin,
 				searchIndex,
-				mediaRepository,
+				mediaReferenceManager,
 				publisher);
 		purgeEntity.purgeEntity(10L);
 
 		InOrder inOrder = inOrder(
 				searchIndex,
 				publisher,
+				mediaReferenceManager,
 				repository,
 				historyManager,
 				versioningManager,
-				recycleBin,
-				mediaRepository
+				recycleBin
 		);
 
 		inOrder.verify(searchIndex).remove(10L);
 		inOrder.verify(publisher).depublish(10L);
+		inOrder.verify(mediaReferenceManager).removeByReference(10L);
 		inOrder.verify(repository).removeEntity(10L);
 		inOrder.verify(historyManager).purge(10L);
 		inOrder.verify(versioningManager).removeAllVersions(10L);
 		inOrder.verify(recycleBin).removeByObject(10L);
-		inOrder.verify(mediaRepository).remove(anyList());
 	}
 }

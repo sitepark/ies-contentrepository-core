@@ -1,6 +1,5 @@
 package com.sitepark.ies.contentrepository.core.port;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.Anchor;
@@ -16,5 +15,4 @@ public interface ContentRepository {
 	void removeGroup(long id);
 	Optional<Identifier> resolveAnchor(Anchor anchor);
 	long resolve(Identifier identifier);
-	List<Long> getAllMediaReferences(long id);
 }
