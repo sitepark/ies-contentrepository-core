@@ -22,9 +22,9 @@
 	</properties>
 
 	<scm>
-		<connection>scm:git:git@gitlab.sitepark.com:ies/ies-contentrepository-core.git</connection>
-		<developerConnection>scm:git:git@gitlab.sitepark.com:ies/ies-contentrepository-core.git</developerConnection>
-		<url>https://gitlab.sitepark.com/ies/ies-contentrepository-core/</url>
+		<connection>scm:git:git@github.com:sitepark-com/ies-contentrepository-core.git</connection>
+		<developerConnection>scm:git:git@github.com:sitepark-com/ies-contentrepository-core.git</developerConnection>
+		<url>https://github.com/sitepark-com/ies-contentrepository-core</url>
 	</scm>
 
 	<distributionManagement>
