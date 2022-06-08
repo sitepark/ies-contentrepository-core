@@ -58,6 +58,10 @@ Basic CRUD operations for repository entries
 
 Publisher to handle publishing
 
+#### MediaReferenceManager
+
+Manage the references to the media-repository
+
 #### EntityLockManager
 
 Manage it exclusive write access.

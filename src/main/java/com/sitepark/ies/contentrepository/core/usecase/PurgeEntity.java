@@ -1,7 +1,5 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -13,7 +11,7 @@ import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
 import com.sitepark.ies.contentrepository.core.port.HistoryManager;
-import com.sitepark.ies.contentrepository.core.port.MediaRepository;
+import com.sitepark.ies.contentrepository.core.port.MediaReferenceManager;
 import com.sitepark.ies.contentrepository.core.port.Publisher;
 import com.sitepark.ies.contentrepository.core.port.RecycleBin;
 import com.sitepark.ies.contentrepository.core.port.SearchIndex;
@@ -28,13 +26,14 @@ public final class PurgeEntity {
 	private final AccessControl accessControl;
 	private final RecycleBin recycleBin;
 	private final SearchIndex searchIndex;
-	private final MediaRepository mediaRepository;
+	private final MediaReferenceManager mediaReferenceManager;
 	private final Publisher publisher;
 
 	@Inject
 	protected PurgeEntity(ContentRepository repository, EntityLockManager lockManager,
 			VersioningManager versioningManager, HistoryManager historyManager, AccessControl accessControl,
-			RecycleBin recycleBin, SearchIndex searchIndex, MediaRepository mediaRepository, Publisher publisher) {
+			RecycleBin recycleBin, SearchIndex searchIndex, MediaReferenceManager mediaReferenceManager,
+			Publisher publisher) {
 
 		this.repository = repository;
 		this.lockManager = lockManager;
@@ -43,7 +42,7 @@ public final class PurgeEntity {
 		this.accessControl = accessControl;
 		this.recycleBin = recycleBin;
 		this.searchIndex = searchIndex;
-		this.mediaRepository = mediaRepository;
+		this.mediaReferenceManager = mediaReferenceManager;
 		this.publisher = publisher;
 	}
 
@@ -62,20 +61,15 @@ public final class PurgeEntity {
 
 		this.publisher.depublish(id);
 
-		List<Long> mediaRefs = this.repository.getAllMediaReferences(id);
+		this.mediaReferenceManager.removeByReference(id);
+
 		this.repository.removeEntity(id);
 
 		this.historyManager.purge(id);
 
-		List<Long> mediaRefsFromOtherVersions = this.versioningManager.getAllMediaReferences(id);
 		this.versioningManager.removeAllVersions(id);
 
 		this.recycleBin.removeByObject(id);
 
-		List<Long> allMediaRefs = new ArrayList<>();
-		allMediaRefs.addAll(mediaRefs);
-		allMediaRefs.addAll(mediaRefsFromOtherVersions);
-
-		this.mediaRepository.remove(allMediaRefs);
 	}
 }
