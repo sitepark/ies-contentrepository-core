@@ -1,4 +1,4 @@
-name: Package
+name: Verify
 
 on: [push]
 
