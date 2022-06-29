@@ -46,6 +46,6 @@ public class RecoverEntity {
 
 		this.historyManager.createEntry(id, System.currentTimeMillis(), HistoryEntryType.RESTORED);
 
-		this.searchIndex.index(entity);
+		this.searchIndex.index(id);
 	}
 }

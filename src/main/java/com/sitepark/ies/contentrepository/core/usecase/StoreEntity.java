@@ -72,7 +72,7 @@ public final class StoreEntity {
 		this.repository.store(versioned);
 		this.historyManager.createEntry(generatedId, versioned.getVersion().get().getTimestamp(),
 				HistoryEntryType.CREATED);
-		this.searchIndex.index(versioned);
+		this.searchIndex.index(generatedId);
 
 		return versioned.getIdentifier().get();
 	}
@@ -104,10 +104,9 @@ public final class StoreEntity {
 		Entity versioned = this.versioningManager.createNewVersion(updateEntity);
 
 		this.repository.store(versioned);
-		this.searchIndex.index(versioned);
-
 		this.historyManager.createEntry(id, versioned.getVersion().get().getTimestamp(),
 				HistoryEntryType.UPDATED);
+		this.searchIndex.index(id);
 
 		return versioned.getIdentifier().get();
 	}
