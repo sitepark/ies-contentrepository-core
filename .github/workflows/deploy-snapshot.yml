@@ -3,7 +3,7 @@ name: (📡) Deploy Snapshot
 on:
   push:
     branches:    
-    - 'main'
+    - main
   workflow_dispatch:
 
 jobs:
