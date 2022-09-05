@@ -18,6 +18,7 @@ import com.sitepark.ies.contentrepository.core.domain.exception.EntityLocked;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
+import com.sitepark.ies.contentrepository.core.port.ExtensionsNotifier;
 import com.sitepark.ies.contentrepository.core.port.HistoryManager;
 import com.sitepark.ies.contentrepository.core.port.MediaReferenceManager;
 import com.sitepark.ies.contentrepository.core.port.Publisher;
@@ -42,6 +43,7 @@ class PurgeEntityTest {
 				null,
 				null,
 				null,
+				null,
 				null);
 		assertThrows(AccessDenied.class, () -> {
 			purgeEntity.purgeEntity(10L);
@@ -51,6 +53,8 @@ class PurgeEntityTest {
 	@Test
 	void testEntityIsLocked() {
 
+		ContentRepository repository = mock(ContentRepository.class);
+		when(repository.isGroup(10L)).thenReturn(false);
 		AccessControl accessControl = mock(AccessControl.class);
 		when(accessControl.isEntityRemovable(anyLong())).thenReturn(true);
 
@@ -63,11 +67,12 @@ class PurgeEntityTest {
 			);
 
 		var purgeEntity = new PurgeEntity(
-				null,
+				repository,
 				lockManager,
 				null,
 				null,
 				accessControl,
+				null,
 				null,
 				null,
 				null,
@@ -94,6 +99,7 @@ class PurgeEntityTest {
 		SearchIndex searchIndex = mock(SearchIndex.class);
 		MediaReferenceManager mediaReferenceManager = mock(MediaReferenceManager.class);
 		Publisher publisher = mock(Publisher.class);
+		ExtensionsNotifier extensionsNotifier = mock(ExtensionsNotifier.class);
 
 		PurgeEntity purgeEntity = new PurgeEntity(
 				repository,
@@ -104,25 +110,28 @@ class PurgeEntityTest {
 				recycleBin,
 				searchIndex,
 				mediaReferenceManager,
-				publisher);
+				publisher,
+				extensionsNotifier);
 		purgeEntity.purgeEntity(10L);
 
 		InOrder inOrder = inOrder(
-				searchIndex,
 				publisher,
+				searchIndex,
 				mediaReferenceManager,
 				repository,
 				historyManager,
 				versioningManager,
-				recycleBin
+				recycleBin,
+				extensionsNotifier
 		);
 
-		inOrder.verify(searchIndex).remove(10L);
 		inOrder.verify(publisher).depublish(10L);
+		inOrder.verify(searchIndex).remove(10L);
 		inOrder.verify(mediaReferenceManager).removeByReference(10L);
 		inOrder.verify(repository).removeEntity(10L);
 		inOrder.verify(historyManager).purge(10L);
 		inOrder.verify(versioningManager).removeAllVersions(10L);
 		inOrder.verify(recycleBin).removeByObject(10L);
+		inOrder.verify(extensionsNotifier).notifyPurge(10L);
 	}
 }

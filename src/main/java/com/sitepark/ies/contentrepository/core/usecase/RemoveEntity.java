@@ -8,7 +8,6 @@ import com.sitepark.ies.contentrepository.core.domain.entity.HistoryEntryType;
 import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItem;
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDenied;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityLocked;
-import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmpty;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
@@ -41,40 +40,6 @@ public final class RemoveEntity {
 	}
 
 	public void remove(long id) {
-		if (this.repository.isGroup(id)) {
-			this.removeGroup(id);
-		} else {
-			this.removeEntity(id);
-		}
-	}
-
-	public void removeGroup(long id) {
-
-		if (!this.accessControl.isGroupRemoveable(id)) {
-			throw new AccessDenied("Not allowed to remove group " + id);
-		}
-
-		if (!this.repository.isEmptyGroup(id)) {
-			throw new GroupNotEmpty(id);
-		}
-
-		Optional<EntityLock> lock = this.lockManager.getLock(id);
-		lock.ifPresent(l -> {
-			throw new EntityLocked(l);
-		});
-
-		this.searchIndex.remove(id);
-
-		this.repository.removeGroup(id);
-
-		this.historyManager.createEntry(id, System.currentTimeMillis(), HistoryEntryType.REMOVED);
-
-		RecycleBinItem recycleBinItem = RecycleBinItem.builder().build();
-		this.recycleBin.add(recycleBinItem);
-
-	}
-
-	public void removeEntity(long id) {
 
 		if (!this.accessControl.isEntityRemovable(id)) {
 			throw new AccessDenied("Not allowed to remove entity " + id);
@@ -85,20 +50,25 @@ public final class RemoveEntity {
 			return;
 		}
 
-		Optional<EntityLock> lock = this.lockManager.getLock(id);
-		lock.ifPresent(l -> {
-			throw new EntityLocked(l);
-		});
+		try {
+			Optional<EntityLock> lock = this.lockManager.getLock(id);
+			lock.ifPresent(l -> {
+				throw new EntityLocked(l);
+			});
 
-		this.searchIndex.remove(id);
+			this.searchIndex.remove(id);
 
-		this.publisher.depublish(id);
+			this.publisher.depublish(id);
 
-		this.repository.removeEntity(id);
+			this.repository.removeEntity(id);
 
-		this.historyManager.createEntry(id, System.currentTimeMillis(), HistoryEntryType.REMOVED);
+			this.historyManager.createEntry(id, System.currentTimeMillis(), HistoryEntryType.REMOVED);
 
-		RecycleBinItem recycleBinItem = RecycleBinItem.builder().build();
-		this.recycleBin.add(recycleBinItem);
+			RecycleBinItem recycleBinItem = RecycleBinItem.builder().build();
+			this.recycleBin.add(recycleBinItem);
+
+		} finally {
+			this.lockManager.unlock(id);
+		}
 	}
 }

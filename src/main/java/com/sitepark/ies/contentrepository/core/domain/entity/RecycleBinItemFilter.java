@@ -7,7 +7,7 @@ public final class RecycleBinItemFilter {
 
 	private final LocalDateTime from;
 	private final LocalDateTime to;
-	private final Identifier user;
+	private final long user;
 
 	private RecycleBinItemFilter(Builder builder) {
 		this.from = builder.from;
@@ -23,7 +23,7 @@ public final class RecycleBinItemFilter {
 		return Optional.ofNullable(this.to);
 	}
 
-	public Optional<Identifier> getUser() {
+	public Optional<Long> getUser() {
 		return Optional.ofNullable(this.user);
 	}
 
@@ -39,7 +39,7 @@ public final class RecycleBinItemFilter {
 
 		private LocalDateTime from;
 		private LocalDateTime to;
-		private Identifier user;
+		private long user;
 
 		private Builder() {}
 		private Builder(RecycleBinItemFilter recycleBinItemFilter) {
@@ -60,8 +60,7 @@ public final class RecycleBinItemFilter {
 			return this;
 		}
 
-		public Builder user(Identifier user) {
-			assert this.user != null;
+		public Builder user(long user) {
 			this.user = user;
 			return this;
 		}

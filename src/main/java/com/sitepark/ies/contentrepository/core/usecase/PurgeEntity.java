@@ -7,9 +7,11 @@ import javax.inject.Inject;
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDenied;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityLocked;
+import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmpty;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
+import com.sitepark.ies.contentrepository.core.port.ExtensionsNotifier;
 import com.sitepark.ies.contentrepository.core.port.HistoryManager;
 import com.sitepark.ies.contentrepository.core.port.MediaReferenceManager;
 import com.sitepark.ies.contentrepository.core.port.Publisher;
@@ -20,20 +22,31 @@ import com.sitepark.ies.contentrepository.core.port.VersioningManager;
 public final class PurgeEntity {
 
 	private final ContentRepository repository;
+
 	private final EntityLockManager lockManager;
+
 	private final VersioningManager versioningManager;
+
 	private final HistoryManager historyManager;
+
 	private final AccessControl accessControl;
+
 	private final RecycleBin recycleBin;
+
 	private final SearchIndex searchIndex;
+
 	private final MediaReferenceManager mediaReferenceManager;
+
 	private final Publisher publisher;
 
+	private final ExtensionsNotifier extensionsNotifier;
+
 	@Inject
+	@SuppressWarnings("PMD.ExcessiveParameterList")
 	protected PurgeEntity(ContentRepository repository, EntityLockManager lockManager,
 			VersioningManager versioningManager, HistoryManager historyManager, AccessControl accessControl,
 			RecycleBin recycleBin, SearchIndex searchIndex, MediaReferenceManager mediaReferenceManager,
-			Publisher publisher) {
+			Publisher publisher, ExtensionsNotifier extensionsNotifier) {
 
 		this.repository = repository;
 		this.lockManager = lockManager;
@@ -44,6 +57,7 @@ public final class PurgeEntity {
 		this.searchIndex = searchIndex;
 		this.mediaReferenceManager = mediaReferenceManager;
 		this.publisher = publisher;
+		this.extensionsNotifier = extensionsNotifier;
 	}
 
 	public void purgeEntity(long id) {
@@ -52,24 +66,34 @@ public final class PurgeEntity {
 			throw new AccessDenied("Not allowed to remove entity " + id);
 		}
 
-		Optional<EntityLock> lock = this.lockManager.getLock(id);
-		lock.ifPresent(l -> {
-			throw new EntityLocked(l);
-		});
+		if (this.repository.isGroup(id) && !this.repository.isEmptyGroup(id)) {
+			throw new GroupNotEmpty(id);
+		}
 
-		this.searchIndex.remove(id);
+		try {
+			Optional<EntityLock> lock = this.lockManager.getLock(id);
+			lock.ifPresent(l -> {
+				throw new EntityLocked(l);
+			});
 
-		this.publisher.depublish(id);
+			this.publisher.depublish(id);
 
-		this.mediaReferenceManager.removeByReference(id);
+			this.searchIndex.remove(id);
 
-		this.repository.removeEntity(id);
+			this.mediaReferenceManager.removeByReference(id);
 
-		this.historyManager.purge(id);
+			this.repository.removeEntity(id);
 
-		this.versioningManager.removeAllVersions(id);
+			this.historyManager.purge(id);
 
-		this.recycleBin.removeByObject(id);
+			this.versioningManager.removeAllVersions(id);
 
+			this.recycleBin.removeByObject(id);
+
+			this.extensionsNotifier.notifyPurge(id);
+
+		} finally {
+			this.lockManager.unlock(id);
+		}
 	}
 }

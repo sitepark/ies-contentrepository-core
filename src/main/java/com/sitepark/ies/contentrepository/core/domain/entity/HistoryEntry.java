@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public final class HistoryEntry implements Serializable {
 
-	private final Identifier entity;
-	private final Identifier user;
+	private final long entity;
+	private final long user;
 	private final long timestamp;
 	private final HistoryEntryType type;
 	private final String comment;
@@ -20,11 +20,11 @@ public final class HistoryEntry implements Serializable {
 		this.comment = builder.comment;
 	}
 
-	public Identifier getEntity() {
+	public long getEntity() {
 		return entity;
 	}
 
-	public Identifier getUser() {
+	public long getUser() {
 		return user;
 	}
 
@@ -50,8 +50,8 @@ public final class HistoryEntry implements Serializable {
 
 	public static class Builder {
 
-		private Identifier entity;
-		private Identifier user;
+		private long entity;
+		private long user;
 		private long timestamp;
 		private HistoryEntryType type;
 		private String comment;
@@ -66,14 +66,12 @@ public final class HistoryEntry implements Serializable {
 			this.comment = historyEntry.comment;
 		}
 
-		public Builder entity(Identifier entity) {
-			assert entity != null;
+		public Builder entity(long entity) {
 			this.entity = entity;
 			return this;
 		}
 
-		public Builder user(Identifier user) {
-			assert user != null;
+		public Builder user(long user) {
 			this.user = user;
 			return this;
 		}

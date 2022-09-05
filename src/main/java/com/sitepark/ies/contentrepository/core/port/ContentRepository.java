@@ -1,18 +1,20 @@
 package com.sitepark.ies.contentrepository.core.port;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.Anchor;
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
-import com.sitepark.ies.contentrepository.core.domain.entity.Identifier;
+import com.sitepark.ies.contentrepository.core.domain.entity.GroupTree;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.Query;
 
 public interface ContentRepository {
 	boolean isGroup(long id);
 	boolean isEmptyGroup(long id);
-	Optional<Entity> store(Entity entity);
+	Entity store(Entity entity);
 	Optional<Entity> get(long id);
 	void removeEntity(long id);
-	void removeGroup(long id);
-	Optional<Identifier> resolveAnchor(Anchor anchor);
-	long resolve(Identifier identifier);
+	Optional<Long> resolveAnchor(Anchor anchor);
+	List<Entity> getAll(Query query);
+	GroupTree getGroupTree();
 }

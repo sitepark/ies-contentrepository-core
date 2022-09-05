@@ -1,8 +1,10 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.sitepark.ies.contentrepository.core.domain.exception.InvalidAnchor;
 
 public final class Anchor implements Serializable {
@@ -14,6 +16,7 @@ public final class Anchor implements Serializable {
 	 */
 	public static final Anchor EMPTY = new Anchor("");
 
+	@JsonValue
 	private final String name;
 
 	private Anchor(String name) {
@@ -50,6 +53,21 @@ public final class Anchor implements Serializable {
 		if (name.indexOf(' ') != -1) {
 			throw new InvalidAnchor(name, "Anchor contains Spaces");
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return this.name != null ? this.name.hashCode() : 0;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof Anchor)) {
+			return false;
+		}
+
+		Anchor anchor = (Anchor)o;
+		return Objects.equals(anchor.name, this.name);
 	}
 
 	@Override

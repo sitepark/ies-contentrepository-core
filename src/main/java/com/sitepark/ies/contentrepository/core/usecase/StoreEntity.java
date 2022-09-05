@@ -6,7 +6,6 @@ import com.sitepark.ies.contentrepository.core.domain.entity.ChangeSet;
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
 import com.sitepark.ies.contentrepository.core.domain.entity.HistoryEntryType;
-import com.sitepark.ies.contentrepository.core.domain.entity.Identifier;
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDenied;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityLocked;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityNotFound;
@@ -44,20 +43,20 @@ public final class StoreEntity {
 		this.contentDiffer = contentDiffer;
 	}
 
-	public Identifier store(Entity entity) {
-		if (entity.getIdentifier().isEmpty()) {
+	public long store(Entity entity) {
+		if (entity.getId().isEmpty()) {
 			return this.create(entity);
 		} else {
 			return this.update(entity);
 		}
 	}
 
-	private Identifier create(Entity newEntity) {
+	private long create(Entity newEntity) {
 
-		Optional<Identifier> parent = newEntity.getParent();
+		Optional<Long> parent = newEntity.getParent();
 		parent.orElseThrow(() -> new ParentMissing());
 
-		long parentId = this.repository.resolve(parent.get());
+		long parentId = parent.get();
 
 		if (!this.accessControl.isEntityCreateable(parentId)) {
 			throw new AccessDenied("Not allowed to create entity in group " + parent);
@@ -65,49 +64,54 @@ public final class StoreEntity {
 
 		long generatedId = this.idGenerator.generate();
 
-		Entity entityWithId = newEntity.toBuilder().identifier(Identifier.ofId(generatedId)).build();
+		Entity entityWithId = newEntity.toBuilder().id(generatedId).build();
 
 		Entity versioned = this.versioningManager.createNewVersion(entityWithId);
 
 		this.repository.store(versioned);
-		this.historyManager.createEntry(generatedId, versioned.getVersion().get().getTimestamp(),
+		this.historyManager.createEntry(generatedId, versioned.getVersion().get(),
 				HistoryEntryType.CREATED);
 		this.searchIndex.index(generatedId);
 
-		return versioned.getIdentifier().get();
+		return versioned.getId().get();
 	}
 
-	private Identifier update(Entity updateEntity) {
+	private long update(Entity updateEntity) {
 
-		updateEntity.getIdentifier()
+		updateEntity.getId()
 				.orElseThrow(() -> new IllegalArgumentException("Update failed, identifier missing"));
 
-		long id = this.repository.resolve(updateEntity.getIdentifier().get());
+		long id = updateEntity.getId().get();
 
 		Optional<Entity> existsEntity = this.repository.get(id);
 		existsEntity.orElseThrow(() -> new EntityNotFound(id));
 
 		if (!this.accessControl.isEntityWritable(id)) {
-			throw new AccessDenied("Not allowed to update entity " + updateEntity.getIdentifier());
+			throw new AccessDenied("Not allowed to update entity " + id);
 		}
 
-		Optional<EntityLock> lock = this.lockManager.getLock(id);
-		lock.ifPresent(l -> {
-			throw new EntityLocked(l);
-		});
+		try {
+			Optional<EntityLock> lock = this.lockManager.getLock(id);
+			lock.ifPresent(l -> {
+				throw new EntityLocked(l);
+			});
 
-		ChangeSet changeSet = this.contentDiffer.diff(updateEntity, existsEntity.get());
-		if (changeSet.isEmpty()) {
-			return updateEntity.getIdentifier().get();
+			ChangeSet changeSet = this.contentDiffer.diff(updateEntity, existsEntity.get());
+			if (changeSet.isEmpty()) {
+				return updateEntity.getId().get();
+			}
+
+			Entity versioned = this.versioningManager.createNewVersion(updateEntity);
+
+			this.repository.store(versioned);
+			this.historyManager.createEntry(id, versioned.getVersion().get(),
+					HistoryEntryType.UPDATED);
+			this.searchIndex.index(id);
+
+			return versioned.getId().get();
+
+		} finally {
+			this.lockManager.unlock(id);
 		}
-
-		Entity versioned = this.versioningManager.createNewVersion(updateEntity);
-
-		this.repository.store(versioned);
-		this.historyManager.createEntry(id, versioned.getVersion().get().getTimestamp(),
-				HistoryEntryType.UPDATED);
-		this.searchIndex.index(id);
-
-		return versioned.getIdentifier().get();
 	}
 }
