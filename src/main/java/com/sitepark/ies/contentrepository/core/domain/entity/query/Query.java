@@ -1,5 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.query;
 
+import java.util.Optional;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter;
@@ -17,8 +19,8 @@ public class Query {
 		this.orderBy = builder.orderBy;
 	}
 
-	public Filter getFilterBy() {
-		return this.filterBy;
+	public Optional<Filter> getFilterBy() {
+		return Optional.ofNullable(this.filterBy);
 	}
 
 	public OrderBy getOrderBy() {
@@ -46,13 +48,12 @@ public class Query {
 			this.orderBy = query.orderBy;
 		}
 
-		public Builder<?> filterBy(Filter filterBy) {
-			assert filterBy != null;
+		public B filterBy(Filter filterBy) {
 			this.filterBy = filterBy;
 			return this.self();
 		}
 
-		public Builder<?> orderBy(OrderBy orderBy) {
+		public B orderBy(OrderBy orderBy) {
 			assert orderBy != null;
 			this.orderBy = orderBy;
 			return this.self();
@@ -61,7 +62,6 @@ public class Query {
 		public abstract B self();
 
 		public abstract Query build();
-
 	}
 
 	@JsonPOJOBuilder(withPrefix = "", buildMethodName = "build")

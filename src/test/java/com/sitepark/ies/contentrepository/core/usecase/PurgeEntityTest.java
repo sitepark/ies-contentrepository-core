@@ -3,11 +3,10 @@ package com.sitepark.ies.contentrepository.core.usecase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
@@ -59,12 +58,7 @@ class PurgeEntityTest {
 		when(accessControl.isEntityRemovable(anyLong())).thenReturn(true);
 
 		EntityLockManager lockManager = mock(EntityLockManager.class);
-		when(lockManager.getLock(anyLong()))
-			.thenReturn(
-					Optional.of(
-							EntityLock.builder().entity(10L).build()
-					)
-			);
+		doThrow(new EntityLocked(EntityLock.builder().entity(10L).build())).when(lockManager).lock(anyLong());
 
 		var purgeEntity = new PurgeEntity(
 				repository,
@@ -77,6 +71,8 @@ class PurgeEntityTest {
 				null,
 				null,
 				null);
+		//purgeEntity.purgeEntity(10L);
+
 		EntityLocked entityLocked = assertThrows(EntityLocked.class, () -> {
 			purgeEntity.purgeEntity(10L);
 		}, "entity should be locked");

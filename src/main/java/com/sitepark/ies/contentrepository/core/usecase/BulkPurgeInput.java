@@ -1,20 +1,35 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
-import com.sitepark.ies.contentrepository.core.domain.entity.query.Query;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public final class BulkPurgeInput {
 
-	private final Query query;
+	private final List<Long> rootList;
+
+	private final Filter filterBy;
 
 	private final boolean forceLock;
 
 	private BulkPurgeInput(Builder builder) {
-		this.query = builder.query;
+		this.rootList = Collections.unmodifiableList(builder.rootList);
+		this.filterBy = builder.filterBy;
 		this.forceLock = builder.forceLock;
 	}
 
-	public Query getQuery() {
-		return this.query;
+	@SuppressFBWarnings("EI_EXPOSE_REP")
+	public List<Long> getRootList() {
+		return this.rootList;
+	}
+
+	public Optional<Filter> getFilter() {
+		return Optional.ofNullable(this.filterBy);
 	}
 
 	public boolean isForceLock() {
@@ -31,24 +46,43 @@ public final class BulkPurgeInput {
 
 	public static class Builder {
 
-		private Query query;
+		private final List<Long> rootList = new ArrayList<>();
+
+		private Filter filterBy;
 
 		private boolean forceLock;
 
 		private Builder() { }
 
 		private Builder(BulkPurgeInput bulkPurgeRequest) {
-			this.query = bulkPurgeRequest.query;
+			this.rootList.addAll(bulkPurgeRequest.rootList);
+			this.filterBy = bulkPurgeRequest.filterBy;
 			this.forceLock = bulkPurgeRequest.forceLock;
 		}
 
-		public void query(Query query) {
-			assert query != null;
-			this.query = query;
+		public Builder rootList(List<Long> rootList) {
+			assert rootList != null;
+			for (Long root : rootList) {
+				this.root(root);
+			}
+			return this;
 		}
 
-		public void forceLock(boolean forceLock) {
+		public Builder root(Long root) {
+			assert root != null;
+			this.rootList.add(root);
+			return this;
+		}
+
+		public Builder filterBy(Filter filterBy) {
+			assert filterBy != null;
+			this.filterBy = filterBy;
+			return this;
+		}
+
+		public Builder forceLock(boolean forceLock) {
 			this.forceLock = forceLock;
+			return this;
 		}
 
 		public BulkPurgeInput build() {

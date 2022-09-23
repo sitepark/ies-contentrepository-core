@@ -14,6 +14,7 @@ module com.sitepark.ies.contentrepository.core {
 	requires com.fasterxml.jackson.databind;
 	requires com.fasterxml.jackson.annotation;
 	requires com.fasterxml.jackson.datatype.jdk8;
+	requires org.apache.logging.log4j;
 
 	opens com.sitepark.ies.contentrepository.core.domain.entity;
 	opens com.sitepark.ies.contentrepository.core.domain.entity.filter;

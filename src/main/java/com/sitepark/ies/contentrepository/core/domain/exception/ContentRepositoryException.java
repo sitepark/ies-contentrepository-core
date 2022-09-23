@@ -10,4 +10,8 @@ public abstract class ContentRepositoryException extends RuntimeException {
 	public ContentRepositoryException(String message) {
 		super(message);
 	}
+
+	public ContentRepositoryException(String message, Throwable t) {
+		super(message, t);
+	}
 }

@@ -6,4 +6,9 @@ public class AccessDenied extends ContentRepositoryException {
 	public AccessDenied(String message) {
 		super(message);
 	}
+
+	public AccessDenied(String message, Throwable t) {
+		super(message, t);
+	}
+
 }

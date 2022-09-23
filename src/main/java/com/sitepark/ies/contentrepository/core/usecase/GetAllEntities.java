@@ -13,9 +13,7 @@ public final class GetAllEntities {
 	private final ContentRepository repository;
 
 	@Inject
-	@SuppressWarnings("PMD.ExcessiveParameterList")
 	protected GetAllEntities(ContentRepository repository) {
-
 		this.repository = repository;
 	}
 

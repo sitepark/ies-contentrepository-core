@@ -1,17 +1,27 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.sitepark.ies.contentrepository.core.domain.entity.BulkOperationKey;
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
-import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
+import com.sitepark.ies.contentrepository.core.domain.entity.EntityBulkExecution;
+import com.sitepark.ies.contentrepository.core.domain.entity.EntityBulkOperation;
+import com.sitepark.ies.contentrepository.core.domain.entity.EntityTree;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.Query;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.SubTreeQuery;
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDenied;
-import com.sitepark.ies.contentrepository.core.domain.exception.EntityLocked;
+import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmpty;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
+import com.sitepark.ies.contentrepository.core.port.EntityBulkExecutor;
 import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
 import com.sitepark.ies.contentrepository.core.port.ExtensionsNotifier;
 import com.sitepark.ies.contentrepository.core.port.HistoryManager;
@@ -43,12 +53,16 @@ public class BulkPurge {
 
 	private final ExtensionsNotifier extensionsNotifier;
 
+	private final EntityBulkExecutor entityBulkExecutor;
+
+	private static Logger LOGGER = LogManager.getLogger();
+
 	@Inject
 	@SuppressWarnings("PMD.ExcessiveParameterList")
 	protected BulkPurge(ContentRepository repository, EntityLockManager lockManager,
 			VersioningManager versioningManager, HistoryManager historyManager, AccessControl accessControl,
 			RecycleBin recycleBin, SearchIndex searchIndex, MediaReferenceManager mediaReferenceManager,
-			Publisher publisher, ExtensionsNotifier extensionsNotifier) {
+			Publisher publisher, ExtensionsNotifier extensionsNotifier, EntityBulkExecutor entityBulkExecutor) {
 
 		this.repository = repository;
 		this.lockManager = lockManager;
@@ -60,27 +74,70 @@ public class BulkPurge {
 		this.mediaReferenceManager = mediaReferenceManager;
 		this.publisher = publisher;
 		this.extensionsNotifier = extensionsNotifier;
+		this.entityBulkExecutor = entityBulkExecutor;
 	}
 
-	public void bulkPurge(BulkPurgeInput input, BulkPurgeOutput output) {
+	/**
+	 * Create a BulkExecution and pass it to the EntityBulkExecutor to execute the purge.
+	 * The return is a BulkExecution ID that can be used to track the progress.
+	 *
+	 * @param input Input argument for the bulk operations
+	 * @return BulkExecution ID that can be used to track the progress
+	 */
+	public String bulkPurge(BulkPurgeInput input) {
 
-		List<Entity> entityList = this.repository.getAll(input.getQuery());
+		List<Entity> entityList = this.getEntityList(input);
 
 		this.accessControl(entityList);
 
-		try {
+		EntityBulkOperation lock = this.buildLockOperation(entityList, false);
+		EntityBulkOperation depublish = this.buildDepublishOperation(entityList);
+		EntityBulkOperation purge = this.buildPurgeOperation(entityList);
 
-			this.lockEntityList(entityList, input.isForceLock());
+		EntityBulkOperation unlock = this.buildUnlockOperation(entityList);
 
-			this.depublishEntityList(entityList);
+		EntityBulkExecution execution = EntityBulkExecution.builder()
+				.topic("contentrepository", "purge")
+				.operation(lock, depublish, purge)
+				.finalizer(unlock)
+				.build();
 
-			this.purgeEntityList(entityList);
+		return this.entityBulkExecutor.execute(execution);
+	}
 
-			this.notifyExtensions(entityList);
+	private List<Entity> getEntityList(BulkPurgeInput input) {
 
-		} finally {
-			this.unlockEntityList(entityList);
+		Query query = this.buildQuery(input);
+		List<Entity> queryResult = this.repository.getAll(query);
+
+		List<Entity> entityList = null;
+		if (input.getRootList().isEmpty()) {
+			entityList = queryResult;
+		} else {
+			List<Entity> rootList = input.getRootList().stream()
+				.map(root -> this.repository.get(root))
+				.filter(entity -> entity.isPresent())
+				.map(entity -> entity.get())
+				.collect(Collectors.toList());
+			entityList = new ArrayList<>();
+			entityList.addAll(rootList);
+			entityList.addAll(queryResult);
 		}
+
+		return entityList;
+	}
+
+	private Query buildQuery(BulkPurgeInput input) {
+		if (!input.getRootList().isEmpty()) {
+			return SubTreeQuery.builder()
+					.rootList(input.getRootList())
+					.filterBy(input.getFilter().orElse(null))
+					.build();
+		}
+
+		return Query.builder()
+				.filterBy(input.getFilter().get())
+				.build();
 	}
 
 	private void accessControl(List<Entity> entityList) {
@@ -93,79 +150,120 @@ public class BulkPurge {
 		});
 	}
 
-	private void lockEntityList(List<Entity> entityList, boolean forceLock) {
-		entityList.stream().forEach(entity -> this.lockEntity(entity, forceLock));
+	private EntityBulkOperation buildLockOperation(List<Entity> entityList, boolean forceLock) {
+
+		return EntityBulkOperation.builder()
+				.key(BulkOperationKey.PURGE_LOCK)
+				.entityList(entityList)
+				.consumer(entity -> {
+
+					long id = entity.getId().get();
+
+					if (forceLock) {
+						this.lockManager.forceLock(id);
+					} else {
+						this.lockManager.lock(id);
+					}
+				})
+				.build();
 	}
 
-	private void lockEntity(Entity entity, boolean forceLock) {
+	private EntityBulkOperation buildDepublishOperation(List<Entity> entityList) {
 
-		long id = entity.getId().get();
-
-		if (forceLock) {
-			this.lockManager.forceLock(id);
-		} else {
-			Optional<EntityLock> lock = this.lockManager.getLock(id);
-			lock.ifPresent(l -> {
-				throw new EntityLocked(l);
-			});
-		}
+		return EntityBulkOperation.builder()
+				.key(BulkOperationKey.PURGE_DEPUBLISH)
+				.entityList(entityList)
+				.consumer(entity -> {
+					long id = entity.getId().get();
+					this.publisher.depublish(id);
+				})
+				.build();
 	}
 
-	private void unlockEntityList(List<Entity> entityList) {
-		entityList.stream().forEach(entity -> this.unlockEntity(entity));
-	}
+	private EntityBulkOperation buildPurgeOperation(List<Entity> entityList) {
 
-	private void unlockEntity(Entity entity) {
-		long id = entity.getId().get();
-		this.lockManager.unlock(id);
-	}
-
-	private void depublishEntityList(List<Entity> entityList) {
-
-		List<Long> idList = entityList.stream()
-				.map(entity -> entity.getId().get())
-				.collect(Collectors.toList());
-
-		this.publisher.depublish(idList, id -> {
-			//System.out.println(id)
-		});
-	}
-
-	private void purgeEntityList(List<Entity> entityList) {
-
-
-		entityList.stream()
+		List<Entity> nonGroupList = entityList.stream()
 				.filter(entity -> !entity.isGroup())
-				.forEach(entity -> this.purgeEntity(entity));
-
-		entityList.stream()
-				.filter(entity -> entity.isGroup())
-				.forEach(entity -> this.purgeEntity(entity));
-	}
-
-	private void purgeEntity(Entity entity) {
-
-		long id = entity.getId().get();
-
-		this.searchIndex.remove(id);
-
-		this.mediaReferenceManager.removeByReference(id);
-
-		this.repository.removeEntity(id);
-
-		this.historyManager.purge(id);
-
-		this.versioningManager.removeAllVersions(id);
-
-		this.recycleBin.removeByObject(id);
-	}
-
-	private void notifyExtensions(List<Entity> entityList) {
-
-		List<Long> idList = entityList.stream()
-				.map(entity -> entity.getId().get())
 				.collect(Collectors.toList());
 
-		this.extensionsNotifier.notifyBulkPurge(idList);
+		List<Entity> groupList = entityList.stream()
+				.filter(entity -> entity.isGroup())
+				.collect(Collectors.toList());
+
+		/*
+		 * Arrange the entityList so that first all group entries are deleted
+		 * and then the groups in the hierarchy from bottom to top.
+		 * This ensures that only empty pools are deleted.
+		 */
+		List<Entity> orderedGroupList = this.orderGroupListHierarchicallyFromBottomToTop(groupList);
+		List<Entity> orderedList = new ArrayList<>();
+		orderedList.addAll(nonGroupList);
+		orderedList.addAll(orderedGroupList);
+
+		if (LOGGER.isDebugEnabled()) {
+			orderedList.stream()
+					.forEach(entity -> {
+						LOGGER.debug("purge order: {}", entity);
+					});
+		}
+
+		return EntityBulkOperation.builder()
+				.key(BulkOperationKey.PURGE_PURGE)
+				.entityList(orderedList)
+				.consumer(entity -> {
+					long id = entity.getId().get();
+
+					if (this.repository.isGroup(id) && !this.repository.isEmptyGroup(id)) {
+						throw new GroupNotEmpty(id);
+					}
+
+					if (LOGGER.isInfoEnabled()) {
+						LOGGER.info("purge: {}", entity);
+					}
+
+					this.searchIndex.remove(id);
+					this.mediaReferenceManager.removeByReference(id);
+					this.repository.removeEntity(id);
+					this.historyManager.purge(id);
+					this.versioningManager.removeAllVersions(id);
+					this.recycleBin.removeByObject(id);
+					this.extensionsNotifier.notifyPurge(id);
+				})
+				.build();
+	}
+
+	/**
+	 * Arranges the groups according to their hierarchy from bottom to top.
+	 */
+	private List<Entity> orderGroupListHierarchicallyFromBottomToTop(List<Entity> groupList) {
+
+		EntityTree tree = new EntityTree();
+		groupList.stream().forEach(tree::add);
+
+		List<Entity> hierarchicalOrder = tree.getAll();
+
+		Collections.reverse(hierarchicalOrder);
+
+		return hierarchicalOrder;
+	}
+
+	private EntityBulkOperation buildUnlockOperation(List<Entity> entityList) {
+
+		return EntityBulkOperation.builder()
+				.key(BulkOperationKey.PURGE_CLEANUP)
+				.entityList(entityList)
+				.consumer(entity -> {
+					long id = entity.getId().get();
+					try {
+						this.lockManager.unlock(id);
+					} catch (Exception e) {
+						if (LOGGER.isTraceEnabled()) {
+							LOGGER.atTrace()
+									.withThrowable(e)
+									.log("Unable to unlock {}", entity);
+						}
+					}
+				})
+				.build();
 	}
 }

@@ -1,12 +1,11 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
-import java.util.Optional;
-
 import javax.inject.Inject;
 
-import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDenied;
-import com.sitepark.ies.contentrepository.core.domain.exception.EntityLocked;
 import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmpty;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
@@ -41,6 +40,8 @@ public final class PurgeEntity {
 
 	private final ExtensionsNotifier extensionsNotifier;
 
+	private static Logger LOGGER = LogManager.getLogger();
+
 	@Inject
 	@SuppressWarnings("PMD.ExcessiveParameterList")
 	protected PurgeEntity(ContentRepository repository, EntityLockManager lockManager,
@@ -71,12 +72,13 @@ public final class PurgeEntity {
 		}
 
 		try {
-			Optional<EntityLock> lock = this.lockManager.getLock(id);
-			lock.ifPresent(l -> {
-				throw new EntityLocked(l);
-			});
+			this.lockManager.lock(id);
 
 			this.publisher.depublish(id);
+
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("purge: {}", this.repository.get(id));
+			}
 
 			this.searchIndex.remove(id);
 

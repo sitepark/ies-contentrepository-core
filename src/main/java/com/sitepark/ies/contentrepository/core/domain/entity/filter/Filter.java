@@ -3,16 +3,8 @@ package com.sitepark.ies.contentrepository.core.domain.entity.filter;
 @SuppressWarnings("PMD.TooManyMethods")
 public interface Filter {
 
-	public static Or or(Filter... filterList) {
-		return new Or(filterList);
-	}
-
-	public static And and(Filter... filterList) {
-		return new And(filterList);
-	}
-
-	public static Not not(Filter filter) {
-		return new Not(filter);
+	public static IsGroup isGroup(Boolean isGroup) {
+		return new IsGroup(isGroup);
 	}
 
 	public static Id id(Long id) {
@@ -45,5 +37,17 @@ public interface Filter {
 
 	public static RootList rootList(Long... rootList) {
 		return new RootList(rootList);
+	}
+
+	public static Or or(Filter... filterList) {
+		return new Or(filterList);
+	}
+
+	public static And and(Filter... filterList) {
+		return new And(filterList);
+	}
+
+	public static Not not(Filter filter) {
+		return new Not(filter);
 	}
 }
