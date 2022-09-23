@@ -86,6 +86,8 @@ public final class BulkPurgeInput {
 		}
 
 		public BulkPurgeInput build() {
+			assert (!this.rootList.isEmpty() || this.filterBy != null)
+					: "Either rootList or filterBy must be specified";
 			return new BulkPurgeInput(this);
 		}
 	}
