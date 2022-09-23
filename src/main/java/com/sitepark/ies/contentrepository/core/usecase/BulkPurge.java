@@ -106,25 +106,8 @@ public class BulkPurge {
 	}
 
 	private List<Entity> getEntityList(BulkPurgeInput input) {
-
 		Query query = this.buildQuery(input);
-		List<Entity> queryResult = this.repository.getAll(query);
-
-		List<Entity> entityList = null;
-		if (input.getRootList().isEmpty()) {
-			entityList = queryResult;
-		} else {
-			List<Entity> rootList = input.getRootList().stream()
-				.map(root -> this.repository.get(root))
-				.filter(entity -> entity.isPresent())
-				.map(entity -> entity.get())
-				.collect(Collectors.toList());
-			entityList = new ArrayList<>();
-			entityList.addAll(rootList);
-			entityList.addAll(queryResult);
-		}
-
-		return entityList;
+		return this.repository.getAll(query);
 	}
 
 	private Query buildQuery(BulkPurgeInput input) {
