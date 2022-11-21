@@ -14,9 +14,12 @@ public class Query {
 
 	private final OrderBy orderBy;
 
+	private final QueryOptions options;
+
 	protected Query(Builder<?> builder) {
 		this.filterBy = builder.filterBy;
 		this.orderBy = builder.orderBy;
+		this.options = builder.options;
 	}
 
 	public Optional<Filter> getFilterBy() {
@@ -25,6 +28,10 @@ public class Query {
 
 	public OrderBy getOrderBy() {
 		return this.orderBy;
+	}
+
+	public QueryOptions getOptions() {
+		return this.options;
 	}
 
 	public static Builder<?> builder() {
@@ -41,11 +48,14 @@ public class Query {
 
 		protected OrderBy orderBy;
 
+		protected QueryOptions options;
+
 		protected Builder() { }
 
 		protected Builder(Query query) {
 			this.filterBy = query.filterBy;
 			this.orderBy = query.orderBy;
+			this.options = query.options;
 		}
 
 		public B filterBy(Filter filterBy) {
@@ -54,8 +64,13 @@ public class Query {
 		}
 
 		public B orderBy(OrderBy orderBy) {
-			assert orderBy != null;
+			assert orderBy != null : "orderBy is null";
 			this.orderBy = orderBy;
+			return this.self();
+		}
+
+		public B options(QueryOptions options) {
+			this.options = options;
 			return this.self();
 		}
 
@@ -80,6 +95,9 @@ public class Query {
 
 		@Override
 		public Query build() {
+			if (this.options == null) {
+				this.options = QueryOptions.builder().build();
+			}
 			return new Query(this);
 		}
 	}
