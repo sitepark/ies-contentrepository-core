@@ -127,8 +127,14 @@ public class BulkPurge {
 
 		entityList.stream().forEach(entity -> {
 			long id = entity.getId().get();
-			if (!this.accessControl.isEntityRemovable(id)) {
-				throw new AccessDenied("Not allowed to remove entity " + id);
+			if (entity.isGroup()) {
+				if (!this.accessControl.isGroupRemoveable(id)) {
+					throw new AccessDenied("Not allowed to remove group " + id);
+				}
+			} else {
+				if (!this.accessControl.isEntityRemovable(id)) {
+					throw new AccessDenied("Not allowed to remove entity " + id);
+				}
 			}
 		});
 	}
