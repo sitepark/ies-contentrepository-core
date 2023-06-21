@@ -36,15 +36,17 @@ public class OrderBy {
 
 		private final List<OrderCriteria> sort = new ArrayList<>();
 
-		private Builder() { }
+		protected Builder() { }
 
-		private Builder(OrderBy and) {
+		protected Builder(OrderBy and) {
 			this.sort.addAll(and.sort);
 		}
 
+		@SuppressWarnings("PMD.UseArraysAsList")
 		public Builder sort(OrderCriteria... sortCriteriaList) {
 			assert sortCriteriaList != null;
 			for (OrderCriteria sortCriteria : sortCriteriaList) {
+				assert sortCriteria != null : "sortCriteria is null";
 				this.sort.add(sortCriteria);
 			}
 			return this;

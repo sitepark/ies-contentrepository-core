@@ -24,10 +24,10 @@ public class QueryOptions {
 
 		private boolean showHidden;
 
-		private Builder() {
+		protected Builder() {
 		}
 
-		private Builder(QueryOptions queryOptions) {
+		protected Builder(QueryOptions queryOptions) {
 			this.showHidden = queryOptions.showHidden;
 		}
 

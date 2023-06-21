@@ -21,11 +21,11 @@ public class Name extends OrderCriteria {
 	@JsonPOJOBuilder(withPrefix = "", buildMethodName = "build")
 	public static class Builder extends OrderCriteria.Builder<Builder> {
 
-		private Builder() {
+		protected Builder() {
 			super();
 		}
 
-		private Builder(Name name) {
+		protected Builder(Name name) {
 			super(name);
 		}
 

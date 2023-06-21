@@ -42,7 +42,7 @@ public final class RecycleBinItem {
 		return new Builder(this);
 	}
 
-	public static class Builder {
+	public static final class Builder {
 
 		private long id;
 		private long parent;

@@ -75,7 +75,6 @@ public class Entity {
 		int hash = Long.hashCode(this.id);
 		hash = (this.anchor != null) ? 31 * hash + this.anchor.hashCode() : hash;
 		hash = (this.name != null) ? 31 * hash + this.name.hashCode() : hash;
-		hash = (this.anchor != null) ? 31 * hash + this.anchor.hashCode() : hash;
 		hash = 31 * hash + Long.hashCode(this.version);
 		hash = 31 * hash + Long.hashCode(this.parent);
 		hash = 31 * hash + Boolean.hashCode(this.isGroup);

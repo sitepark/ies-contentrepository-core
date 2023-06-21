@@ -44,7 +44,7 @@ public final class BulkPurgeInput {
 		return new Builder(this);
 	}
 
-	public static class Builder {
+	public static final class Builder {
 
 		private final List<Long> rootList = new ArrayList<>();
 

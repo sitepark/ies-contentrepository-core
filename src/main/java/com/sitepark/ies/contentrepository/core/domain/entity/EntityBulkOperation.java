@@ -46,7 +46,7 @@ public class EntityBulkOperation {
 
 		private Consumer<Entity> consumer;
 
-		private Builder() {
+		protected Builder() {
 		}
 
 		public Builder key(BulkOperationKey key) {

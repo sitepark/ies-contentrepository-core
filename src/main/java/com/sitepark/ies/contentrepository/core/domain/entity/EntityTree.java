@@ -145,9 +145,9 @@ public class EntityTree {
 				this.toString(indent, child, indentPrefix, b);
 			}
 		} else {
-			b.append(indentPrefix.toString());
-			b.append(this.index.get(parent));
-			b.append('\n');
+			b.append(indentPrefix.toString())
+				.append(this.index.get(parent))
+				.append('\n');
 
 			if (this.hasChildren(parent)) {
 				for (int i = 0; i < indent; i++) {

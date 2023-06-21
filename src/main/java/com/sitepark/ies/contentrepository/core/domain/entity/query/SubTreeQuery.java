@@ -35,9 +35,9 @@ public class SubTreeQuery extends Query {
 
 		private final List<Long> rootList = new ArrayList<>();
 
-		private Builder() { }
+		protected Builder() { }
 
-		private Builder(SubTreeQuery curserBasedQuery) {
+		protected Builder(SubTreeQuery curserBasedQuery) {
 			super(curserBasedQuery);
 			this.rootList.addAll(curserBasedQuery.rootList);
 		}

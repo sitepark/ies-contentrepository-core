@@ -9,6 +9,6 @@ public class DatabindModule extends SimpleModule {
 	private static final long serialVersionUID = 1L;
 
 	public DatabindModule() {
-		this.addDeserializer(Filter.class, new FilterDeserializer());
+		super.addDeserializer(Filter.class, new FilterDeserializer());
 	}
 }

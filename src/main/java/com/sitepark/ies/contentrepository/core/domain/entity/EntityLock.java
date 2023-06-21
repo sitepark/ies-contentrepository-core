@@ -61,10 +61,10 @@ public final class EntityLock implements Serializable {
 		private long lastAccess;
 		private long ttl;
 
-		private Builder() {
+		protected Builder() {
 		}
 
-		private Builder(EntityLock entityLock) {
+		protected Builder(EntityLock entityLock) {
 			this.entity = entityLock.entity;
 			this.user = entityLock.user;
 			this.created = entityLock.created;

@@ -8,16 +8,16 @@ public class FilterDeserializer extends UniquePropertyPolymorphicDeserializer<Fi
 
 	public FilterDeserializer() {
 		super(Filter.class);
-		this.register("id", Id.class);
-		this.register("idList", IdList.class);
-		this.register("parent", Parent.class);
-		this.register("parentList", ParentList.class);
-		this.register("root", Root.class);
-		this.register("rootList", RootList.class);
-		this.register("anchor", Anchor.class);
-		this.register("anchorList", AnchorList.class);
-		this.register("and", And.class);
-		this.register("or", Or.class);
-		this.register("not", Not.class);
+		super.register("id", Id.class);
+		super.register("idList", IdList.class);
+		super.register("parent", Parent.class);
+		super.register("parentList", ParentList.class);
+		super.register("root", Root.class);
+		super.register("rootList", RootList.class);
+		super.register("anchor", Anchor.class);
+		super.register("anchorList", AnchorList.class);
+		super.register("and", And.class);
+		super.register("or", Or.class);
+		super.register("not", Not.class);
 	}
 }

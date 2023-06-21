@@ -62,7 +62,7 @@ public final class HistoryEntry implements Serializable {
 		return new Builder(this);
 	}
 
-	public static class Builder {
+	public static final class Builder {
 
 		private long entity;
 		private String initiator;

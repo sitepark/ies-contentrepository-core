@@ -40,9 +40,9 @@ public class CursorBasedQuery extends Query {
 
 		private String after;
 
-		private Builder() { }
+		protected Builder() { }
 
-		private Builder(CursorBasedQuery curserBasedQuery) {
+		protected Builder(CursorBasedQuery curserBasedQuery) {
 			super(curserBasedQuery);
 			this.first = curserBasedQuery.first;
 			this.after = curserBasedQuery.after;

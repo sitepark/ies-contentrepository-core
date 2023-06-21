@@ -47,7 +47,7 @@ public class EntityBulkExecution {
 
 		private EntityBulkOperation finalizer;
 
-		private Builder() {
+		protected Builder() {
 		}
 
 		/**
@@ -63,6 +63,7 @@ public class EntityBulkExecution {
 			return this;
 		}
 
+		@SuppressWarnings("PMD.UseArraysAsList")
 		public Builder operation(EntityBulkOperation... operations) {
 			assert operations != null;
 			for (EntityBulkOperation operation : operations) {
