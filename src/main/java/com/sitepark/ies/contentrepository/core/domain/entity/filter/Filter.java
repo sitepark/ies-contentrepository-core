@@ -31,6 +31,15 @@ public interface Filter {
 		return new ParentList(parentList);
 	}
 
+	public static ParentAnchor parentAnchor(com.sitepark.ies.contentrepository.core.domain.entity.Anchor parentAnchor) {
+		return new ParentAnchor(parentAnchor);
+	}
+
+	public static ParentAnchorList parentAnchorList(
+			com.sitepark.ies.contentrepository.core.domain.entity.Anchor... parentAnchorList) {
+		return new ParentAnchorList(parentAnchorList);
+	}
+
 	public static Root root(Long root) {
 		return new Root(root);
 	}

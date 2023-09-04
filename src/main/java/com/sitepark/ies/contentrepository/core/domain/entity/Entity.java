@@ -153,7 +153,7 @@ public class Entity {
 
 		public B anchor(String anchor) {
 			assert anchor != null;
-			this.anchor = Anchor.ofString(anchor).get();
+			this.anchor = Anchor.ofString(anchor);
 			return this.self();
 		}
 

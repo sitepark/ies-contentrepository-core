@@ -23,7 +23,7 @@ class FilterTest {
 		Filter filter =
 				or(
 					idList(6L),
-					anchor(com.sitepark.ies.contentrepository.core.domain.entity.Anchor.ofString("abc").get()),
+					anchor(com.sitepark.ies.contentrepository.core.domain.entity.Anchor.ofString("abc")),
 					and(
 						root(5L),
 						parent(7L),
