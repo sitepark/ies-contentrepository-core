@@ -1,6 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.filter;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,7 +13,7 @@ public class Or implements Filter {
 	private final List<Filter> or;
 
 	protected Or(@JsonProperty("or") Filter... or) {
-		assert or != null;
+		Objects.requireNonNull(or, "or is null");
 		this.or = List.of(or);
 	}
 

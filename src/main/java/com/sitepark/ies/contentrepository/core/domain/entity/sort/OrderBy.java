@@ -3,6 +3,7 @@ package com.sitepark.ies.contentrepository.core.domain.entity.sort;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
@@ -44,9 +45,11 @@ public class OrderBy {
 
 		@SuppressWarnings("PMD.UseArraysAsList")
 		public Builder sort(OrderCriteria... sortCriteriaList) {
-			assert sortCriteriaList != null;
+			Objects.requireNonNull(sortCriteriaList, "sortCriteriaList is null");
 			for (OrderCriteria sortCriteria : sortCriteriaList) {
-				assert sortCriteria != null : "sortCriteria is null";
+				Objects.requireNonNull(
+						sortCriteriaList,
+						"sortCriteria in sortCriteriaList is null");
 				this.sort.add(sortCriteria);
 			}
 			return this;

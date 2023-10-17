@@ -3,6 +3,7 @@ package com.sitepark.ies.contentrepository.core.domain.entity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -58,14 +59,14 @@ public class EntityBulkExecution {
 		 * BulkExecutions recursively below <code>level1</code> are returned.
 		 */
 		public Builder topic(String... topic) {
-			assert topic != null;
+			Objects.requireNonNull(topic, "topic is null");
 			this.topic = topic.clone();
 			return this;
 		}
 
 		@SuppressWarnings("PMD.UseArraysAsList")
 		public Builder operation(EntityBulkOperation... operations) {
-			assert operations != null;
+			Objects.requireNonNull(operations, "operations is null");
 			for (EntityBulkOperation operation : operations) {
 				assert operation != null;
 				this.operations.add(operation);
@@ -74,7 +75,7 @@ public class EntityBulkExecution {
 		}
 
 		public Builder finalizer(EntityBulkOperation finalizer) {
-			assert finalizer != null;
+			Objects.requireNonNull(finalizer, "finalizer is null");
 			this.finalizer = finalizer;
 			return this;
 		}

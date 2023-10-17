@@ -1,5 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.filter;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Id implements Filter {
@@ -8,7 +10,7 @@ public class Id implements Filter {
 	private final Long id;
 
 	protected Id(@JsonProperty("id") Long id) {
-		assert id != null;
+		Objects.requireNonNull(id, "id is null");
 		this.id = id;
 	}
 

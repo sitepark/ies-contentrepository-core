@@ -1,6 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.filter;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -14,7 +15,7 @@ public class ParentAnchorList implements Filter {
 
 	protected ParentAnchorList(@JsonProperty("parentAnchorList")
 			com.sitepark.ies.contentrepository.core.domain.entity.Anchor... parentAnchorList) {
-		assert parentAnchorList != null : "parentAnchorList is null";
+		Objects.requireNonNull(parentAnchorList, "parentAnchorList is null");
 		this.parentAnchorList = List.of(parentAnchorList);
 	}
 

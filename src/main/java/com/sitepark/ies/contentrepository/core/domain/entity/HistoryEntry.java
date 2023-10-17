@@ -1,6 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Optional;
 
 public final class HistoryEntry implements Serializable {
@@ -88,7 +89,7 @@ public final class HistoryEntry implements Serializable {
 		}
 
 		public Builder initiator(String initiator) {
-			assert initiator != null : "initiator is null";
+			Objects.requireNonNull(initiator, "initiator is null");
 			this.initiator = initiator;
 			return this;
 		}
@@ -99,19 +100,21 @@ public final class HistoryEntry implements Serializable {
 		}
 
 		public Builder timestamp(long timestamp) {
-			assert timestamp > 0;
+			if (timestamp <= 0) {
+				throw new IllegalArgumentException("timestamp should be greater than 0");
+			}
 			this.timestamp = timestamp;
 			return this;
 		}
 
 		public Builder type(HistoryEntryType type) {
-			assert type != null : "type is null";
+			Objects.requireNonNull(type, "type is null");
 			this.type = type;
 			return this;
 		}
 
 		public Builder comment(String comment) {
-			assert comment != null : "comment is null";
+			Objects.requireNonNull(comment, "comment is null");
 			this.comment = comment;
 			return this;
 		}

@@ -1,5 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
+import java.util.Objects;
+
 public class MediaReference {
 
 	private final long mediaId;
@@ -47,18 +49,22 @@ public class MediaReference {
 		}
 
 		public Builder mediaId(long mediaId) {
-			assert mediaId > 0;
+			if (mediaId <= 0) {
+				throw new IllegalArgumentException("mediaId should be greater than 0");
+			}
 			this.mediaId = mediaId;
 			return this;
 		}
 
 		public Builder usedBy(long usedBy) {
-			assert usedBy > 0;
+			if (usedBy <= 0) {
+				throw new IllegalArgumentException("usedBy should be greater than 0");
+			}
 			this.usedBy = usedBy;
 			return this;
 		}
 		public Builder type(MediaReferenceType type) {
-			assert type != null;
+			Objects.requireNonNull(type, "type is null");
 			this.type = type;
 			return this;
 		}

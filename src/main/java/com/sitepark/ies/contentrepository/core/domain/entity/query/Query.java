@@ -1,5 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.query;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -64,7 +65,7 @@ public class Query {
 		}
 
 		public B orderBy(OrderBy orderBy) {
-			assert orderBy != null : "orderBy is null";
+			Objects.requireNonNull(orderBy, "orderBy is null");
 			this.orderBy = orderBy;
 			return this.self();
 		}

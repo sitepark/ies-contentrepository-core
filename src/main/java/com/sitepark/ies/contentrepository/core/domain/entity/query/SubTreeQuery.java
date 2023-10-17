@@ -3,6 +3,7 @@ package com.sitepark.ies.contentrepository.core.domain.entity.query;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
@@ -43,13 +44,13 @@ public class SubTreeQuery extends Query {
 		}
 
 		public Builder root(Long root) {
-			assert root != null;
+			Objects.requireNonNull(root, "root is null");
 			this.rootList.add(root);
 			return this.self();
 		}
 
 		public Builder rootList(List<Long> rootList) {
-			assert rootList != null;
+			Objects.requireNonNull(rootList, "rootList is null");
 			for (Long root : rootList) {
 				this.root(root);
 			}

@@ -1,5 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.filter;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Root implements Filter {
@@ -8,7 +10,7 @@ public class Root implements Filter {
 	private final Long root;
 
 	protected Root(@JsonProperty("root") Long root) {
-		assert root != null;
+		Objects.requireNonNull(root, "root is null");
 		this.root = root;
 	}
 

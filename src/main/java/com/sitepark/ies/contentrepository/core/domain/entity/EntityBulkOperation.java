@@ -3,6 +3,7 @@ package com.sitepark.ies.contentrepository.core.domain.entity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -50,19 +51,19 @@ public class EntityBulkOperation {
 		}
 
 		public Builder key(BulkOperationKey key) {
-			assert key != null;
+			Objects.requireNonNull(key, "key is null");
 			this.key = key;
 			return this;
 		}
 
 		public Builder entityList(List<Entity> entityList) {
-			assert entityList != null;
+			Objects.requireNonNull(entityList, "entityList is null");
 			this.entityList.addAll(entityList);
 			return this;
 		}
 
 		public Builder consumer(Consumer<Entity> consumer) {
-			assert consumer != null;
+			Objects.requireNonNull(consumer, "consumer is null");
 			this.consumer = consumer;
 			return this;
 		}
