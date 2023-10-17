@@ -152,19 +152,22 @@ public class Entity {
 		}
 
 		public B anchor(String anchor) {
-			assert anchor != null;
+			Objects.requireNonNull(anchor, "anchor is null");
 			this.anchor = Anchor.ofString(anchor);
 			return this.self();
 		}
 
 		public B anchor(Anchor anchor) {
-			assert anchor != null;
+			Objects.requireNonNull(anchor, "anchor is null");
 			this.anchor = anchor;
 			return this.self();
 		}
 
 		public B name(String name) {
-			assert name != null;
+			Objects.requireNonNull(name, "name is null");
+			if (name.isBlank()) {
+				throw new IllegalArgumentException("name is blank");
+			}
 			assert !name.isBlank();
 			this.name = name;
 			return this.self();

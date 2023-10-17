@@ -1,5 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.sort;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
@@ -39,13 +41,13 @@ public abstract class OrderCriteria {
 		}
 
 		public B name(String name) {
-			assert name != null;
+			Objects.requireNonNull(name, "name is null");
 			this.name = name;
 			return this.self();
 		}
 
 		public B direction(Direction direction) {
-			assert direction != null;
+			Objects.requireNonNull(direction, "direction is null");
 			this.direction = direction;
 			return this.self();
 		}

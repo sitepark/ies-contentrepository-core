@@ -1,5 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.query;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
@@ -54,7 +56,7 @@ public class CursorBasedQuery extends Query {
 		}
 
 		public Builder after(String after) {
-			assert after != null;
+			Objects.requireNonNull(after, "after is null");
 			this.after = after;
 			return this.self();
 		}

@@ -1,5 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.filter;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Not implements Filter {
@@ -8,7 +10,7 @@ public class Not implements Filter {
 	private final Filter not;
 
 	protected Not(@JsonProperty("not") Filter not) {
-		assert not != null;
+		Objects.requireNonNull(not, "not is null");
 		this.not = not;
 	}
 

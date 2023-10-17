@@ -1,6 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.filter;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,7 +13,7 @@ public class And implements Filter {
 	private final List<Filter> and;
 
 	protected And(@JsonProperty("and") Filter... and) {
-		assert and != null;
+		Objects.requireNonNull(and, "and is null");
 		this.and = List.of(and);
 	}
 

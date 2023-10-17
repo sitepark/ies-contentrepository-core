@@ -83,19 +83,25 @@ public final class EntityLock implements Serializable {
 		}
 
 		public Builder created(long created) {
-			assert created > 0;
+			if (created <= 0) {
+				throw new IllegalArgumentException("created should be greater then 0");
+			}
 			this.created = created;
 			return this;
 		}
 
 		public Builder lastAccess(long lastAccess) {
-			assert lastAccess > 0;
+			if (lastAccess <= 0) {
+				throw new IllegalArgumentException("lastAccess should be greater then 0");
+			}
 			this.lastAccess = lastAccess;
 			return this;
 		}
 
 		public Builder ttl(long ttl) {
-			assert ttl > 0;
+			if (ttl <= 0) {
+				throw new IllegalArgumentException("ttl should be greater then 0");
+			}
 			this.ttl = ttl;
 			return this;
 		}

@@ -3,6 +3,7 @@ package com.sitepark.ies.contentrepository.core.domain.entity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public final class RecycleBinItem {
 
@@ -68,19 +69,19 @@ public final class RecycleBinItem {
 		}
 
 		public Builder entity(Entity entity) {
-			assert entity != null;
+			Objects.requireNonNull(entity, "entity is null");
 			this.entity = entity;
 			return this;
 		}
 
 		public Builder children(List<RecycleBinItem> children) {
-			assert children != null;
+			Objects.requireNonNull(children, "children is null");
 			this.children = new ArrayList<>(children);
 			return this;
 		}
 
 		public Builder child(RecycleBinItem child) {
-			assert child != null;
+			Objects.requireNonNull(child, "child is null");
 			this.children.add(child);
 			return this;
 		}

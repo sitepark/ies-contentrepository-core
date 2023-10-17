@@ -1,5 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.filter;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Anchor implements Filter {
@@ -8,7 +10,7 @@ public class Anchor implements Filter {
 	private final com.sitepark.ies.contentrepository.core.domain.entity.Anchor anchor;
 
 	protected Anchor(@JsonProperty("anchor") com.sitepark.ies.contentrepository.core.domain.entity.Anchor anchor) {
-		assert anchor != null;
+		Objects.requireNonNull(anchor, "anchor is null");
 		this.anchor = anchor;
 	}
 

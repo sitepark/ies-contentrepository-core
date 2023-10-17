@@ -1,6 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.filter;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -13,7 +14,7 @@ public class IdList implements Filter {
 	private final List<Long> idList;
 
 	protected IdList(@JsonProperty("idList") Long... idList) {
-		assert idList != null;
+		Objects.requireNonNull(idList, "idList is null");
 		this.idList = List.of(idList);
 	}
 

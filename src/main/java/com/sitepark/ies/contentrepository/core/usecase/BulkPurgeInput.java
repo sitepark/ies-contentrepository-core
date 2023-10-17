@@ -3,6 +3,7 @@ package com.sitepark.ies.contentrepository.core.usecase;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter;
@@ -61,7 +62,7 @@ public final class BulkPurgeInput {
 		}
 
 		public Builder rootList(List<Long> rootList) {
-			assert rootList != null;
+			Objects.requireNonNull(rootList, "rootList is null");
 			for (Long root : rootList) {
 				this.root(root);
 			}
@@ -69,13 +70,13 @@ public final class BulkPurgeInput {
 		}
 
 		public Builder root(Long root) {
-			assert root != null;
+			Objects.requireNonNull(root, "root is null");
 			this.rootList.add(root);
 			return this;
 		}
 
 		public Builder filterBy(Filter filterBy) {
-			assert filterBy != null;
+			Objects.requireNonNull(filterBy, "filterBy is null");
 			this.filterBy = filterBy;
 			return this;
 		}

@@ -1,6 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.filter;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,7 +13,7 @@ public class RootList implements Filter {
 	private final List<Long> rootList;
 
 	protected RootList(@JsonProperty("rootList") Long... rootList) {
-		assert rootList != null;
+		Objects.requireNonNull(rootList, "rootList is null");
 		this.rootList = List.of(rootList);
 	}
 
