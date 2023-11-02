@@ -26,7 +26,13 @@ public class EntityTree {
 	 */
 	public List<Entity> getRoots() {
 		return this.getRootIdList().stream()
-				.map(id -> this.index.get(id))
+				.map(id -> {
+					Entity entity = this.index.get(id);
+					if (entity == null) {
+						throw new IllegalStateException("Entity with id " + id + " missing");
+					}
+					return entity;
+				})
 				.collect(Collectors.toList());
 	}
 
@@ -108,9 +114,10 @@ public class EntityTree {
 		List<Entity> list = new ArrayList<>();
 		for (Long rootId : rootIdList) {
 			Entity root = this.index.get(rootId);
-			if (root != null) {
-				list.add(root);
+			if (root == null) {
+				throw new IllegalStateException("Entity with id " + rootId + " missing");
 			}
+			list.add(root);
 			List<Entity> childrenOrRoot = this.getChildrenRecursive(rootId);
 			list.addAll(childrenOrRoot);
 		}

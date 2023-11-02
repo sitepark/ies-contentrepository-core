@@ -111,18 +111,15 @@ public class Entity {
 	@Override
 	public String toString() {
 		return new StringBuilder()
+				.append("Entity[")
+				.append("name: ")
 				.append(this.getName().orElse("UNNAMED"))
-				.append(" (")
-				.append("id: ").append(this.id)
-				.append(", ")
-				.append("anchor: ").append(this.anchor)
-				.append(", ")
-				.append("parent: ").append(this.parent)
-				.append(", ")
-				.append("version: ").append(this.version)
-				.append(", ")
-				.append("isGroup: ").append(this.isGroup)
-				.append(')').toString();
+				.append(", id: ").append(this.id)
+				.append(", anchor: ").append(this.anchor)
+				.append(", parent: ").append(this.parent)
+				.append(", version: ").append(this.version)
+				.append(", isGroup: ").append(this.isGroup)
+				.append(']').toString();
 	}
 
 	public static abstract class Builder<B extends Builder<B>> {
@@ -168,7 +165,6 @@ public class Entity {
 			if (name.isBlank()) {
 				throw new IllegalArgumentException("name is blank");
 			}
-			assert !name.isBlank();
 			this.name = name;
 			return this.self();
 		}
