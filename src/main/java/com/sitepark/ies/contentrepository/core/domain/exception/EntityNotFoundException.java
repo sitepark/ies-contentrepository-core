@@ -1,11 +1,12 @@
 package com.sitepark.ies.contentrepository.core.domain.exception;
 
-public class GroupNotEmpty extends ContentRepositoryException {
+public class EntityNotFoundException extends ContentRepositoryException {
+
 	private static final long serialVersionUID = 1L;
 
 	private final long id;
 
-	public GroupNotEmpty(long id) {
+	public EntityNotFoundException(long id) {
 		super();
 		this.id = id;
 	}
@@ -16,7 +17,6 @@ public class GroupNotEmpty extends ContentRepositoryException {
 
 	@Override
 	public String getMessage() {
-		return "Group with id " + this.id + " not empty";
+		return "Entity with id " + this.id + " not found";
 	}
-
 }

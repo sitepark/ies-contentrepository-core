@@ -1,12 +1,12 @@
 package com.sitepark.ies.contentrepository.core.domain.exception;
 
-public class InvalidAnchor extends ContentRepositoryException {
+public class InvalidAnchorException extends ContentRepositoryException {
 
 	private final String name;
 
 	private static final long serialVersionUID = 1L;
 
-	public InvalidAnchor(String name, String message) {
+	public InvalidAnchorException(String name, String message) {
 		super(message);
 		this.name = name;
 	}
