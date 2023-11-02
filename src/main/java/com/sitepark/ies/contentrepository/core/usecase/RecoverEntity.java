@@ -5,8 +5,8 @@ import java.util.Optional;
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.domain.entity.HistoryEntryType;
 import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItem;
-import com.sitepark.ies.contentrepository.core.domain.exception.AccessDenied;
-import com.sitepark.ies.contentrepository.core.domain.exception.EntityNotFound;
+import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
+import com.sitepark.ies.contentrepository.core.domain.exception.EntityNotFoundException;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.HistoryManager;
@@ -33,10 +33,10 @@ public class RecoverEntity {
 	public void recover(long id) {
 
 		Optional<RecycleBinItem> recycleBinItem = this.recycleBin.get(id);
-		recycleBinItem.orElseThrow(() -> new EntityNotFound(id));
+		recycleBinItem.orElseThrow(() -> new EntityNotFoundException(id));
 
 		if (!this.accessControl.isGroupCreateable(recycleBinItem.get().getParent())) {
-			throw new AccessDenied("Not allowed to recover entity " + recycleBinItem.get().getId()
+			throw new AccessDeniedException("Not allowed to recover entity " + recycleBinItem.get().getId()
 					+ " in group " + recycleBinItem.get().getParent());
 		}
 

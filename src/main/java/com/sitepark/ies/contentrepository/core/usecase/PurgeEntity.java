@@ -5,8 +5,8 @@ import javax.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.sitepark.ies.contentrepository.core.domain.exception.AccessDenied;
-import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmpty;
+import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
+import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmptyException;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
@@ -64,11 +64,11 @@ public final class PurgeEntity {
 	public void purgeEntity(long id) {
 
 		if (!this.accessControl.isEntityRemovable(id)) {
-			throw new AccessDenied("Not allowed to remove entity " + id);
+			throw new AccessDeniedException("Not allowed to remove entity " + id);
 		}
 
 		if (this.repository.isGroup(id) && !this.repository.isEmptyGroup(id)) {
-			throw new GroupNotEmpty(id);
+			throw new GroupNotEmptyException(id);
 		}
 
 		try {

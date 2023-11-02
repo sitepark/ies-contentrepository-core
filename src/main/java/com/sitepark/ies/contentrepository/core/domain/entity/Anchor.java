@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.sitepark.ies.contentrepository.core.domain.exception.InvalidAnchor;
+import com.sitepark.ies.contentrepository.core.domain.exception.InvalidAnchorException;
 
 public final class Anchor implements Serializable {
 
@@ -49,16 +49,16 @@ public final class Anchor implements Serializable {
 	}
 
 	/**
-	 * @throws InvalidAnchor
+	 * @throws InvalidAnchorException
 	 */
 	private static void validate(String name) {
 
 		if (ONLY_NUMBERS_PATTERN.matcher(name).matches()) {
-			throw new InvalidAnchor(name, "Anchor must not only consist of numbers");
+			throw new InvalidAnchorException(name, "Anchor must not only consist of numbers");
 		}
 
 		if (!VALIDATOR_PATTERN.matcher(name).matches()) {
-			throw new InvalidAnchor(name, "Anchor contains Spaces");
+			throw new InvalidAnchorException(name, "Anchor contains Spaces");
 		}
 	}
 

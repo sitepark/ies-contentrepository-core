@@ -2,13 +2,13 @@ package com.sitepark.ies.contentrepository.core.domain.exception;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
 
-public class EntityLocked extends ContentRepositoryException {
+public class EntityLockedException extends ContentRepositoryException {
 
 	private static final long serialVersionUID = 1L;
 
 	private final EntityLock lock;
 
-	public EntityLocked(EntityLock lock) {
+	public EntityLockedException(EntityLock lock) {
 		super();
 		this.lock = lock;
 	}

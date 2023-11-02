@@ -6,10 +6,10 @@ import com.sitepark.ies.contentrepository.core.domain.entity.ChangeSet;
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
 import com.sitepark.ies.contentrepository.core.domain.entity.HistoryEntryType;
-import com.sitepark.ies.contentrepository.core.domain.exception.AccessDenied;
-import com.sitepark.ies.contentrepository.core.domain.exception.EntityLocked;
-import com.sitepark.ies.contentrepository.core.domain.exception.EntityNotFound;
-import com.sitepark.ies.contentrepository.core.domain.exception.ParentMissing;
+import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
+import com.sitepark.ies.contentrepository.core.domain.exception.EntityLockedException;
+import com.sitepark.ies.contentrepository.core.domain.exception.EntityNotFoundException;
+import com.sitepark.ies.contentrepository.core.domain.exception.ParentMissingException;
 import com.sitepark.ies.contentrepository.core.domain.service.ContentDiffer;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
@@ -54,12 +54,12 @@ public final class StoreEntity {
 	private long create(Entity newEntity) {
 
 		Optional<Long> parent = newEntity.getParent();
-		parent.orElseThrow(() -> new ParentMissing());
+		parent.orElseThrow(() -> new ParentMissingException());
 
 		long parentId = parent.get();
 
 		if (!this.accessControl.isEntityCreateable(parentId)) {
-			throw new AccessDenied("Not allowed to create entity in group " + parent);
+			throw new AccessDeniedException("Not allowed to create entity in group " + parent);
 		}
 
 		long generatedId = this.idGenerator.generate();
@@ -84,16 +84,16 @@ public final class StoreEntity {
 		long id = updateEntity.getId().get();
 
 		Optional<Entity> existsEntity = this.repository.get(id);
-		existsEntity.orElseThrow(() -> new EntityNotFound(id));
+		existsEntity.orElseThrow(() -> new EntityNotFoundException(id));
 
 		if (!this.accessControl.isEntityWritable(id)) {
-			throw new AccessDenied("Not allowed to update entity " + id);
+			throw new AccessDeniedException("Not allowed to update entity " + id);
 		}
 
 		try {
 			Optional<EntityLock> lock = this.lockManager.getLock(id);
 			lock.ifPresent(l -> {
-				throw new EntityLocked(l);
+				throw new EntityLockedException(l);
 			});
 
 			ChangeSet changeSet = this.contentDiffer.diff(updateEntity, existsEntity.get());

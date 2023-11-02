@@ -6,8 +6,8 @@ import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
 import com.sitepark.ies.contentrepository.core.domain.entity.HistoryEntryType;
 import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItem;
-import com.sitepark.ies.contentrepository.core.domain.exception.AccessDenied;
-import com.sitepark.ies.contentrepository.core.domain.exception.EntityLocked;
+import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
+import com.sitepark.ies.contentrepository.core.domain.exception.EntityLockedException;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
@@ -42,7 +42,7 @@ public final class RemoveEntity {
 	public void remove(long id) {
 
 		if (!this.accessControl.isEntityRemovable(id)) {
-			throw new AccessDenied("Not allowed to remove entity " + id);
+			throw new AccessDeniedException("Not allowed to remove entity " + id);
 		}
 
 		Optional<Entity> entity = this.repository.get(id);
@@ -53,7 +53,7 @@ public final class RemoveEntity {
 		try {
 			Optional<EntityLock> lock = this.lockManager.getLock(id);
 			lock.ifPresent(l -> {
-				throw new EntityLocked(l);
+				throw new EntityLockedException(l);
 			});
 
 			this.searchIndex.remove(id);

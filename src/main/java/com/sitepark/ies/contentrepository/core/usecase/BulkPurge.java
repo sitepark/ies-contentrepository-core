@@ -17,8 +17,8 @@ import com.sitepark.ies.contentrepository.core.domain.entity.EntityBulkOperation
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityTree;
 import com.sitepark.ies.contentrepository.core.domain.entity.query.Query;
 import com.sitepark.ies.contentrepository.core.domain.entity.query.SubTreeQuery;
-import com.sitepark.ies.contentrepository.core.domain.exception.AccessDenied;
-import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmpty;
+import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
+import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmptyException;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.EntityBulkExecutor;
@@ -129,11 +129,11 @@ public class BulkPurge {
 			long id = entity.getId().get();
 			if (entity.isGroup()) {
 				if (!this.accessControl.isGroupRemoveable(id)) {
-					throw new AccessDenied("Not allowed to remove group " + id);
+					throw new AccessDeniedException("Not allowed to remove group " + id);
 				}
 			} else {
 				if (!this.accessControl.isEntityRemovable(id)) {
-					throw new AccessDenied("Not allowed to remove entity " + id);
+					throw new AccessDeniedException("Not allowed to remove entity " + id);
 				}
 			}
 		});
@@ -203,7 +203,7 @@ public class BulkPurge {
 					long id = entity.getId().get();
 
 					if (this.repository.isGroup(id) && !this.repository.isEmptyGroup(id)) {
-						throw new GroupNotEmpty(id);
+						throw new GroupNotEmptyException(id);
 					}
 
 					if (LOGGER.isInfoEnabled()) {

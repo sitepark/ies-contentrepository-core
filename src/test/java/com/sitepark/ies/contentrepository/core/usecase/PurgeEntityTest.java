@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
-import com.sitepark.ies.contentrepository.core.domain.exception.AccessDenied;
-import com.sitepark.ies.contentrepository.core.domain.exception.EntityLocked;
+import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
+import com.sitepark.ies.contentrepository.core.domain.exception.EntityLockedException;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
@@ -44,7 +44,7 @@ class PurgeEntityTest {
 				null,
 				null,
 				null);
-		assertThrows(AccessDenied.class, () -> {
+		assertThrows(AccessDeniedException.class, () -> {
 			purgeEntity.purgeEntity(10L);
 		});
 	}
@@ -58,7 +58,7 @@ class PurgeEntityTest {
 		when(accessControl.isEntityRemovable(anyLong())).thenReturn(true);
 
 		EntityLockManager lockManager = mock(EntityLockManager.class);
-		doThrow(new EntityLocked(EntityLock.builder().entity(10L).build())).when(lockManager).lock(anyLong());
+		doThrow(new EntityLockedException(EntityLock.builder().entity(10L).build())).when(lockManager).lock(anyLong());
 
 		var purgeEntity = new PurgeEntity(
 				repository,
@@ -73,10 +73,10 @@ class PurgeEntityTest {
 				null);
 		//purgeEntity.purgeEntity(10L);
 
-		EntityLocked entityLocked = assertThrows(EntityLocked.class, () -> {
+		EntityLockedException entityLockedException = assertThrows(EntityLockedException.class, () -> {
 			purgeEntity.purgeEntity(10L);
 		}, "entity should be locked");
-		assertEquals(10L, entityLocked.getLock().getEntity(), "unexpected entity id");
+		assertEquals(10L, entityLockedException.getLock().getEntity(), "unexpected entity id");
 	}
 
 	@SuppressWarnings("PMD")
