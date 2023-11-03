@@ -1,3 +1,6 @@
+[![codecov](https://codecov.io/gh/sitepark/ies-contentrepository-core/graph/badge.svg?token=AKQ68GKS9T)](https://codecov.io/gh/sitepark/ies-contentrepository-core)
+[![Known Vulnerabilities](https://snyk.io/test/github/sitepark/ies-contentrepository-core/badge.svg)](https://snyk.io/test/github/sitepark/ies-contentrepository-core)
+
 # Content-Repository
 
 The content repository contains the content-bearing objects and groups. These have master data and schema-less content. There are three types.
