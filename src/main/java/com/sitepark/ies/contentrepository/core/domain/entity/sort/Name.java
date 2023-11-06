@@ -10,6 +10,17 @@ public class Name extends OrderCriteria {
 		super(builder);
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder b = new StringBuilder(100)
+				.append("OrderBy.Name[name:")
+				.append(this.getName())
+				.append(", direction:")
+				.append(this.getDirection())
+				.append(']');
+		return b.toString();
+	}
+
 	public static Builder builder() {
 		return new Builder();
 	}
@@ -29,7 +40,8 @@ public class Name extends OrderCriteria {
 			super(name);
 		}
 
-		@Override public Name build() {
+		@Override
+		public Name build() {
 			return new Name(this);
 		}
 

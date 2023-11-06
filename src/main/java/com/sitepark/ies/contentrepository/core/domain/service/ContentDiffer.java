@@ -5,6 +5,6 @@ import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 
 public class ContentDiffer {
 	public ChangeSet diff(Entity left, Entity right) {
-		return new ChangeSet();
+		throw new UnsupportedOperationException();
 	}
 }

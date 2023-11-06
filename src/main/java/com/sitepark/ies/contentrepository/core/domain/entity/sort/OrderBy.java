@@ -24,6 +24,33 @@ public class OrderBy {
 		return this.sort;
 	}
 
+	@Override
+	public final int hashCode() {
+		return Objects.hash(
+				this.sort);
+	}
+
+	@Override
+	public final boolean equals(Object o) {
+
+		if (!(o instanceof OrderBy)) {
+			return false;
+		}
+
+		OrderBy orderBy = (OrderBy)o;
+
+		return Objects.equals(this.sort, orderBy.sort);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder b = new StringBuilder(100)
+				.append("OrderBy[sort:")
+				.append(this.sort)
+				.append(']');
+		return b.toString();
+	}
+
 	public static Builder builder() {
 		return new Builder();
 	}
@@ -39,8 +66,8 @@ public class OrderBy {
 
 		protected Builder() { }
 
-		protected Builder(OrderBy and) {
-			this.sort.addAll(and.sort);
+		protected Builder(OrderBy orderBy) {
+			this.sort.addAll(orderBy.sort);
 		}
 
 		@SuppressWarnings("PMD.UseArraysAsList")
@@ -48,7 +75,7 @@ public class OrderBy {
 			Objects.requireNonNull(sortCriteriaList, "sortCriteriaList is null");
 			for (OrderCriteria sortCriteria : sortCriteriaList) {
 				Objects.requireNonNull(
-						sortCriteriaList,
+						sortCriteria,
 						"sortCriteria in sortCriteriaList is null");
 				this.sort.add(sortCriteria);
 			}

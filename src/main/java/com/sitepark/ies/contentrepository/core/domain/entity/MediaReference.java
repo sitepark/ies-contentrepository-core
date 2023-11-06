@@ -26,6 +26,28 @@ public class MediaReference {
 		return this.type;
 	}
 
+	@Override
+	public final int hashCode() {
+		return Objects.hash(
+				this.mediaId,
+				this.usedBy,
+				this.type);
+	}
+
+	@Override
+	public final boolean equals(Object o) {
+
+		if (!(o instanceof MediaReference)) {
+			return false;
+		}
+
+		MediaReference ref = (MediaReference)o;
+
+		return Objects.equals(this.mediaId, ref.mediaId) &&
+				Objects.equals(this.usedBy, ref.usedBy) &&
+				Objects.equals(this.type, ref.type);
+	}
+
 	public static Builder builder() {
 		return new Builder();
 	}

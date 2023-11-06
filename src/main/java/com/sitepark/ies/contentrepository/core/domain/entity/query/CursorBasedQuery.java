@@ -26,6 +26,39 @@ public class CursorBasedQuery extends Query {
 		return this.after;
 	}
 
+	@Override
+	public final int hashCode() {
+		return Objects.hash(
+				super.hashCode(),
+				this.first,
+				this.after);
+	}
+
+	@Override
+	public final boolean equals(Object o) {
+
+		if (!(o instanceof CursorBasedQuery)) {
+			return false;
+		}
+
+		CursorBasedQuery that = (CursorBasedQuery)o;
+
+		return
+				that.canEqual(this) &&
+				super.equals(o) &&
+				Objects.equals(this.first, that.first) &&
+				Objects.equals(this.after, that.after);
+	}
+
+	/**
+	 * @see <a href="https://www.artima.com/articles/how-to-write-an-equality-method-in-java">How to Write an Equality Method in Java</a>
+	 */
+	@Override
+	public boolean canEqual(Object other) {
+		return (other instanceof CursorBasedQuery);
+	}
+
+
 	public static Builder builder() {
 		return new Builder();
 	}
