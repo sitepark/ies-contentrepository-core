@@ -14,6 +14,7 @@ import org.mockito.InOrder;
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityLockedException;
+import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmptyException;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
@@ -46,7 +47,33 @@ class PurgeEntityTest {
 				null);
 		assertThrows(AccessDeniedException.class, () -> {
 			purgeEntity.purgeEntity(10L);
-		});
+		}, "access should be denied");
+	}
+
+	@Test
+	void testGroupNotEmptyException() {
+
+		AccessControl accessControl = mock(AccessControl.class);
+		when(accessControl.isEntityRemovable(anyLong())).thenReturn(true);
+
+		ContentRepository repository = mock(ContentRepository.class);
+		when(repository.isGroup(anyLong())).thenReturn(true);
+		when(repository.isEmptyGroup(anyLong())).thenReturn(false);
+
+		var purgeEntity = new PurgeEntity(
+				repository,
+				null,
+				null,
+				null,
+				accessControl,
+				null,
+				null,
+				null,
+				null,
+				null);
+		assertThrows(GroupNotEmptyException.class, () -> {
+			purgeEntity.purgeEntity(10L);
+		}, "only empty groups may be purged");
 	}
 
 	@Test
@@ -81,12 +108,66 @@ class PurgeEntityTest {
 
 	@SuppressWarnings("PMD")
 	@Test
-	void testPurge() {
+	void testPurgeEntity() {
 
 		AccessControl accessControl = mock(AccessControl.class);
 		when(accessControl.isEntityRemovable(anyLong())).thenReturn(true);
 
 		ContentRepository repository = mock(ContentRepository.class);
+		EntityLockManager lockManager = mock(EntityLockManager.class);
+		VersioningManager versioningManager = mock(VersioningManager.class);
+		HistoryManager historyManager = mock(HistoryManager.class);
+
+		RecycleBin recycleBin = mock(RecycleBin.class);
+		SearchIndex searchIndex = mock(SearchIndex.class);
+		MediaReferenceManager mediaReferenceManager = mock(MediaReferenceManager.class);
+		Publisher publisher = mock(Publisher.class);
+		ExtensionsNotifier extensionsNotifier = mock(ExtensionsNotifier.class);
+
+		PurgeEntity purgeEntity = new PurgeEntity(
+				repository,
+				lockManager,
+				versioningManager,
+				historyManager,
+				accessControl,
+				recycleBin,
+				searchIndex,
+				mediaReferenceManager,
+				publisher,
+				extensionsNotifier);
+		purgeEntity.purgeEntity(10L);
+
+		InOrder inOrder = inOrder(
+				publisher,
+				searchIndex,
+				mediaReferenceManager,
+				repository,
+				historyManager,
+				versioningManager,
+				recycleBin,
+				extensionsNotifier
+		);
+
+		inOrder.verify(publisher).depublish(10L);
+		inOrder.verify(searchIndex).remove(10L);
+		inOrder.verify(mediaReferenceManager).removeByReference(10L);
+		inOrder.verify(repository).removeEntity(10L);
+		inOrder.verify(historyManager).purge(10L);
+		inOrder.verify(versioningManager).removeAllVersions(10L);
+		inOrder.verify(recycleBin).removeByObject(10L);
+		inOrder.verify(extensionsNotifier).notifyPurge(10L);
+	}
+
+	@SuppressWarnings("PMD")
+	@Test
+	void testPurgeGroup() {
+
+		AccessControl accessControl = mock(AccessControl.class);
+		when(accessControl.isEntityRemovable(anyLong())).thenReturn(true);
+
+		ContentRepository repository = mock(ContentRepository.class);
+		when(repository.isGroup(anyLong())).thenReturn(true);
+		when(repository.isEmptyGroup(anyLong())).thenReturn(true);
 		EntityLockManager lockManager = mock(EntityLockManager.class);
 		VersioningManager versioningManager = mock(VersioningManager.class);
 		HistoryManager historyManager = mock(HistoryManager.class);

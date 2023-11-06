@@ -9,6 +9,10 @@ import static com.sitepark.ies.contentrepository.core.domain.entity.filter.Filte
 import static com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter.root;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+
+import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +20,115 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sitepark.ies.contentrepository.core.domain.databind.DatabindModule;
 
 class FilterTest {
+
+	@Test
+	void testIsGroup() {
+		IsGroup filter = Filter.isGroup(true);
+		assertTrue(filter.isGroup(), "unexpected isGroup");
+	}
+
+	@Test
+	void testId() {
+		Id filter = Filter.id(123L);
+		assertEquals(123L, filter.getId(), "unexpected id");
+	}
+
+	@Test
+	void testIdList() {
+		IdList filter = Filter.idList(123L);
+		assertEquals(Arrays.asList(123L), filter.getIdList(), "unexpected idList");
+	}
+
+	@Test
+	void testAnchor() {
+		com.sitepark.ies.contentrepository.core.domain.entity.Anchor anchor =
+				com.sitepark.ies.contentrepository.core.domain.entity.Anchor.ofString("abc");
+		Anchor filter = Filter.anchor(anchor);
+		assertEquals(
+				anchor,
+				filter.getAnchor(),
+				"unexpected anchorList");
+	}
+
+	@Test
+	void testAnchorList() {
+		com.sitepark.ies.contentrepository.core.domain.entity.Anchor anchor =
+				com.sitepark.ies.contentrepository.core.domain.entity.Anchor.ofString("abc");
+		AnchorList filter = Filter.anchorList(anchor);
+		assertEquals(
+				Arrays.asList(anchor),
+				filter.getAnchorList(),
+				"unexpected anchorList");
+	}
+
+	@Test
+	void testParent() {
+		Parent filter = Filter.parent(123L);
+		assertEquals(123L, filter.getParent(), "unexpected parent");
+	}
+
+	@Test
+	void testParentList() {
+		ParentList filter = Filter.parentList(123L);
+		assertEquals(Arrays.asList(123L), filter.getParentList(), "unexpected parentList");
+	}
+
+	@Test
+	void testParentAnchor() {
+		com.sitepark.ies.contentrepository.core.domain.entity.Anchor anchor =
+				com.sitepark.ies.contentrepository.core.domain.entity.Anchor.ofString("abc");
+		ParentAnchor filter = Filter.parentAnchor(anchor);
+		assertEquals(
+				anchor,
+				filter.getParentAnchor(),
+				"unexpected parentAnchor");
+	}
+
+	@Test
+	void testParentAnchorList() {
+		com.sitepark.ies.contentrepository.core.domain.entity.Anchor anchor =
+				com.sitepark.ies.contentrepository.core.domain.entity.Anchor.ofString("abc");
+		ParentAnchorList filter = Filter.parentAnchorList(anchor);
+		assertEquals(
+				Arrays.asList(anchor),
+				filter.getParentAnchorList(),
+				"unexpected parentAnchorList");
+	}
+
+	@Test
+	void testRoot() {
+		Root filter = Filter.root(123L);
+		assertEquals(123L, filter.getRoot(), "unexpected root");
+	}
+
+	@Test
+	void testRootList() {
+		RootList filter = Filter.rootList(123L);
+		assertEquals(Arrays.asList(123L), filter.getRootList(), "unexpected rootList");
+	}
+
+	@Test
+	void testOr() {
+		Filter a = mock();
+		Filter b = mock();
+		Or filter = Filter.or(a, b);
+		assertEquals(Arrays.asList(a, b), filter.getOr(), "unexpected or");
+	}
+
+	@Test
+	void testAnd() {
+		Filter a = mock();
+		Filter b = mock();
+		And filter = Filter.and(a, b);
+		assertEquals(Arrays.asList(a, b), filter.getAnd(), "unexpected and");
+	}
+
+	@Test
+	void testNot() {
+		Filter a = mock();
+		Not filter = Filter.not(a);
+		assertEquals(a, filter.getNot(), "unexpected not");
+	}
 
 	@Test
 	void testSerialize() throws Exception {

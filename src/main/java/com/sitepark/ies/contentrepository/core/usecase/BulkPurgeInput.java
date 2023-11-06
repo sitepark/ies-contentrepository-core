@@ -37,6 +37,28 @@ public final class BulkPurgeInput {
 		return this.forceLock;
 	}
 
+	@Override
+	public final int hashCode() {
+		return Objects.hash(
+				this.rootList,
+				this.filterBy,
+				this.forceLock);
+	}
+
+	@Override
+	public final boolean equals(Object o) {
+
+		if (!(o instanceof BulkPurgeInput)) {
+			return false;
+		}
+
+		BulkPurgeInput that = (BulkPurgeInput)o;
+
+		return Objects.equals(this.rootList, that.rootList) &&
+				Objects.equals(this.filterBy, that.filterBy) &&
+				Objects.equals(this.forceLock, that.forceLock);
+	}
+
 	public static Builder builder() {
 		return new Builder();
 	}
@@ -63,6 +85,7 @@ public final class BulkPurgeInput {
 
 		public Builder rootList(List<Long> rootList) {
 			Objects.requireNonNull(rootList, "rootList is null");
+			this.rootList.clear();
 			for (Long root : rootList) {
 				this.root(root);
 			}
@@ -87,8 +110,10 @@ public final class BulkPurgeInput {
 		}
 
 		public BulkPurgeInput build() {
-			assert (!this.rootList.isEmpty() || this.filterBy != null)
-					: "Either rootList or filterBy must be specified";
+			if (this.rootList.isEmpty() && this.filterBy == null) {
+				throw new IllegalStateException(
+						"Either rootList or filterBy must be specified");
+			}
 			return new BulkPurgeInput(this);
 		}
 	}

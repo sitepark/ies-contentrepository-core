@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 @JsonDeserialize(builder = OrderCriteria.Builder.class)
 public abstract class OrderCriteria {
+
 	private final String name;
 
 	private final Direction direction;
@@ -22,6 +23,26 @@ public abstract class OrderCriteria {
 
 	public Direction getDirection() {
 		return this.direction;
+	}
+
+	@Override
+	public final int hashCode() {
+		return Objects.hash(
+				this.name,
+				this.direction);
+	}
+
+	@Override
+	public final boolean equals(Object o) {
+
+		if (!(o instanceof OrderCriteria)) {
+			return false;
+		}
+
+		OrderCriteria criteria = (OrderCriteria)o;
+
+		return Objects.equals(this.name, criteria.name) &&
+				Objects.equals(this.direction, criteria.direction);
 	}
 
 	public abstract Builder<?> toBuilder();

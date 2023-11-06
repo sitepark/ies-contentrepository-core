@@ -35,6 +35,37 @@ public class Query {
 		return this.options;
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(
+				this.filterBy,
+				this.orderBy,
+				this.options);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+
+		if (!(o instanceof Query)) {
+			return false;
+		}
+
+		Query that = (Query)o;
+
+		return
+				that.canEqual(this) &&
+				Objects.equals(this.filterBy, that.filterBy) &&
+				Objects.equals(this.orderBy, that.orderBy) &&
+				Objects.equals(this.options, that.options);
+	}
+
+	/**
+	 * @see <a href="https://www.artima.com/articles/how-to-write-an-equality-method-in-java">How to Write an Equality Method in Java</a>
+	 */
+	public boolean canEqual(Object other) {
+		return (other instanceof Query);
+	}
+
 	public static Builder<?> builder() {
 		return new QueryBuilder();
 	}
@@ -71,6 +102,7 @@ public class Query {
 		}
 
 		public B options(QueryOptions options) {
+			Objects.requireNonNull(options, "options is null");
 			this.options = options;
 			return this.self();
 		}

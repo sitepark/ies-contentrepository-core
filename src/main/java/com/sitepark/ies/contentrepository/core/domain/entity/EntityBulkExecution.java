@@ -1,6 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +37,42 @@ public class EntityBulkExecution {
 		return Optional.ofNullable(this.finalizer);
 	}
 
+	@Override
+	public final int hashCode() {
+		return Objects.hash(
+				Arrays.hashCode(this.topic),
+				this.operations,
+				this.finalizer);
+	}
+
+
+	@Override
+	public final boolean equals(Object o) {
+
+		if (!(o instanceof EntityBulkExecution)) {
+			return false;
+		}
+
+		EntityBulkExecution execution = (EntityBulkExecution)o;
+
+		return Arrays.equals(this.topic, execution.topic) &&
+				Objects.equals(this.operations, execution.operations) &&
+				Objects.equals(this.finalizer, execution.finalizer);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder b = new StringBuilder(100)
+				.append("EntityBulkExecution[topic:")
+				.append(Arrays.toString(this.topic))
+				.append(", operations:")
+				.append(this.operations)
+				.append(", finalizer:")
+				.append(this.finalizer)
+				.append(']');
+		return b.toString();
+	}
+
 	public static Builder builder() {
 		return new Builder();
 	}
@@ -60,6 +97,10 @@ public class EntityBulkExecution {
 		 */
 		public Builder topic(String... topic) {
 			Objects.requireNonNull(topic, "topic is null");
+			for (String part : topic) {
+				Objects.requireNonNull(part, "operations contains null values");
+			}
+
 			this.topic = topic.clone();
 			return this;
 		}
@@ -68,7 +109,7 @@ public class EntityBulkExecution {
 		public Builder operation(EntityBulkOperation... operations) {
 			Objects.requireNonNull(operations, "operations is null");
 			for (EntityBulkOperation operation : operations) {
-				assert operation != null;
+				Objects.requireNonNull(operation, "operations contains null values");
 				this.operations.add(operation);
 			}
 			return this;
@@ -81,8 +122,12 @@ public class EntityBulkExecution {
 		}
 
 		public EntityBulkExecution build() {
-			assert this.topic != null;
-			assert !this.operations.isEmpty();
+			if (this.topic == null) {
+				throw new IllegalStateException("topic must be set");
+			}
+			if (this.operations.isEmpty()) {
+				throw new IllegalStateException("operation must be set");
+			}
 			return new EntityBulkExecution(this);
 		}
 	}

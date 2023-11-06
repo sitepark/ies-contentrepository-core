@@ -23,11 +23,41 @@ public class SubTreeQuery extends Query {
 		return this.rootList;
 	}
 
+	@Override
+	public final int hashCode() {
+		return Objects.hash(
+				super.hashCode(),
+				this.rootList);
+	}
+
+	@Override
+	public final boolean equals(Object o) {
+
+		if (!(o instanceof SubTreeQuery)) {
+			return false;
+		}
+
+		SubTreeQuery that = (SubTreeQuery)o;
+
+		return
+				that.canEqual(this) &&
+				super.equals(o) &&
+				Objects.equals(this.rootList, that.rootList);
+	}
+
+	/**
+	 * @see <a href="https://www.artima.com/articles/how-to-write-an-equality-method-in-java">How to Write an Equality Method in Java</a>
+	 */
+	@Override
+	public boolean canEqual(Object other) {
+		return (other instanceof SubTreeQuery);
+	}
 	public static Builder builder() {
 		return new Builder();
 	}
 
-	@Override public Builder toBuilder() {
+	@Override
+	public Builder toBuilder() {
 		return new Builder(this);
 	}
 
@@ -51,6 +81,7 @@ public class SubTreeQuery extends Query {
 
 		public Builder rootList(List<Long> rootList) {
 			Objects.requireNonNull(rootList, "rootList is null");
+			this.rootList.clear();
 			for (Long root : rootList) {
 				this.root(root);
 			}
@@ -59,7 +90,9 @@ public class SubTreeQuery extends Query {
 
 		@Override
 		public SubTreeQuery build() {
-			assert !this.rootList.isEmpty() : "rootList is empty";
+			if (this.rootList.isEmpty()) {
+				throw new IllegalStateException("rootList must not be empty");
+			}
 			return new SubTreeQuery(this);
 		}
 

@@ -35,6 +35,45 @@ public final class RecycleBinItem {
 		return Collections.unmodifiableList(this.children);
 	}
 
+	@Override
+	public final int hashCode() {
+		return Objects.hash(
+				this.id,
+				this.parent,
+				this.entity,
+				this.children);
+	}
+
+	@Override
+	public final boolean equals(Object o) {
+
+		if (!(o instanceof RecycleBinItem)) {
+			return false;
+		}
+
+		RecycleBinItem item = (RecycleBinItem)o;
+
+		return Objects.equals(this.id, item.id) &&
+				Objects.equals(this.parent, item.parent) &&
+				Objects.equals(this.entity, item.entity) &&
+				Objects.equals(this.children, item.children);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder b = new StringBuilder(100)
+				.append("RecycleBinItem[id:")
+				.append(this.id)
+				.append(", parent:")
+				.append(this.parent)
+				.append(", entity:")
+				.append(this.entity)
+				.append(", children:")
+				.append(this.children)
+				.append(']');
+		return b.toString();
+	}
+
 	public static Builder builder() {
 		return new Builder();
 	}
@@ -58,7 +97,7 @@ public final class RecycleBinItem {
 			this.children = new ArrayList<>(recycleBinItem.children);
 		}
 
-		public Builder identifier(long id) {
+		public Builder id(long id) {
 			this.id = id;
 			return this;
 		}

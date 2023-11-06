@@ -16,13 +16,21 @@ import com.sitepark.ies.contentrepository.core.port.SearchIndex;
 public class RecoverEntity {
 
 	private final ContentRepository repository;
+
 	private final HistoryManager historyManager;
+
 	private final AccessControl accessControl;
+
 	private final RecycleBin recycleBin;
+
 	private final SearchIndex searchIndex;
 
-	protected RecoverEntity(ContentRepository repository, HistoryManager historyManager, AccessControl accessControl,
-			RecycleBin recycleBin, SearchIndex searchIndex) {
+	protected RecoverEntity(
+			ContentRepository repository,
+			HistoryManager historyManager,
+			AccessControl accessControl,
+			RecycleBin recycleBin,
+			SearchIndex searchIndex) {
 		this.repository = repository;
 		this.historyManager = historyManager;
 		this.accessControl = accessControl;

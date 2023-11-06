@@ -55,6 +55,53 @@ public final class HistoryEntry implements Serializable {
 		return comment;
 	}
 
+	@Override
+	public final int hashCode() {
+		return Objects.hash(
+				this.entity,
+				this.initiator,
+				this.user,
+				this.timestamp,
+				this.type,
+				this.comment);
+	}
+
+	@Override
+	public final boolean equals(Object o) {
+
+		if (!(o instanceof HistoryEntry)) {
+			return false;
+		}
+
+		HistoryEntry entry = (HistoryEntry)o;
+
+		return Objects.equals(this.entity, entry.entity) &&
+				Objects.equals(this.initiator, entry.initiator) &&
+				Objects.equals(this.user, entry.user) &&
+				Objects.equals(this.timestamp, entry.timestamp) &&
+				Objects.equals(this.type, entry.type) &&
+				Objects.equals(this.comment, entry.comment);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder b = new StringBuilder(100)
+				.append("HistoryEntry[entity:")
+				.append(this.entity)
+				.append(", initiator:")
+				.append(this.initiator)
+				.append(", user:")
+				.append(this.user)
+				.append(", timestamp:")
+				.append(this.timestamp)
+				.append(", type:")
+				.append(this.type)
+				.append(", comment:")
+				.append(this.comment)
+				.append(']');
+		return b.toString();
+	}
+
 	public static Builder builder() {
 		return new Builder();
 	}
@@ -101,7 +148,7 @@ public final class HistoryEntry implements Serializable {
 
 		public Builder timestamp(long timestamp) {
 			if (timestamp <= 0) {
-				throw new IllegalArgumentException("timestamp should be greater than 0");
+				throw new IllegalArgumentException("timestamp must be greater than 0");
 			}
 			this.timestamp = timestamp;
 			return this;

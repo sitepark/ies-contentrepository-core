@@ -35,6 +35,41 @@ public class EntityBulkOperation {
 		return this.consumer;
 	}
 
+	@Override
+	public final int hashCode() {
+		return Objects.hash(
+				this.key,
+				this.entityList,
+				this.consumer);
+	}
+
+	@Override
+	public final boolean equals(Object o) {
+
+		if (!(o instanceof EntityBulkOperation)) {
+			return false;
+		}
+
+		EntityBulkOperation op = (EntityBulkOperation)o;
+
+		return Objects.equals(this.key, op.key) &&
+				Objects.equals(this.entityList, op.entityList) &&
+				Objects.equals(this.consumer, op.consumer);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder b = new StringBuilder(100)
+				.append("EntityBulkOperation[key:")
+				.append(this.key)
+				.append(", entityList:")
+				.append(this.entityList)
+				.append(", consumer:")
+				.append(this.consumer)
+				.append(']');
+		return b.toString();
+	}
+
 	public static Builder builder() {
 		return new Builder();
 	}
@@ -69,9 +104,15 @@ public class EntityBulkOperation {
 		}
 
 		public EntityBulkOperation build() {
-			assert this.key != null;
-			assert !this.entityList.isEmpty();
-			assert this.consumer != null;
+			if (this.key == null) {
+				throw new IllegalStateException("key must be set");
+			}
+			if (this.entityList.isEmpty()) {
+				throw new IllegalStateException("entity must be set");
+			}
+			if (this.consumer == null) {
+				throw new IllegalStateException("consumer must be set");
+			}
 			return new EntityBulkOperation(this);
 		}
 	}

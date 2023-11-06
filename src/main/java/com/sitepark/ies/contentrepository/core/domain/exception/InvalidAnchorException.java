@@ -17,6 +17,6 @@ public class InvalidAnchorException extends ContentRepositoryException {
 
 	@Override
 	public String getMessage() {
-		return "Invalid anchor '" + this.name + ": " + super.getMessage();
+		return "Invalid anchor '" + this.name + "': " + super.getMessage();
 	}
 }

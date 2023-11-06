@@ -1,5 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.query;
 
+import java.util.Objects;
+
 public class QueryOptions {
 
 	private final boolean showHidden;
@@ -10,6 +12,25 @@ public class QueryOptions {
 
 	public boolean isShowHidden() {
 		return this.showHidden;
+	}
+
+	@Override
+	public final int hashCode() {
+		return Objects.hash(
+				this.showHidden);
+	}
+
+	@Override
+	public final boolean equals(Object o) {
+
+		if (!(o instanceof QueryOptions)) {
+			return false;
+		}
+
+		QueryOptions that = (QueryOptions)o;
+
+		return
+				Objects.equals(this.showHidden, that.showHidden);
 	}
 
 	public static Builder builder() {

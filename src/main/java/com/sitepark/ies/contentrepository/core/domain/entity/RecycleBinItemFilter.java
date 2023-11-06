@@ -1,13 +1,16 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 public final class RecycleBinItemFilter {
 
 	private final LocalDateTime from;
+
 	private final LocalDateTime to;
-	private final long user;
+
+	private final Long user;
 
 	private RecycleBinItemFilter(Builder builder) {
 		this.from = builder.from;
@@ -27,6 +30,28 @@ public final class RecycleBinItemFilter {
 		return Optional.ofNullable(this.user);
 	}
 
+	@Override
+	public final int hashCode() {
+		return Objects.hash(
+				this.from,
+				this.to,
+				this.user);
+	}
+
+	@Override
+	public final boolean equals(Object o) {
+
+		if (!(o instanceof RecycleBinItemFilter)) {
+			return false;
+		}
+
+		RecycleBinItemFilter filter = (RecycleBinItemFilter)o;
+
+		return Objects.equals(this.from, filter.from) &&
+				Objects.equals(this.to, filter.to) &&
+				Objects.equals(this.user, filter.user);
+	}
+
 	public static Builder builder() {
 		return new Builder();
 	}
@@ -38,8 +63,10 @@ public final class RecycleBinItemFilter {
 	public static final class Builder {
 
 		private LocalDateTime from;
+
 		private LocalDateTime to;
-		private long user;
+
+		private Long user;
 
 		private Builder() {}
 		private Builder(RecycleBinItemFilter recycleBinItemFilter) {
@@ -49,18 +76,21 @@ public final class RecycleBinItemFilter {
 		}
 
 		public Builder from(LocalDateTime from) {
-			assert this.from != null;
+			Objects.requireNonNull(from, "from is null");
 			this.from = from;
 			return this;
 		}
 
 		public Builder to(LocalDateTime to) {
-			assert this.to != null;
+			Objects.requireNonNull(to, "to is null");
 			this.to = to;
 			return this;
 		}
 
 		public Builder user(long user) {
+			if (user <= 0) {
+				throw new IllegalArgumentException("user should be greater then 0");
+			}
 			this.user = user;
 			return this;
 		}
