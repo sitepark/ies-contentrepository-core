@@ -7,4 +7,7 @@ public class AccessDeniedException extends ContentRepositoryException {
 		super(message);
 	}
 
+	public AccessDeniedException(String message, Throwable t) {
+		super(message, t);
+	}
 }
