@@ -60,7 +60,9 @@ public class Query {
 	}
 
 	/**
-	 * @see <a href="https://www.artima.com/articles/how-to-write-an-equality-method-in-java">How to Write an Equality Method in Java</a>
+	 * @see <a href="https://www.artima.com/articles/how-to-write-an-equality-method-in-java">
+	 * 	How to Write an Equality Method in Java
+	 * </a>
 	 */
 	public boolean canEqual(Object other) {
 		return (other instanceof Query);

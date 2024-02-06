@@ -7,6 +7,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public final class Identifier {
 
+	private static final int MAX_ID_LENGTH = 19;
+
+	private static final String ZERO_ID = "0";
+
 	private final Long id;
 
 	private final Anchor anchor;
@@ -48,12 +52,12 @@ public final class Identifier {
 
 	public static boolean isId(String str) {
 
-		if (str.equals("0")) {
+		if (ZERO_ID.equals(str)) {
 			throw new IllegalArgumentException("id should be greater than 0");
 		}
 
 		int length = str.length();
-		if (length > 19) {
+		if (length > MAX_ID_LENGTH) {
 			return false;
 		}
 

@@ -71,17 +71,13 @@ public class MediaReference {
 		}
 
 		public Builder mediaId(String mediaId) {
-			if (mediaId == null) {
-				throw new NullPointerException("mediaId is null");
-			}
+			Objects.requireNonNull(mediaId, "mediaId is null");
 			this.mediaId = mediaId;
 			return this;
 		}
 
 		public Builder usedBy(String usedBy) {
-			if (usedBy == null) {
-				throw new NullPointerException("usedBy is null");
-			}
+			Objects.requireNonNull(usedBy, "usedBy is null");
 			this.usedBy = usedBy;
 			return this;
 		}

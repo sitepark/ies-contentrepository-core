@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sitepark.ies.contentrepository.core.domain.databind.DatabindModule;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 class FilterTest {
 
 	@Test

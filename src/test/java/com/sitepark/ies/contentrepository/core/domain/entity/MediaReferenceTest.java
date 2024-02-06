@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 class MediaReferenceTest {
 
 	@Test

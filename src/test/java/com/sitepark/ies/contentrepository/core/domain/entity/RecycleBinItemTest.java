@@ -14,6 +14,7 @@ import com.jparams.verifier.tostring.ToStringVerifier;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 class RecycleBinItemTest {
 
 	@Test
