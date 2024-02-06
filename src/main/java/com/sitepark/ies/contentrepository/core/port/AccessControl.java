@@ -2,13 +2,13 @@ package com.sitepark.ies.contentrepository.core.port;
 
 public interface AccessControl {
 
-	boolean isEntityCreateable(long parent);
-	boolean isEntityReadable(long id);
-	boolean isEntityWritable(long id);
-	boolean isEntityRemovable(long id);
+	boolean isEntityCreateable(String parent);
+	boolean isEntityReadable(String id);
+	boolean isEntityWritable(String id);
+	boolean isEntityRemovable(String id);
 
-	boolean isGroupCreateable(long parent);
-	boolean isGroupReadable(long id);
-	boolean isGroupWritable(long id);
-	boolean isGroupRemoveable(long id);
+	boolean isGroupCreateable(String parent);
+	boolean isGroupReadable(String id);
+	boolean isGroupWritable(String id);
+	boolean isGroupRemoveable(String id);
 }

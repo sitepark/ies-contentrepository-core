@@ -29,14 +29,14 @@ class FilterTest {
 
 	@Test
 	void testId() {
-		Id filter = Filter.id(123L);
-		assertEquals(123L, filter.getId(), "unexpected id");
+		Id filter = Filter.id("123");
+		assertEquals("123", filter.getId(), "unexpected id");
 	}
 
 	@Test
 	void testIdList() {
-		IdList filter = Filter.idList(123L);
-		assertEquals(Arrays.asList(123L), filter.getIdList(), "unexpected idList");
+		IdList filter = Filter.idList("123");
+		assertEquals(Arrays.asList("123"), filter.getIdList(), "unexpected idList");
 	}
 
 	@Test
@@ -63,14 +63,14 @@ class FilterTest {
 
 	@Test
 	void testParent() {
-		Parent filter = Filter.parent(123L);
-		assertEquals(123L, filter.getParent(), "unexpected parent");
+		Parent filter = Filter.parent("123");
+		assertEquals("123", filter.getParent(), "unexpected parent");
 	}
 
 	@Test
 	void testParentList() {
-		ParentList filter = Filter.parentList(123L);
-		assertEquals(Arrays.asList(123L), filter.getParentList(), "unexpected parentList");
+		ParentList filter = Filter.parentList("123");
+		assertEquals(Arrays.asList("123"), filter.getParentList(), "unexpected parentList");
 	}
 
 	@Test
@@ -97,14 +97,14 @@ class FilterTest {
 
 	@Test
 	void testRoot() {
-		Root filter = Filter.root(123L);
-		assertEquals(123L, filter.getRoot(), "unexpected root");
+		Root filter = Filter.root("123");
+		assertEquals("123", filter.getRoot(), "unexpected root");
 	}
 
 	@Test
 	void testRootList() {
-		RootList filter = Filter.rootList(123L);
-		assertEquals(Arrays.asList(123L), filter.getRootList(), "unexpected rootList");
+		RootList filter = Filter.rootList("123");
+		assertEquals(Arrays.asList("123"), filter.getRootList(), "unexpected rootList");
 	}
 
 	@Test
@@ -135,12 +135,12 @@ class FilterTest {
 
 		Filter filter =
 				or(
-					idList(6L),
+					idList("6"),
 					anchor(com.sitepark.ies.contentrepository.core.domain.entity.Anchor.ofString("abc")),
 					and(
-						root(5L),
-						parent(7L),
-						not(parent(9L))
+						root("5"),
+						parent("7"),
+						not(parent("9"))
 					)
 				);
 
@@ -149,12 +149,12 @@ class FilterTest {
 
 		assertEquals(
 				"{\"or\":[" +
-						"{\"idList\":[6]}," +
+						"{\"idList\":[\"6\"]}," +
 						"{\"anchor\":\"abc\"}," +
 						"{\"and\":[" +
-								"{\"root\":5}," +
-								"{\"parent\":7}," +
-								"{\"not\":{\"parent\":9}}" +
+								"{\"root\":\"5\"}," +
+								"{\"parent\":\"7\"}," +
+								"{\"not\":{\"parent\":\"9\"}}" +
 						"]}" +
 				"]}",
 				json,
@@ -170,12 +170,12 @@ class FilterTest {
 		objectMapper.registerModule(new DatabindModule());
 
 		String json = "{\"or\":[" +
-				"{\"idList\":[6]}," +
+				"{\"idList\":[\"6\"]}," +
 				"{\"anchor\":\"abc\"}," +
 				"{\"and\":[" +
-					"{\"root\":5}," +
-					"{\"parent\":7}," +
-					"{\"not\":{\"parent\":9}}" +
+					"{\"root\":\"5\"}," +
+					"{\"parent\":\"7\"}," +
+					"{\"not\":{\"parent\":\"9\"}}" +
 				"]" +
 		"}]}";
 
@@ -193,14 +193,14 @@ class FilterTest {
 		And and = (And)or.getOr().get(2);
 
 		assertInstanceOf(Root.class, and.getAnd().get(0));
-		assertEquals(5L, ((Root)and.getAnd().get(0)).getRoot(), "wront root");
+		assertEquals("5", ((Root)and.getAnd().get(0)).getRoot(), "wront root");
 		assertInstanceOf(Parent.class, and.getAnd().get(1));
-		assertEquals(7L, ((Parent)and.getAnd().get(1)).getParent(), "wront parent");
+		assertEquals("7", ((Parent)and.getAnd().get(1)).getParent(), "wront parent");
 		assertInstanceOf(Not.class, and.getAnd().get(2));
 
 		Not not = (Not)and.getAnd().get(2);
 
 		assertInstanceOf(Parent.class, not.getNot());
-		assertEquals(9L, ((Parent)not.getNot()).getParent(), "wront parent (in not)");
+		assertEquals("9", ((Parent)not.getNot()).getParent(), "wront parent (in not)");
 	}
 }

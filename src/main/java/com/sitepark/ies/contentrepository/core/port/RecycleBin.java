@@ -7,8 +7,8 @@ import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItem;
 import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItemFilter;
 
 public interface RecycleBin {
-	Optional<RecycleBinItem> get(long id);
+	Optional<RecycleBinItem> get(String id);
 	void add(RecycleBinItem item);
-	void removeByObject(long id);
+	void removeByObject(String id);
 	List<RecycleBinItem> find(RecycleBinItemFilter filter);
 }

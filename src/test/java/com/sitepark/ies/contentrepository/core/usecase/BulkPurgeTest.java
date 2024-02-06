@@ -2,7 +2,7 @@ package com.sitepark.ies.contentrepository.core.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -37,14 +37,14 @@ class BulkPurgeTest {
 				.build();
 
 		Entity entity = Entity.builder()
-				.id(200L)
+				.id("200")
 				.build();
 
 		ContentRepository repository = mock();
 		when(repository.getAll(any())).thenReturn(Arrays.asList(entity));
 
 		AccessControl accessControl = mock();
-		when(accessControl.isEntityRemovable(anyLong())).thenReturn(false);
+		when(accessControl.isEntityRemovable(anyString())).thenReturn(false);
 
 		BulkPurge bulkPurge = new BulkPurge(
 				repository,
@@ -72,7 +72,7 @@ class BulkPurgeTest {
 				.build();
 
 		Entity entity = Entity.builder()
-				.id(200L)
+				.id("200")
 				.isGroup(true)
 				.build();
 
@@ -80,7 +80,7 @@ class BulkPurgeTest {
 		when(repository.getAll(any())).thenReturn(Arrays.asList(entity));
 
 		AccessControl accessControl = mock();
-		when(accessControl.isGroupRemoveable(anyLong())).thenReturn(false);
+		when(accessControl.isGroupRemoveable(anyString())).thenReturn(false);
 
 		BulkPurge bulkPurge = new BulkPurge(
 				repository,
@@ -108,14 +108,14 @@ class BulkPurgeTest {
 				.build();
 
 		Entity entity = Entity.builder()
-				.id(200L)
+				.id("200")
 				.build();
 
 		ContentRepository repository = mock();
 		when(repository.getAll(any())).thenReturn(Arrays.asList(entity));
 
 		AccessControl accessControl = mock();
-		when(accessControl.isEntityRemovable(anyLong())).thenReturn(true);
+		when(accessControl.isEntityRemovable(anyString())).thenReturn(true);
 
 		EntityBulkExecutor entityBulkExecutor = mock();
 		when(entityBulkExecutor.execute(any(EntityBulkExecution.class))).thenAnswer(args -> {
@@ -154,18 +154,18 @@ class BulkPurgeTest {
 
 		bulkPurge.bulkPurge(input);
 
-		verify(lockManager).lock(anyLong());
-		verify(publisher).depublish(anyLong());
+		verify(lockManager).lock(anyString());
+		verify(publisher).depublish(anyString());
 
-		verify(searchIndex).remove(anyLong());
-		verify(mediaReferenceManager).removeByReference(anyLong());
-		verify(repository).removeEntity(anyLong());
-		verify(historyManager).purge(anyLong());
-		verify(versioningManager).removeAllVersions(anyLong());
-		verify(recycleBin).removeByObject(anyLong());
-		verify(extensionsNotifier).notifyPurge(anyLong());
+		verify(searchIndex).remove(anyString());
+		verify(mediaReferenceManager).removeByReference(anyString());
+		verify(repository).removeEntity(anyString());
+		verify(historyManager).purge(anyString());
+		verify(versioningManager).removeAllVersions(anyString());
+		verify(recycleBin).removeByObject(anyString());
+		verify(extensionsNotifier).notifyPurge(anyString());
 
-		verify(lockManager).unlock(anyLong());
+		verify(lockManager).unlock(anyString());
 
 
 	}

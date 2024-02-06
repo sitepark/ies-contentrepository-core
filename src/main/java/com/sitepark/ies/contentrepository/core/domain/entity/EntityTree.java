@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 @SuppressWarnings("PMD.UseConcurrentHashMap")
 public class EntityTree {
 
-	private final Map<Long, Set<Long>> children = new HashMap<>();
+	private final Map<String, Set<String>> children = new HashMap<>();
 
-	private final Map<Long, Long> parents = new HashMap<>();
+	private final Map<String, String> parents = new HashMap<>();
 
-	private final Map<Long, Entity> index = new HashMap<>();
+	private final Map<String, Entity> index = new HashMap<>();
 
 	/**
 	 * Returns all roots of the tree.
@@ -36,13 +36,13 @@ public class EntityTree {
 				.collect(Collectors.toList());
 	}
 
-	private Set<Long> getRootIdList() {
-		Set<Long> knownRoots = this.children.get(null);
-		Set<Long> roots = new HashSet<>();
+	private Set<String> getRootIdList() {
+		Set<String> knownRoots = this.children.get(null);
+		Set<String> roots = new HashSet<>();
 		if (knownRoots != null) {
 			roots.addAll(knownRoots);
 		}
-		for (Long parent : this.parents.values()) {
+		for (String parent : this.parents.values()) {
 			if (parent != null && !this.parents.containsKey(parent)) {
 				roots.add(parent);
 			}
@@ -62,7 +62,7 @@ public class EntityTree {
 		}
 
 		this.parents.put(entity.getId().get(), entity.getParent().orElse(null));
-		Set<Long> siblings = this.children.get(entity.getParent().orElse(null));
+		Set<String> siblings = this.children.get(entity.getParent().orElse(null));
 		if (siblings == null) {
 			siblings = new HashSet<>();
 			this.children.put(entity.getParent().orElse(null), siblings);
@@ -71,12 +71,12 @@ public class EntityTree {
 		this.index.put(entity.getId().get(), entity);
 	}
 
-	public Entity get(Long id) {
+	public Entity get(String id) {
 		return this.index.get(id);
 	}
 
-	public List<Entity> getChildren(Long parent) {
-		Set<Long> children = this.children.get(parent);
+	public List<Entity> getChildren(String parent) {
+		Set<String> children = this.children.get(parent);
 		return children.stream()
 			.map(id -> this.index.get(id))
 			.collect(Collectors.toList());
@@ -85,20 +85,20 @@ public class EntityTree {
 	/**
 	 * Liefert die Unterelemente des Parent rekusive.
 	 */
-	public List<Entity> getChildrenRecursive(Long root) {
-		Set<Long> children = this.getChildrenIdListRecursive(root);
+	public List<Entity> getChildrenRecursive(String root) {
+		Set<String> children = this.getChildrenIdListRecursive(root);
 		return children.stream()
 				.map(id -> this.index.get(id))
 				.collect(Collectors.toList());
 	}
 
-	private Set<Long> getChildrenIdListRecursive(Long root) {
-		Set<Long> list = new LinkedHashSet<Long>();
-		Set<Long> children = this.children.get(root);
+	private Set<String> getChildrenIdListRecursive(String root) {
+		Set<String> list = new LinkedHashSet<>();
+		Set<String> children = this.children.get(root);
 		if (children != null) {
 			list.addAll(children);
-			for (Long id : children) {
-				Set<Long> grandChildren = this.getChildrenIdListRecursive(id);
+			for (String id : children) {
+				Set<String> grandChildren = this.getChildrenIdListRecursive(id);
 				list.addAll(grandChildren);
 			}
 		}
@@ -110,9 +110,9 @@ public class EntityTree {
 	 * Returns all elements of the tree in hierarchical order
 	 */
 	public List<Entity> getAll() {
-		Set<Long> rootIdList = this.getRootIdList();
+		Set<String> rootIdList = this.getRootIdList();
 		List<Entity> list = new ArrayList<>();
-		for (Long rootId : rootIdList) {
+		for (String rootId : rootIdList) {
 			Entity root = this.index.get(rootId);
 			if (root == null) {
 				throw new IllegalStateException("Entity with id " + rootId + " missing");
@@ -124,7 +124,7 @@ public class EntityTree {
 		return list;
 	}
 
-	public boolean hasChildren(Long parent) {
+	public boolean hasChildren(String parent) {
 		return this.children.containsKey(parent);
 	}
 
@@ -137,18 +137,18 @@ public class EntityTree {
 		return this.toString(indent, null);
 	}
 
-	public String toString(int indent, Long parent) {
+	public String toString(int indent, String parent) {
 		java.lang.StringBuilder b = new java.lang.StringBuilder();
 		this.toString(indent, parent, new java.lang.StringBuilder(), b);
 		return b.toString();
 	}
 
-	private void toString(int indent, Long parent, java.lang.StringBuilder indentPrefix,
+	private void toString(int indent, String parent, java.lang.StringBuilder indentPrefix,
 			java.lang.StringBuilder b) {
 
 		if (parent == null) {
-			Set<Long> roots = this.getRootIdList();
-			for (Long child : roots) {
+			Set<String> roots = this.getRootIdList();
+			for (String child : roots) {
 				this.toString(indent, child, indentPrefix, b);
 			}
 		} else {
@@ -160,7 +160,7 @@ public class EntityTree {
 				for (int i = 0; i < indent; i++) {
 					indentPrefix.append(' ');
 				}
-				for (Long child : this.children.get(parent)) {
+				for (String child : this.children.get(parent)) {
 					this.toString(indent, child, indentPrefix, b);
 				}
 				indentPrefix.delete(indentPrefix.length() - indent, indentPrefix.length());

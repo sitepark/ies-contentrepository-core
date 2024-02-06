@@ -7,14 +7,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Parent implements Filter {
 
 	@SuppressWarnings("PMD.AvoidFieldNameMatchingTypeName") // so that when deserializing it has the desired format
-	private final Long parent;
+	private final String parent;
 
-	protected Parent(@JsonProperty("parent") Long parent) {
+	protected Parent(@JsonProperty("parent") String parent) {
 		Objects.requireNonNull(parent, "parent is null");
 		this.parent = parent;
 	}
 
-	public Long getParent() {
+	public String getParent() {
 		return this.parent;
 	}
 }

@@ -7,8 +7,8 @@ import java.util.Objects;
 
 public final class RecycleBinItem {
 
-	private final long id;
-	private final long parent;
+	private final String id;
+	private final String parent;
 	private final Entity entity;
 	private final List<RecycleBinItem> children;
 
@@ -19,11 +19,11 @@ public final class RecycleBinItem {
 		this.children = builder.children;
 	}
 
-	public long getId() {
+	public String getId() {
 		return this.id;
 	}
 
-	public long getParent() {
+	public String getParent() {
 		return this.parent;
 	}
 
@@ -61,17 +61,8 @@ public final class RecycleBinItem {
 
 	@Override
 	public String toString() {
-		StringBuilder b = new StringBuilder(100)
-				.append("RecycleBinItem[id:")
-				.append(this.id)
-				.append(", parent:")
-				.append(this.parent)
-				.append(", entity:")
-				.append(this.entity)
-				.append(", children:")
-				.append(this.children)
-				.append(']');
-		return b.toString();
+		return "RecycleBinItem [id=" + id + ", parent=" + parent + ", entity=" + entity + ", children=" + children
+				+ "]";
 	}
 
 	public static Builder builder() {
@@ -84,8 +75,8 @@ public final class RecycleBinItem {
 
 	public static final class Builder {
 
-		private long id;
-		private long parent;
+		private String id;
+		private String parent;
 		private Entity entity;
 		private List<RecycleBinItem> children = new ArrayList<>();
 
@@ -97,12 +88,20 @@ public final class RecycleBinItem {
 			this.children = new ArrayList<>(recycleBinItem.children);
 		}
 
-		public Builder id(long id) {
+		public Builder id(String id) {
+			Objects.requireNonNull(id, "id is null");
+			if (!Identifier.isId(id)) {
+				throw new IllegalArgumentException(id + " is not an id");
+			}
 			this.id = id;
 			return this;
 		}
 
-		public Builder parent(long parent) {
+		public Builder parent(String parent) {
+			Objects.requireNonNull(parent, "parent is null");
+			if (!Identifier.isId(parent)) {
+				throw new IllegalArgumentException(parent + " is not an id");
+			}
 			this.parent = parent;
 			return this;
 		}

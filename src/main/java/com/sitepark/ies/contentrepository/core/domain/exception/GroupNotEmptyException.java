@@ -3,14 +3,14 @@ package com.sitepark.ies.contentrepository.core.domain.exception;
 public class GroupNotEmptyException extends ContentRepositoryException {
 	private static final long serialVersionUID = 1L;
 
-	private final long id;
+	private final String id;
 
-	public GroupNotEmptyException(long id) {
+	public GroupNotEmptyException(String id) {
 		super();
 		this.id = id;
 	}
 
-	public long getId() {
+	public String getId() {
 		return this.id;
 	}
 

@@ -61,7 +61,7 @@ public final class PurgeEntity {
 		this.extensionsNotifier = extensionsNotifier;
 	}
 
-	public void purgeEntity(long id) {
+	public void purgeEntity(String id) {
 
 		if (!this.accessControl.isEntityRemovable(id)) {
 			throw new AccessDeniedException("Not allowed to remove entity " + id);

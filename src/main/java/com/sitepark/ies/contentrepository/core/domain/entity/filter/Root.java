@@ -7,14 +7,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Root implements Filter {
 
 	@SuppressWarnings("PMD.AvoidFieldNameMatchingTypeName") // so that when deserializing it has the desired format
-	private final Long root;
+	private final String root;
 
-	protected Root(@JsonProperty("root") Long root) {
+	protected Root(@JsonProperty("root") String root) {
 		Objects.requireNonNull(root, "root is null");
 		this.root = root;
 	}
 
-	public Long getRoot() {
+	public String getRoot() {
 		return this.root;
 	}
 

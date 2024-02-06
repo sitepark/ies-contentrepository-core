@@ -7,11 +7,11 @@ public interface Filter {
 		return new IsGroup(isGroup);
 	}
 
-	public static Id id(Long id) {
+	public static Id id(String id) {
 		return new Id(id);
 	}
 
-	public static IdList idList(Long... idlist) {
+	public static IdList idList(String... idlist) {
 		return new IdList(idlist);
 	}
 
@@ -23,11 +23,11 @@ public interface Filter {
 		return new AnchorList(anchorList);
 	}
 
-	public static Parent parent(Long parent) {
+	public static Parent parent(String parent) {
 		return new Parent(parent);
 	}
 
-	public static ParentList parentList(Long... parentList) {
+	public static ParentList parentList(String... parentList) {
 		return new ParentList(parentList);
 	}
 
@@ -40,11 +40,11 @@ public interface Filter {
 		return new ParentAnchorList(parentAnchorList);
 	}
 
-	public static Root root(Long root) {
+	public static Root root(String root) {
 		return new Root(root);
 	}
 
-	public static RootList rootList(Long... rootList) {
+	public static RootList rootList(String... rootList) {
 		return new RootList(rootList);
 	}
 

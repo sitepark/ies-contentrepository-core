@@ -126,7 +126,7 @@ public class BulkPurge {
 	private void accessControl(List<Entity> entityList) {
 
 		entityList.stream().forEach(entity -> {
-			long id = entity.getId().get();
+			String id = entity.getId().get();
 			if (entity.isGroup()) {
 				if (!this.accessControl.isGroupRemoveable(id)) {
 					throw new AccessDeniedException("Not allowed to remove group " + id);
@@ -146,7 +146,7 @@ public class BulkPurge {
 				.entityList(entityList)
 				.consumer(entity -> {
 
-					long id = entity.getId().get();
+					String id = entity.getId().get();
 
 					if (forceLock) {
 						this.lockManager.forceLock(id);
@@ -163,7 +163,7 @@ public class BulkPurge {
 				.key(BulkOperationKey.PURGE_DEPUBLISH)
 				.entityList(entityList)
 				.consumer(entity -> {
-					long id = entity.getId().get();
+					String id = entity.getId().get();
 					this.publisher.depublish(id);
 				})
 				.build();
@@ -200,7 +200,7 @@ public class BulkPurge {
 				.key(BulkOperationKey.PURGE_PURGE)
 				.entityList(orderedList)
 				.consumer(entity -> {
-					long id = entity.getId().get();
+					String id = entity.getId().get();
 
 					if (this.repository.isGroup(id) && !this.repository.isEmptyGroup(id)) {
 						throw new GroupNotEmptyException(id);
@@ -242,7 +242,7 @@ public class BulkPurge {
 				.key(BulkOperationKey.PURGE_CLEANUP)
 				.entityList(entityList)
 				.consumer(entity -> {
-					long id = entity.getId().get();
+					String id = entity.getId().get();
 					try {
 						this.lockManager.unlock(id);
 					} catch (Exception e) {

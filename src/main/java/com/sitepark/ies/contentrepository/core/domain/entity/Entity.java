@@ -1,5 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -9,11 +10,11 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 @JsonDeserialize(builder = Entity.EntityBuilder.class)
 public class Entity {
 
-	private final long id;
+	private final String id;
 	private final Anchor anchor;
 	private final String name;
-	private final long parent;
-	private final long version;
+	private final String parent;
+	private final OffsetDateTime version;
 	private final boolean isGroup;
 
 	protected Entity(Builder<?> builder) {
@@ -25,8 +26,8 @@ public class Entity {
 		this.isGroup = builder.isGroup;
 	}
 
-	public Optional<Long> getId() {
-		if (this.id == 0) {
+	public Optional<String> getId() {
+		if (this.id == null) {
 			return Optional.empty();
 		} else {
 			return Optional.of(this.id);
@@ -41,16 +42,16 @@ public class Entity {
 		return Optional.ofNullable(this.name);
 	}
 
-	public Optional<Long> getParent() {
-		if (this.parent == 0) {
+	public Optional<String> getParent() {
+		if (this.parent == null) {
 			return Optional.empty();
 		} else {
 			return Optional.of(this.parent);
 		}
 	}
 
-	public Optional<Long> getVersion() {
-		if (this.version == 0) {
+	public Optional<OffsetDateTime> getVersion() {
+		if (this.version == null) {
 			return Optional.empty();
 		} else {
 			return Optional.of(this.version);
@@ -72,14 +73,13 @@ public class Entity {
 	@Override
 	public final int hashCode() {
 
-		int hash = Long.hashCode(this.id);
-		hash = (this.anchor != null) ? 31 * hash + this.anchor.hashCode() : hash;
-		hash = (this.name != null) ? 31 * hash + this.name.hashCode() : hash;
-		hash = 31 * hash + Long.hashCode(this.version);
-		hash = 31 * hash + Long.hashCode(this.parent);
-		hash = 31 * hash + Boolean.hashCode(this.isGroup);
-
-		return hash;
+		return Objects.hash(
+				this.id,
+				this.anchor,
+				this.name,
+				this.parent,
+				this.version,
+				this.isGroup);
 	}
 
 	@Override
@@ -89,46 +89,29 @@ public class Entity {
 			return false;
 		}
 
-		Entity entity = (Entity)o;
+		Entity that = (Entity)o;
 
-		if (!Objects.equals(this.id, entity.id)) {
-			return false;
-		} else if (!Objects.equals(this.anchor, entity.anchor)) {
-			return false;
-		} else if (this.isGroup != entity.isGroup) {
-			return false;
-		} else if (!Objects.equals(this.version, entity.version)) {
-			return false;
-		} else if (!Objects.equals(this.name, entity.name)) {
-			return false;
-		} else if (!Objects.equals(this.parent, entity.parent)) {
-			return false;
-		}
-
-		return true;
+		return Objects.equals(this.id, that.id) &&
+				Objects.equals(this.anchor, that.anchor) &&
+				Objects.equals(this.name, that.name) &&
+				Objects.equals(this.parent, that.parent) &&
+				Objects.equals(this.version, that.version) &&
+				Objects.equals(this.isGroup, that.isGroup);
 	}
 
 	@Override
 	public String toString() {
-		return new StringBuilder()
-				.append("Entity[")
-				.append("name: ")
-				.append(this.getName().orElse("UNNAMED"))
-				.append(", id: ").append(this.id)
-				.append(", anchor: ").append(this.anchor)
-				.append(", parent: ").append(this.parent)
-				.append(", version: ").append(this.version)
-				.append(", isGroup: ").append(this.isGroup)
-				.append(']').toString();
+		return "Entity [id=" + id + ", anchor=" + anchor + ", name=" + name + ", parent=" + parent + ", version="
+				+ version + ", isGroup=" + isGroup + "]";
 	}
 
 	public static abstract class Builder<B extends Builder<B>> {
 
-		private long id;
+		private String id;
 		private Anchor anchor;
 		private String name;
-		private long parent;
-		private long version;
+		private String parent;
+		private OffsetDateTime version;
 		private boolean isGroup;
 
 		protected Builder() {
@@ -143,7 +126,11 @@ public class Entity {
 			this.isGroup = entity.isGroup;
 		}
 
-		public B id(long id) {
+		public B id(String id) {
+			Objects.requireNonNull(id, "id is null");
+			if (!Identifier.isId(id)) {
+				throw new IllegalArgumentException(id + " is not an id");
+			}
 			this.id = id;
 			return this.self();
 		}
@@ -169,12 +156,17 @@ public class Entity {
 			return this.self();
 		}
 
-		public B parent(long parent) {
+		public B parent(String parent) {
+			Objects.requireNonNull(parent, "parent is null");
+			if (!Identifier.isId(parent)) {
+				throw new IllegalArgumentException(parent + " is not an id");
+			}
 			this.parent = parent;
 			return this.self();
 		}
 
-		public B version(long version) {
+		public B version(OffsetDateTime version) {
+			Objects.requireNonNull(version, "version is null");
 			this.version = version;
 			return this.self();
 		}

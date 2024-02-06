@@ -43,7 +43,7 @@ public final class StoreEntity {
 		this.contentDiffer = contentDiffer;
 	}
 
-	public long store(Entity entity) {
+	public String store(Entity entity) {
 		if (entity.getId().isEmpty()) {
 			return this.create(entity);
 		} else {
@@ -51,18 +51,18 @@ public final class StoreEntity {
 		}
 	}
 
-	private long create(Entity newEntity) {
+	private String create(Entity newEntity) {
 
-		Optional<Long> parent = newEntity.getParent();
+		Optional<String> parent = newEntity.getParent();
 		parent.orElseThrow(() -> new ParentMissingException());
 
-		long parentId = parent.get();
+		String parentId = parent.get();
 
 		if (!this.accessControl.isEntityCreateable(parentId)) {
 			throw new AccessDeniedException("Not allowed to create entity in group " + parent);
 		}
 
-		long generatedId = this.idGenerator.generate();
+		String generatedId = this.idGenerator.generate();
 
 		Entity entityWithId = newEntity.toBuilder().id(generatedId).build();
 
@@ -76,12 +76,12 @@ public final class StoreEntity {
 		return versioned.getId().get();
 	}
 
-	private long update(Entity updateEntity) {
+	private String update(Entity updateEntity) {
 
 		updateEntity.getId()
 				.orElseThrow(() -> new IllegalArgumentException("Update failed, identifier missing"));
 
-		long id = updateEntity.getId().get();
+		String id = updateEntity.getId().get();
 
 		Optional<Entity> existsEntity = this.repository.get(id);
 		existsEntity.orElseThrow(() -> new EntityNotFoundException(id));

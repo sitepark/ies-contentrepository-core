@@ -3,6 +3,9 @@ package com.sitepark.ies.contentrepository.core.domain.entity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+
 import org.junit.jupiter.api.Test;
 
 import com.jparams.verifier.tostring.NameStyle;
@@ -30,51 +33,53 @@ class EntityLockTest {
 	@Test
 	void testSetEntity() {
 		EntityLock lock = EntityLock.builder()
-			.entity(123)
+			.entity("123")
 			.build();
 
-		assertEquals(123, lock.getEntity(), "unexpected entity");
+		assertEquals("123", lock.getEntity(), "unexpected entity");
 	}
 
 	@Test
 	void testSetUser() {
 		EntityLock lock = EntityLock.builder()
-			.user(123)
+			.user("123")
 			.build();
 
-		assertEquals(123, lock.getUser(), "unexpected user");
+		assertEquals("123", lock.getUser(), "unexpected user");
 	}
 
 	@Test
 	void testSetCreated() {
+		OffsetDateTime created = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
 		EntityLock lock = EntityLock.builder()
-			.created(123)
+			.created(created)
 			.build();
 
-		assertEquals(123, lock.getCreated(), "unexpected created");
+		assertEquals(created, lock.getCreated(), "unexpected created");
 	}
 
 	@Test
 	void testInvalidCreated() {
-		assertThrows(IllegalArgumentException.class, () -> {
-			EntityLock.builder().created(0);
-		}, "created must be greater than 0");
+		assertThrows(NullPointerException.class, () -> {
+			EntityLock.builder().created(null);
+		}, "null should not be allowed");
 	}
 
 	@Test
 	void testSetLastAccess() {
+		OffsetDateTime created = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
 		EntityLock lock = EntityLock.builder()
-			.lastAccess(123)
+			.lastAccess(created)
 			.build();
 
-		assertEquals(123, lock.getLastAccess(), "unexpected lastAccess");
+		assertEquals(created, lock.getLastAccess(), "unexpected lastAccess");
 	}
 
 	@Test
 	void testInvalidLastAccess() {
-		assertThrows(IllegalArgumentException.class, () -> {
-			EntityLock.builder().lastAccess(0);
-		}, "lastAccess must be greater than 0");
+		assertThrows(NullPointerException.class, () -> {
+			EntityLock.builder().lastAccess(null);
+		}, "null should not be allowed");
 	}
 
 	@Test
@@ -96,23 +101,27 @@ class EntityLockTest {
 	@Test
 	void testToBuilder() {
 
+		OffsetDateTime created = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
+
+		OffsetDateTime lastAccess = OffsetDateTime.of(2024, 5, 2, 11, 10, 0, 0, ZoneOffset.UTC);
+
 		EntityLock lock = EntityLock.builder()
-				.entity(1)
-				.user(2)
-				.created(3)
-				.lastAccess(4)
+				.entity("1")
+				.user("2")
+				.created(created)
+				.lastAccess(lastAccess)
 				.ttl(5)
 				.build();
 
 		EntityLock copy = lock.toBuilder()
-				.user(10)
+				.user("10")
 				.build();
 
 		EntityLock expected = EntityLock.builder()
-				.entity(1)
-				.user(10)
-				.created(3)
-				.lastAccess(4)
+				.entity("1")
+				.user("10")
+				.created(created)
+				.lastAccess(lastAccess)
 				.ttl(5)
 				.build();
 

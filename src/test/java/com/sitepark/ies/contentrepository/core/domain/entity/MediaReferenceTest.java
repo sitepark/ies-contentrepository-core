@@ -19,33 +19,33 @@ class MediaReferenceTest {
 	@Test
 	void testSetMediaId() {
 		MediaReference ref = MediaReference.builder()
-			.mediaId(123)
+			.mediaId("123")
 			.build();
 
-		assertEquals(123, ref.getMediaId(), "unexpected mediaId");
+		assertEquals("123", ref.getMediaId(), "unexpected mediaId");
 	}
 
 	@Test
 	void testInvalidMediaId() {
-		assertThrows(IllegalArgumentException.class, () -> {
-			MediaReference.builder().mediaId(0);
-		}, "mediaId should be empty");
+		assertThrows(NullPointerException.class, () -> {
+			MediaReference.builder().mediaId(null);
+		}, "mediaId should't be null");
 	}
 
 	@Test
 	void testSetUsedBy() {
 		MediaReference ref = MediaReference.builder()
-			.usedBy(123)
+			.usedBy("123")
 			.build();
 
-		assertEquals(123, ref.getUsedBy(), "unexpected usedBy");
+		assertEquals("123", ref.getUsedBy(), "unexpected usedBy");
 	}
 
 	@Test
 	void testInvalidUsedBy() {
-		assertThrows(IllegalArgumentException.class, () -> {
-			MediaReference.builder().usedBy(0);
-		}, "usedBy should be empty");
+		assertThrows(NullPointerException.class, () -> {
+			MediaReference.builder().usedBy(null);
+		}, "usedBy should't be null");
 	}
 
 	@Test
@@ -71,18 +71,18 @@ class MediaReferenceTest {
 	void testToBuilder() {
 
 		MediaReference ref = MediaReference.builder()
-				.mediaId(123)
-				.usedBy(345)
+				.mediaId("123")
+				.usedBy("345")
 				.type(MediaReferenceType.EMBEDDED)
 				.build();
 
 		MediaReference copy = ref.toBuilder()
-				.usedBy(678)
+				.usedBy("678")
 				.build();
 
 		MediaReference expected = MediaReference.builder()
-				.mediaId(123)
-				.usedBy(678)
+				.mediaId("123")
+				.usedBy("678")
 				.type(MediaReferenceType.EMBEDDED)
 				.build();
 

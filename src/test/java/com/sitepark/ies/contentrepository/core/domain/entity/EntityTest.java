@@ -4,11 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 
@@ -34,9 +39,9 @@ class EntityTest {
 	@Test
 	void testSetId() {
 		Entity entity = Entity.builder()
-				.id(123)
+				.id("123")
 				.build();
-		assertEquals(123, entity.getId().get(), "unexpected id");
+		assertEquals("123", entity.getId().get(), "unexpected id");
 	}
 
 	@Test
@@ -106,9 +111,9 @@ class EntityTest {
 	@Test
 	void testSetParent() {
 		Entity entity = Entity.builder()
-				.parent(123)
+				.parent("123")
 				.build();
-		assertEquals(123, entity.getParent().get(), "unexpected parent");
+		assertEquals("123", entity.getParent().get(), "unexpected parent");
 	}
 
 	@Test
@@ -119,10 +124,11 @@ class EntityTest {
 
 	@Test
 	void testSetVersion() {
+		OffsetDateTime version = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
 		Entity entity = Entity.builder()
-				.version(123)
+				.version(version)
 				.build();
-		assertEquals(123, entity.getVersion().get(), "unexpected version");
+		assertEquals(version, entity.getVersion().get(), "unexpected version");
 	}
 
 	@Test
@@ -141,11 +147,12 @@ class EntityTest {
 
 	@Test
 	void testToBuilder() {
+		OffsetDateTime version = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
 		Entity entity = Entity.builder()
-				.id(100560100000014842L)
+				.id("100560100000014842")
 				.name("060 Rathaus")
-				.parent(100560100000014840L)
-				.version(1587102861231L)
+				.parent("100560100000014840")
+				.version(version)
 				.isGroup(false)
 				.build();
 
@@ -154,10 +161,10 @@ class EntityTest {
 				.build();
 
 		Entity expected = Entity.builder()
-				.id(100560100000014842L)
+				.id("100560100000014842")
 				.name("abc")
-				.parent(100560100000014840L)
-				.version(1587102861231L)
+				.parent("100560100000014840")
+				.version(version)
 				.isGroup(false)
 				.build();
 
@@ -168,22 +175,26 @@ class EntityTest {
 	@Test
 	void testSerialize() throws JsonProcessingException {
 
+		OffsetDateTime version = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
+
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.registerModule(new Jdk8Module());
+		mapper.registerModule(new JavaTimeModule());
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
 		Entity entity = Entity.builder()
-				.id(100560100000014842L)
+				.id("100560100000014842")
 				.name("060 Rathaus")
-				.parent(100560100000014840L)
-				.version(1587102861231L)
+				.parent("100560100000014840")
+				.version(version)
 				.isGroup(false)
 				.build();
 
 		String json = mapper.writeValueAsString(entity);
 
-		String expected = "{\"id\":100560100000014842,\"anchor\":null," +
-				"\"name\":\"060 Rathaus\",\"parent\":100560100000014840," +
-				"\"version\":1587102861231,\"group\":false}";
+		String expected = "{\"id\":\"100560100000014842\",\"anchor\":null," +
+				"\"name\":\"060 Rathaus\",\"parent\":\"100560100000014840\"," +
+				"\"version\":\"2024-05-02T10:10:00Z\",\"group\":false}";
 
 		assertEquals(expected, json, "unexpected json");
 	}

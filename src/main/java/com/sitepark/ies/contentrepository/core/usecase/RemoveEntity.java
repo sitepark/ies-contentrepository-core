@@ -1,5 +1,6 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
@@ -39,7 +40,7 @@ public final class RemoveEntity {
 		this.publisher = publisher;
 	}
 
-	public void remove(long id) {
+	public void remove(String id) {
 
 		if (!this.accessControl.isEntityRemovable(id)) {
 			throw new AccessDeniedException("Not allowed to remove entity " + id);
@@ -62,7 +63,7 @@ public final class RemoveEntity {
 
 			this.repository.removeEntity(id);
 
-			this.historyManager.createEntry(id, System.currentTimeMillis(), HistoryEntryType.REMOVED);
+			this.historyManager.createEntry(id, OffsetDateTime.now(), HistoryEntryType.REMOVED);
 
 			RecycleBinItem recycleBinItem = RecycleBinItem.builder().build();
 			this.recycleBin.add(recycleBinItem);

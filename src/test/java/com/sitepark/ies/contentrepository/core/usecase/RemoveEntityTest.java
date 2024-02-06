@@ -2,7 +2,7 @@ package com.sitepark.ies.contentrepository.core.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,7 +29,7 @@ class RemoveEntityTest {
 	void testAccessDenied() {
 
 		AccessControl accessControl = mock();
-		when(accessControl.isEntityRemovable(anyLong())).thenReturn(false);
+		when(accessControl.isEntityRemovable(anyString())).thenReturn(false);
 
 		RemoveEntity removeEntity = new RemoveEntity(
 				null,
@@ -41,7 +41,7 @@ class RemoveEntityTest {
 				null);
 
 		assertThrows(AccessDeniedException.class, () -> {
-			removeEntity.remove(123L);
+			removeEntity.remove("123");
 		}, "remove should be denied access");
 	}
 
@@ -49,15 +49,15 @@ class RemoveEntityTest {
 	void testLocked() {
 
 		AccessControl accessControl = mock();
-		when(accessControl.isEntityRemovable(anyLong())).thenReturn(true);
+		when(accessControl.isEntityRemovable(anyString())).thenReturn(true);
 
 		ContentRepository repository = mock();
 		Entity entity = mock();
-		when(repository.get(anyLong())).thenReturn(Optional.of(entity));
+		when(repository.get(anyString())).thenReturn(Optional.of(entity));
 
 		EntityLock lock = mock();
 		EntityLockManager lockManager = mock();
-		when(lockManager.getLock(anyLong())).thenReturn(Optional.of(lock));
+		when(lockManager.getLock(anyString())).thenReturn(Optional.of(lock));
 
 		RemoveEntity removeEntity = new RemoveEntity(
 				repository,
@@ -69,7 +69,7 @@ class RemoveEntityTest {
 				null);
 
 		assertThrows(EntityLockedException.class, () -> {
-			removeEntity.remove(123L);
+			removeEntity.remove("123");
 		}, "entity should be locked");
 	}
 
@@ -77,11 +77,11 @@ class RemoveEntityTest {
 	void test() {
 
 		AccessControl accessControl = mock();
-		when(accessControl.isEntityRemovable(anyLong())).thenReturn(true);
+		when(accessControl.isEntityRemovable(anyString())).thenReturn(true);
 
 		ContentRepository repository = mock();
 		Entity entity = mock();
-		when(repository.get(anyLong())).thenReturn(Optional.of(entity));
+		when(repository.get(anyString())).thenReturn(Optional.of(entity));
 
 		EntityLockManager lockManager = mock();
 		HistoryManager historyManager = mock();
@@ -98,15 +98,15 @@ class RemoveEntityTest {
 				searchIndex,
 				publisher);
 
-		removeEntity.remove(123L);
+		removeEntity.remove("123");
 
-		verify(repository).get(anyLong());
-		verify(lockManager).getLock(anyLong());
-		verify(searchIndex).remove(anyLong());
-		verify(publisher).depublish(anyLong());
-		verify(repository).removeEntity(anyLong());
-		verify(historyManager).createEntry(anyLong(), anyLong(), any());
+		verify(repository).get(anyString());
+		verify(lockManager).getLock(anyString());
+		verify(searchIndex).remove(anyString());
+		verify(publisher).depublish(anyString());
+		verify(repository).removeEntity(anyString());
+		verify(historyManager).createEntry(anyString(), any(), any());
 		verify(recycleBin).add(any());
-		verify(lockManager).unlock(anyLong());
+		verify(lockManager).unlock(anyString());
 	}
 }

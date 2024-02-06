@@ -10,15 +10,15 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public class ParentList implements Filter {
 
 	@SuppressWarnings("PMD.AvoidFieldNameMatchingTypeName") // so that when deserializing it has the desired format
-	private final List<Long> parentList;
+	private final List<String> parentList;
 
-	protected ParentList(@JsonProperty("parentList") Long... parentList) {
+	protected ParentList(@JsonProperty("parentList") String... parentList) {
 		Objects.requireNonNull(parentList, "parentList is null");
 		this.parentList = List.of(parentList);
 	}
 
 	@SuppressFBWarnings("EI_EXPOSE_REP")
-	public List<Long> getParentList() {
+	public List<String> getParentList() {
 		return this.parentList;
 	}
 }

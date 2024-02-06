@@ -1,14 +1,15 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
 import java.io.Serializable;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 public final class EntityLock implements Serializable {
 
-	private final long entity;
-	private final long user;
-	private final long created;
-	private final long lastAccess;
+	private final String entity;
+	private final String user;
+	private final OffsetDateTime created;
+	private final OffsetDateTime lastAccess;
 	private final long ttl;
 
 	private static final long serialVersionUID = 1L;
@@ -21,19 +22,19 @@ public final class EntityLock implements Serializable {
 		this.ttl = builder.ttl;
 	}
 
-	public long getEntity() {
+	public String getEntity() {
 		return entity;
 	}
 
-	public long getUser() {
+	public String getUser() {
 		return user;
 	}
 
-	public long getCreated() {
+	public OffsetDateTime getCreated() {
 		return created;
 	}
 
-	public long getLastAccess() {
+	public OffsetDateTime getLastAccess() {
 		return lastAccess;
 	}
 
@@ -94,10 +95,10 @@ public final class EntityLock implements Serializable {
 
 	public static class Builder {
 
-		private long entity;
-		private long user;
-		private long created;
-		private long lastAccess;
+		private String entity;
+		private String user;
+		private OffsetDateTime created;
+		private OffsetDateTime lastAccess;
 		private long ttl;
 
 		protected Builder() {
@@ -111,28 +112,32 @@ public final class EntityLock implements Serializable {
 			this.ttl = entityLock.ttl;
 		}
 
-		public Builder entity(long entity) {
+		public Builder entity(String entity) {
+			Objects.requireNonNull(entity, "entity is null");
+			if (!Identifier.isId(entity)) {
+				throw new IllegalArgumentException(entity + " is not an id");
+			}
 			this.entity = entity;
 			return this;
 		}
 
-		public Builder user(long user) {
+		public Builder user(String user) {
+			Objects.requireNonNull(user, "user is null");
+			if (!Identifier.isId(user)) {
+				throw new IllegalArgumentException(user + " is not an id");
+			}
 			this.user = user;
 			return this;
 		}
 
-		public Builder created(long created) {
-			if (created <= 0) {
-				throw new IllegalArgumentException("created should be greater then 0");
-			}
+		public Builder created(OffsetDateTime created) {
+			Objects.requireNonNull(created, "created is null");
 			this.created = created;
 			return this;
 		}
 
-		public Builder lastAccess(long lastAccess) {
-			if (lastAccess <= 0) {
-				throw new IllegalArgumentException("lastAccess should be greater then 0");
-			}
+		public Builder lastAccess(OffsetDateTime lastAccess) {
+			Objects.requireNonNull(lastAccess, "lastAccess is null");
 			this.lastAccess = lastAccess;
 			return this;
 		}

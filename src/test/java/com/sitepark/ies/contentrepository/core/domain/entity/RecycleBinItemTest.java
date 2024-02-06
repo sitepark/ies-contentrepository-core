@@ -19,8 +19,8 @@ class RecycleBinItemTest {
 	@Test
 	@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 	void testEquals() {
-		RecycleBinItem a = RecycleBinItem.builder().id(1).build();
-		RecycleBinItem b = RecycleBinItem.builder().id(2).build();
+		RecycleBinItem a = RecycleBinItem.builder().id("1").build();
+		RecycleBinItem b = RecycleBinItem.builder().id("2").build();
 		EqualsVerifier.forClass(RecycleBinItem.class)
 			.withPrefabValues(RecycleBinItem.class, a, b)
 			.verify();
@@ -37,19 +37,19 @@ class RecycleBinItemTest {
 	@Test
 	void testSetId() {
 		RecycleBinItem item = RecycleBinItem.builder()
-			.id(123)
+			.id("123")
 			.build();
 
-		assertEquals(123, item.getId(), "unexpected id");
+		assertEquals("123", item.getId(), "unexpected id");
 	}
 
 	@Test
 	void testSetParent() {
 		RecycleBinItem item = RecycleBinItem.builder()
-			.parent(123)
+			.parent("123")
 			.build();
 
-		assertEquals(123, item.getParent(), "unexpected parent");
+		assertEquals("123", item.getParent(), "unexpected parent");
 	}
 
 	@Test
@@ -100,19 +100,19 @@ class RecycleBinItemTest {
 		Entity entity = mock();
 		List<RecycleBinItem> children = Arrays.asList(mock(RecycleBinItem.class));
 		RecycleBinItem item = RecycleBinItem.builder()
-			.id(123)
-			.parent(345)
+			.id("123")
+			.parent("345")
 			.entity(entity)
 			.children(children)
 			.build();
 
 		RecycleBinItem copy = item.toBuilder()
-				.parent(678)
+				.parent("678")
 				.build();
 
 		RecycleBinItem expected = RecycleBinItem.builder()
-				.id(123)
-				.parent(678)
+				.id("123")
+				.parent("678")
 				.entity(entity)
 				.children(children)
 				.build();

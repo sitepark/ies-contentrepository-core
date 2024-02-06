@@ -1,5 +1,6 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
@@ -38,7 +39,7 @@ public class RecoverEntity {
 		this.searchIndex = searchIndex;
 	}
 
-	public void recover(long id) {
+	public void recover(String id) {
 
 		Optional<RecycleBinItem> recycleBinItem = this.recycleBin.get(id);
 		recycleBinItem.orElseThrow(() -> new EntityNotFoundException(id));
@@ -52,7 +53,7 @@ public class RecoverEntity {
 
 		this.repository.store(entity);
 
-		this.historyManager.createEntry(id, System.currentTimeMillis(), HistoryEntryType.RESTORED);
+		this.historyManager.createEntry(id, OffsetDateTime.now(), HistoryEntryType.RESTORED);
 
 		this.searchIndex.index(id);
 	}

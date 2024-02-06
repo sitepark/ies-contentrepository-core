@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class MediaReference {
 
-	private final long mediaId;
-	final long usedBy;
+	private final String mediaId;
+	final String usedBy;
 	private final MediaReferenceType type;
 
 	protected MediaReference(Builder builder) {
@@ -14,11 +14,11 @@ public class MediaReference {
 		this.type = builder.type;
 	}
 
-	public long getMediaId() {
+	public String getMediaId() {
 		return this.mediaId;
 	}
 
-	public long getUsedBy() {
+	public String getUsedBy() {
 		return this.usedBy;
 	}
 
@@ -58,8 +58,8 @@ public class MediaReference {
 
 	public static class Builder {
 
-		private long mediaId;
-		private long usedBy;
+		private String mediaId;
+		private String usedBy;
 		private MediaReferenceType type;
 
 		protected Builder() {}
@@ -70,17 +70,17 @@ public class MediaReference {
 			this.type = media.type;
 		}
 
-		public Builder mediaId(long mediaId) {
-			if (mediaId <= 0) {
-				throw new IllegalArgumentException("mediaId should be greater than 0");
+		public Builder mediaId(String mediaId) {
+			if (mediaId == null) {
+				throw new NullPointerException("mediaId is null");
 			}
 			this.mediaId = mediaId;
 			return this;
 		}
 
-		public Builder usedBy(long usedBy) {
-			if (usedBy <= 0) {
-				throw new IllegalArgumentException("usedBy should be greater than 0");
+		public Builder usedBy(String usedBy) {
+			if (usedBy == null) {
+				throw new NullPointerException("usedBy is null");
 			}
 			this.usedBy = usedBy;
 			return this;

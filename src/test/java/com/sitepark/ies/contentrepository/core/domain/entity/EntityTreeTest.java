@@ -17,25 +17,25 @@ class EntityTreeTest {
 	void testGetRoots() {
 		EntityTree tree = new EntityTree();
 
-		tree.add(Entity.builder().id(1).build());
-		tree.add(Entity.builder().id(2).build());
-		tree.add(Entity.builder().id(10).parent(1).build());
-		tree.add(Entity.builder().id(11).parent(1).build());
-		tree.add(Entity.builder().id(20).parent(2).build());
+		tree.add(Entity.builder().id("1").build());
+		tree.add(Entity.builder().id("2").build());
+		tree.add(Entity.builder().id("10").parent("1").build());
+		tree.add(Entity.builder().id("11").parent("1").build());
+		tree.add(Entity.builder().id("20").parent("2").build());
 
-		List<Long> all = tree.getRoots().stream()
+		List<String> all = tree.getRoots().stream()
 				.map(entity -> entity.getId().get())
 				.collect(Collectors.toList());
 
-		assertThat("Unexpected entries", all, Matchers.contains(1L, 2L));
+		assertThat("Unexpected entries", all, Matchers.contains("1", "2"));
 	}
 
 	@Test
 	void testGetRootsWithInvalidState() {
 		EntityTree tree = new EntityTree();
 
-		tree.add(Entity.builder().id(1).build());
-		tree.add(Entity.builder().id(20).parent(2).build());
+		tree.add(Entity.builder().id("1").build());
+		tree.add(Entity.builder().id("20").parent("2").build());
 
 		assertThrows(IllegalStateException.class, () -> {
 			tree.getRoots();
@@ -47,17 +47,17 @@ class EntityTreeTest {
 
 		EntityTree tree = new EntityTree();
 
-		tree.add(Entity.builder().id(1).build());
-		tree.add(Entity.builder().id(2).build());
-		tree.add(Entity.builder().id(10).parent(1).build());
-		tree.add(Entity.builder().id(11).parent(1).build());
-		tree.add(Entity.builder().id(20).parent(2).build());
+		tree.add(Entity.builder().id("1").build());
+		tree.add(Entity.builder().id("2").build());
+		tree.add(Entity.builder().id("10").parent("1").build());
+		tree.add(Entity.builder().id("11").parent("1").build());
+		tree.add(Entity.builder().id("20").parent("2").build());
 
-		List<Long> all = tree.getChildren(1L).stream()
+		List<String> all = tree.getChildren("1").stream()
 				.map(entity -> entity.getId().get())
 				.collect(Collectors.toList());
 
-		assertThat("Unexpected chilldren", all, Matchers.contains(10L, 11L));
+		assertThat("Unexpected chilldren", all, Matchers.contains("11", "10"));
 	}
 
 	@Test
@@ -74,10 +74,10 @@ class EntityTreeTest {
 
 		EntityTree tree = new EntityTree();
 
-		tree.add(Entity.builder().id(1).build());
-		tree.add(Entity.builder().id(10).parent(1).build());
+		tree.add(Entity.builder().id("1").build());
+		tree.add(Entity.builder().id("10").parent("1").build());
 
-		assertTrue(tree.hasChildren(1L), "entity should have children");
+		assertTrue(tree.hasChildren("1"), "entity should have children");
 
 	}
 
@@ -85,36 +85,36 @@ class EntityTreeTest {
 	void testGet() {
 
 		EntityTree tree = new EntityTree();
-		tree.add(Entity.builder().id(1).build());
+		tree.add(Entity.builder().id("1").build());
 
-		Entity entity = tree.get(1L);
+		Entity entity = tree.get("1");
 
-		assertEquals(1L, entity.getId().get(), "unexpected entity");
+		assertEquals("1", entity.getId().get(), "unexpected entity");
 	}
 
 	@Test
 	void testGetAll() {
 		EntityTree tree = new EntityTree();
 
-		tree.add(Entity.builder().id(1).build());
-		tree.add(Entity.builder().id(2).build());
-		tree.add(Entity.builder().id(10).parent(1).build());
-		tree.add(Entity.builder().id(11).parent(1).build());
-		tree.add(Entity.builder().id(20).parent(2).build());
+		tree.add(Entity.builder().id("1").build());
+		tree.add(Entity.builder().id("2").build());
+		tree.add(Entity.builder().id("10").parent("1").build());
+		tree.add(Entity.builder().id("11").parent("1").build());
+		tree.add(Entity.builder().id("20").parent("2").build());
 
-		List<Long> all = tree.getAll().stream()
+		List<String> all = tree.getAll().stream()
 				.map(entity -> entity.getId().get())
 				.collect(Collectors.toList());
 
-		assertThat("Unexpected entries", all, Matchers.contains(1L, 10L, 11L, 2L, 20L));
+		assertThat("Unexpected entries", all, Matchers.containsInAnyOrder("1", "10", "11", "2", "20"));
 	}
 
 	@Test
 	void testGetAllWithInvalidState() {
 		EntityTree tree = new EntityTree();
 
-		tree.add(Entity.builder().id(1).build());
-		tree.add(Entity.builder().id(20).parent(2).build());
+		tree.add(Entity.builder().id("1").build());
+		tree.add(Entity.builder().id("20").parent("2").build());
 
 		assertThrows(IllegalStateException.class, () -> {
 			tree.getAll();
@@ -124,22 +124,21 @@ class EntityTreeTest {
 	@Test
 	void testToString() {
 		EntityTree tree = new EntityTree();
-		tree.add(Entity.builder().id(1).build());
+		tree.add(Entity.builder().id("1").build());
 
 		String s = tree.toString();
-
-		assertTrue(s.contains("id: 1,"), "entity with id 1 not found");
+		assertTrue(s.contains("id=1,"), "entity with id 1 not found");
 	}
 
 	@Test
 	void testToStringWithIndent() {
 		EntityTree tree = new EntityTree();
 
-		tree.add(Entity.builder().id(1).build());
-		tree.add(Entity.builder().id(2).build());
-		tree.add(Entity.builder().id(10).parent(1).build());
-		tree.add(Entity.builder().id(11).parent(1).build());
-		tree.add(Entity.builder().id(20).parent(2).build());
+		tree.add(Entity.builder().id("1").build());
+		tree.add(Entity.builder().id("2").build());
+		tree.add(Entity.builder().id("10").parent("1").build());
+		tree.add(Entity.builder().id("11").parent("1").build());
+		tree.add(Entity.builder().id("20").parent("2").build());
 
 		String s = tree.toString(3);
 

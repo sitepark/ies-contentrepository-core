@@ -2,7 +2,7 @@ package com.sitepark.ies.contentrepository.core.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,10 +30,10 @@ class RecoverEntityTest {
 		SearchIndex searchIndex = mock();
 
 		RecycleBinItem recycleBinItem = mock();
-		when(recycleBin.get(anyLong())).thenReturn(Optional.of(recycleBinItem));
+		when(recycleBin.get(anyString())).thenReturn(Optional.of(recycleBinItem));
 
 		AccessControl accessControl = mock();
-		when(accessControl.isGroupCreateable(anyLong())).thenReturn(false);
+		when(accessControl.isGroupCreateable(anyString())).thenReturn(false);
 
 		RecoverEntity recoverEntity = new RecoverEntity(
 				repository,
@@ -43,7 +43,7 @@ class RecoverEntityTest {
 				searchIndex);
 
 		assertThrows(AccessDeniedException.class, () -> {
-			recoverEntity.recover(123L);
+			recoverEntity.recover("123");
 		}, "recover should be denied access");
 	}
 
@@ -56,10 +56,10 @@ class RecoverEntityTest {
 		SearchIndex searchIndex = mock();
 
 		RecycleBinItem recycleBinItem = mock();
-		when(recycleBin.get(anyLong())).thenReturn(Optional.of(recycleBinItem));
+		when(recycleBin.get(anyString())).thenReturn(Optional.of(recycleBinItem));
 
 		AccessControl accessControl = mock();
-		when(accessControl.isGroupCreateable(anyLong())).thenReturn(true);
+		when(accessControl.isGroupCreateable(any())).thenReturn(true);
 
 		RecoverEntity recoverEntity = new RecoverEntity(
 				repository,
@@ -68,11 +68,10 @@ class RecoverEntityTest {
 				recycleBin,
 				searchIndex);
 
-		recoverEntity.recover(123L);
+		recoverEntity.recover("123");
 
 		verify(repository).store(any());
-		verify(historyManager).createEntry(anyLong(), anyLong(), any());
-		verify(searchIndex).index(anyLong());
+		verify(historyManager).createEntry(any(), any(), any());
+		verify(searchIndex).index(anyString());
 	}
-
 }

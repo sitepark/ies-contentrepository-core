@@ -2,7 +2,7 @@ package com.sitepark.ies.contentrepository.core.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -32,7 +32,7 @@ class PurgeEntityTest {
 	void testAccessDenied() {
 
 		AccessControl accessControl = mock(AccessControl.class);
-		when(accessControl.isEntityRemovable(anyLong())).thenReturn(false);
+		when(accessControl.isEntityRemovable(anyString())).thenReturn(false);
 
 		var purgeEntity = new PurgeEntity(
 				null,
@@ -46,7 +46,7 @@ class PurgeEntityTest {
 				null,
 				null);
 		assertThrows(AccessDeniedException.class, () -> {
-			purgeEntity.purgeEntity(10L);
+			purgeEntity.purgeEntity("10");
 		}, "access should be denied");
 	}
 
@@ -54,11 +54,11 @@ class PurgeEntityTest {
 	void testGroupNotEmptyException() {
 
 		AccessControl accessControl = mock(AccessControl.class);
-		when(accessControl.isEntityRemovable(anyLong())).thenReturn(true);
+		when(accessControl.isEntityRemovable(anyString())).thenReturn(true);
 
 		ContentRepository repository = mock(ContentRepository.class);
-		when(repository.isGroup(anyLong())).thenReturn(true);
-		when(repository.isEmptyGroup(anyLong())).thenReturn(false);
+		when(repository.isGroup(anyString())).thenReturn(true);
+		when(repository.isEmptyGroup(anyString())).thenReturn(false);
 
 		var purgeEntity = new PurgeEntity(
 				repository,
@@ -72,7 +72,7 @@ class PurgeEntityTest {
 				null,
 				null);
 		assertThrows(GroupNotEmptyException.class, () -> {
-			purgeEntity.purgeEntity(10L);
+			purgeEntity.purgeEntity("10");
 		}, "only empty groups may be purged");
 	}
 
@@ -80,12 +80,15 @@ class PurgeEntityTest {
 	void testEntityIsLocked() {
 
 		ContentRepository repository = mock(ContentRepository.class);
-		when(repository.isGroup(10L)).thenReturn(false);
+		when(repository.isGroup("10")).thenReturn(false);
 		AccessControl accessControl = mock(AccessControl.class);
-		when(accessControl.isEntityRemovable(anyLong())).thenReturn(true);
+		when(accessControl.isEntityRemovable(anyString())).thenReturn(true);
 
 		EntityLockManager lockManager = mock(EntityLockManager.class);
-		doThrow(new EntityLockedException(EntityLock.builder().entity(10L).build())).when(lockManager).lock(anyLong());
+		doThrow(
+				new EntityLockedException(EntityLock.builder().entity("10").build()))
+				.when(lockManager)
+				.lock(anyString());
 
 		var purgeEntity = new PurgeEntity(
 				repository,
@@ -101,9 +104,9 @@ class PurgeEntityTest {
 		//purgeEntity.purgeEntity(10L);
 
 		EntityLockedException entityLockedException = assertThrows(EntityLockedException.class, () -> {
-			purgeEntity.purgeEntity(10L);
+			purgeEntity.purgeEntity("10");
 		}, "entity should be locked");
-		assertEquals(10L, entityLockedException.getLock().getEntity(), "unexpected entity id");
+		assertEquals("10", entityLockedException.getLock().getEntity(), "unexpected entity id");
 	}
 
 	@SuppressWarnings("PMD")
@@ -111,7 +114,7 @@ class PurgeEntityTest {
 	void testPurgeEntity() {
 
 		AccessControl accessControl = mock(AccessControl.class);
-		when(accessControl.isEntityRemovable(anyLong())).thenReturn(true);
+		when(accessControl.isEntityRemovable(anyString())).thenReturn(true);
 
 		ContentRepository repository = mock(ContentRepository.class);
 		EntityLockManager lockManager = mock(EntityLockManager.class);
@@ -135,7 +138,7 @@ class PurgeEntityTest {
 				mediaReferenceManager,
 				publisher,
 				extensionsNotifier);
-		purgeEntity.purgeEntity(10L);
+		purgeEntity.purgeEntity("10");
 
 		InOrder inOrder = inOrder(
 				publisher,
@@ -148,14 +151,14 @@ class PurgeEntityTest {
 				extensionsNotifier
 		);
 
-		inOrder.verify(publisher).depublish(10L);
-		inOrder.verify(searchIndex).remove(10L);
-		inOrder.verify(mediaReferenceManager).removeByReference(10L);
-		inOrder.verify(repository).removeEntity(10L);
-		inOrder.verify(historyManager).purge(10L);
-		inOrder.verify(versioningManager).removeAllVersions(10L);
-		inOrder.verify(recycleBin).removeByObject(10L);
-		inOrder.verify(extensionsNotifier).notifyPurge(10L);
+		inOrder.verify(publisher).depublish("10");
+		inOrder.verify(searchIndex).remove("10");
+		inOrder.verify(mediaReferenceManager).removeByReference("10");
+		inOrder.verify(repository).removeEntity("10");
+		inOrder.verify(historyManager).purge("10");
+		inOrder.verify(versioningManager).removeAllVersions("10");
+		inOrder.verify(recycleBin).removeByObject("10");
+		inOrder.verify(extensionsNotifier).notifyPurge("10");
 	}
 
 	@SuppressWarnings("PMD")
@@ -163,11 +166,11 @@ class PurgeEntityTest {
 	void testPurgeGroup() {
 
 		AccessControl accessControl = mock(AccessControl.class);
-		when(accessControl.isEntityRemovable(anyLong())).thenReturn(true);
+		when(accessControl.isEntityRemovable(anyString())).thenReturn(true);
 
 		ContentRepository repository = mock(ContentRepository.class);
-		when(repository.isGroup(anyLong())).thenReturn(true);
-		when(repository.isEmptyGroup(anyLong())).thenReturn(true);
+		when(repository.isGroup(anyString())).thenReturn(true);
+		when(repository.isEmptyGroup(anyString())).thenReturn(true);
 		EntityLockManager lockManager = mock(EntityLockManager.class);
 		VersioningManager versioningManager = mock(VersioningManager.class);
 		HistoryManager historyManager = mock(HistoryManager.class);
@@ -189,7 +192,7 @@ class PurgeEntityTest {
 				mediaReferenceManager,
 				publisher,
 				extensionsNotifier);
-		purgeEntity.purgeEntity(10L);
+		purgeEntity.purgeEntity("10");
 
 		InOrder inOrder = inOrder(
 				publisher,
@@ -202,13 +205,13 @@ class PurgeEntityTest {
 				extensionsNotifier
 		);
 
-		inOrder.verify(publisher).depublish(10L);
-		inOrder.verify(searchIndex).remove(10L);
-		inOrder.verify(mediaReferenceManager).removeByReference(10L);
-		inOrder.verify(repository).removeEntity(10L);
-		inOrder.verify(historyManager).purge(10L);
-		inOrder.verify(versioningManager).removeAllVersions(10L);
-		inOrder.verify(recycleBin).removeByObject(10L);
-		inOrder.verify(extensionsNotifier).notifyPurge(10L);
+		inOrder.verify(publisher).depublish("10");
+		inOrder.verify(searchIndex).remove("10");
+		inOrder.verify(mediaReferenceManager).removeByReference("10");
+		inOrder.verify(repository).removeEntity("10");
+		inOrder.verify(historyManager).purge("10");
+		inOrder.verify(versioningManager).removeAllVersions("10");
+		inOrder.verify(recycleBin).removeByObject("10");
+		inOrder.verify(extensionsNotifier).notifyPurge("10");
 	}
 }
