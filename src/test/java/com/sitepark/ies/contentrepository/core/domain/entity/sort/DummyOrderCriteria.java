@@ -1,8 +1,8 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.sort;
 
-public class TestOrderCriteria extends OrderCriteria {
+public class DummyOrderCriteria extends OrderCriteria {
 
-	protected TestOrderCriteria(Builder builder) {
+	protected DummyOrderCriteria(Builder builder) {
 		super(builder);
 	}
 
@@ -20,7 +20,7 @@ public class TestOrderCriteria extends OrderCriteria {
 		protected Builder() {
 		}
 
-		protected Builder(TestOrderCriteria sortCriteria) {
+		protected Builder(DummyOrderCriteria sortCriteria) {
 			super(sortCriteria);
 		}
 
@@ -30,8 +30,8 @@ public class TestOrderCriteria extends OrderCriteria {
 		}
 
 		@Override
-		public TestOrderCriteria build() {
-			return new TestOrderCriteria(this);
+		public DummyOrderCriteria build() {
+			return new DummyOrderCriteria(this);
 		}
 	}
 }

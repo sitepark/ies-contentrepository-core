@@ -7,9 +7,15 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
+@SuppressFBWarnings({
+	"PI_DO_NOT_REUSE_PUBLIC_IDENTIFIERS_CLASS_NAMES",
+	"NP_NULL_PARAM_DEREF_NONVIRTUAL",
+	"NP_NULL_PARAM_DEREF_ALL_TARGETS_DANGEROUS"
+})
 class IdentifierTest {
 
 	@Test
@@ -22,19 +28,46 @@ class IdentifierTest {
 	@Test
 	void testToStringWithId() {
 		Identifier identifier = Identifier.ofString("123");
-		assertEquals("123", identifier.toString());
+		assertEquals(
+				"123",
+				identifier.toString(),
+				"unexpected identifier-string");
+	}
+
+	@Test
+	void testToStringWithNull() {
+		assertThrows(NullPointerException.class, () -> {
+			Identifier.ofString(null);
+		});
+	}
+
+	@Test
+	void testToStringWithZero() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			Identifier.ofString("0");
+		});
+	}
+
+	@Test
+	void testToStringWithBlank() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			Identifier.ofString(" ");
+		});
 	}
 
 	@Test
 	void testToStringWithAnchor() {
 		Identifier identifier = Identifier.ofString("abc");
-		assertEquals("abc", identifier.toString());
+		assertEquals(
+				"abc",
+				identifier.toString(),
+				"unexpected identifier-string");
 	}
 
 	@Test
 	void testOfStringToId() {
 		Identifier identifier = Identifier.ofString("123");
-		assertEquals(Optional.of(123L), identifier.getId(), "id exprected");
+		assertEquals(Optional.of("123"), identifier.getId(), "id exprected");
 	}
 
 	@Test
@@ -60,8 +93,8 @@ class IdentifierTest {
 
 	@Test
 	void testOfId() {
-		Identifier identifier = Identifier.ofId(123L);
-		assertEquals(Optional.of(123L), identifier.getId(), "id exprected");
+		Identifier identifier = Identifier.ofId("123");
+		assertEquals(Optional.of("123"), identifier.getId(), "id exprected");
 	}
 
 	@Test

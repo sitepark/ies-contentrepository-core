@@ -17,7 +17,7 @@ class OrderCriteriaTest {
 
 	@Test
 	void testSetName() {
-		OrderCriteria criteria = TestOrderCriteria.builder()
+		OrderCriteria criteria = DummyOrderCriteria.builder()
 				.name("name")
 				.build();
 		assertEquals("name", criteria.getName(), "unexpected name");
@@ -25,7 +25,7 @@ class OrderCriteriaTest {
 
 	@Test
 	void testSetDirection() {
-		OrderCriteria criteria = TestOrderCriteria.builder()
+		OrderCriteria criteria = DummyOrderCriteria.builder()
 				.direction(Direction.ASC)
 				.build();
 		assertEquals(Direction.ASC, criteria.getDirection(), "unexpected direction");
@@ -33,14 +33,14 @@ class OrderCriteriaTest {
 
 	@Test
 	void testDefaultDirection() {
-		OrderCriteria criteria = TestOrderCriteria.builder()
+		OrderCriteria criteria = DummyOrderCriteria.builder()
 				.build();
 		assertEquals(Direction.DESC, criteria.getDirection(), "unexpected direction");
 	}
 
 	@Test
 	void testToBuilder() {
-		OrderCriteria criteria = TestOrderCriteria.builder()
+		OrderCriteria criteria = DummyOrderCriteria.builder()
 				.name("name")
 				.direction(Direction.ASC)
 				.build();
@@ -49,7 +49,7 @@ class OrderCriteriaTest {
 				.name("name2")
 				.build();
 
-		OrderCriteria expected = TestOrderCriteria.builder()
+		OrderCriteria expected = DummyOrderCriteria.builder()
 				.name("name2")
 				.direction(Direction.ASC)
 				.build();

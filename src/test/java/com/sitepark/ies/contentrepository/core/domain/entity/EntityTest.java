@@ -17,9 +17,15 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
+@SuppressFBWarnings({
+	"PI_DO_NOT_REUSE_PUBLIC_IDENTIFIERS_CLASS_NAMES",
+	"NP_NULL_PARAM_DEREF_NONVIRTUAL",
+	"NP_NULL_PARAM_DEREF_ALL_TARGETS_DANGEROUS"
+})
 class EntityTest {
 
 	@Test
@@ -42,6 +48,27 @@ class EntityTest {
 				.id("123")
 				.build();
 		assertEquals("123", entity.getId().get(), "unexpected id");
+	}
+
+	@Test
+	void testSetIdWithNull() {
+		assertThrows(NullPointerException.class, () -> {
+			Entity.builder().id(null);
+		}, "id should not be null");
+	}
+
+	@Test
+	void testSetIdWithZero() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			Entity.builder().id("0");
+		}, "id should not be zero");
+	}
+
+	@Test
+	void testSetIdWithInvalidValid() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			Entity.builder().id("0x");
+		}, "id should not be invalid");
 	}
 
 	@Test
@@ -114,6 +141,27 @@ class EntityTest {
 				.parent("123")
 				.build();
 		assertEquals("123", entity.getParent().get(), "unexpected parent");
+	}
+
+	@Test
+	void testSetParentWithNull() {
+		assertThrows(NullPointerException.class, () -> {
+			Entity.builder().parent(null);
+		}, "parent should not be null");
+	}
+
+	@Test
+	void testSetParentWithZero() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			Entity.builder().parent("0");
+		}, "parent should not be zero");
+	}
+
+	@Test
+	void testSetParentWithInvalidValid() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			Entity.builder().parent("0x");
+		}, "parent should not be invalid");
 	}
 
 	@Test

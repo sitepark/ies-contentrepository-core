@@ -12,9 +12,15 @@ import org.junit.jupiter.api.Test;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
+@SuppressFBWarnings({
+	"PI_DO_NOT_REUSE_PUBLIC_IDENTIFIERS_CLASS_NAMES",
+	"NP_NULL_PARAM_DEREF_NONVIRTUAL",
+	"NP_NULL_PARAM_DEREF_ALL_TARGETS_DANGEROUS"
+})
 class RecycleBinItemTest {
 
 	@Test
@@ -45,12 +51,54 @@ class RecycleBinItemTest {
 	}
 
 	@Test
+	void testSetIdWithNull() {
+		assertThrows(NullPointerException.class, () -> {
+			RecycleBinItem.builder().id(null);
+		}, "id should not be null");
+	}
+
+	@Test
+	void testSetIdWitZero() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			RecycleBinItem.builder().id("0");
+		}, "id should not be zero");
+	}
+
+	@Test
+	void testSetIdWitInvalidValue() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			RecycleBinItem.builder().id("1x");
+		}, "id should not be zero");
+	}
+
+	@Test
 	void testSetParent() {
 		RecycleBinItem item = RecycleBinItem.builder()
 			.parent("123")
 			.build();
 
 		assertEquals("123", item.getParent(), "unexpected parent");
+	}
+
+	@Test
+	void testSetParentWithNull() {
+		assertThrows(NullPointerException.class, () -> {
+			RecycleBinItem.builder().parent(null);
+		}, "parent should not be null");
+	}
+
+	@Test
+	void testSetParentWitZero() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			RecycleBinItem.builder().parent("0");
+		}, "parent should not be zero");
+	}
+
+	@Test
+	void testSetParentWitInvalidValue() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			RecycleBinItem.builder().parent("1x");
+		}, "parent should not be zero");
 	}
 
 	@Test

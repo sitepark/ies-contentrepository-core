@@ -11,11 +11,11 @@ public final class Identifier {
 
 	private static final String ZERO_ID = "0";
 
-	private final Long id;
+	private final String id;
 
 	private final Anchor anchor;
 
-	private Identifier(Long id) {
+	private Identifier(String id) {
 		this.id = id;
 		this.anchor = null;
 	}
@@ -25,7 +25,7 @@ public final class Identifier {
 		this.anchor = anchor;
 	}
 
-	public static Identifier ofId(long id) {
+	public static Identifier ofId(String id) {
 		return new Identifier(id);
 	}
 
@@ -36,13 +36,17 @@ public final class Identifier {
 
 	@JsonCreator
 	public static Identifier ofString(String identifier) {
+		Objects.requireNonNull(identifier, "identifier is null");
+		if (identifier.isBlank()) {
+			throw new IllegalArgumentException("identifier is blank");
+		}
 		if (isId(identifier)) {
-			return new Identifier(Long.valueOf(identifier));
+			return new Identifier(identifier);
 		}
 		return new Identifier(Anchor.ofString(identifier));
 	}
 
-	public Optional<Long> getId() {
+	public Optional<String> getId() {
 		return Optional.ofNullable(this.id);
 	}
 
@@ -92,7 +96,7 @@ public final class Identifier {
 	@Override
 	public String toString() {
 		if (this.id != null) {
-			return this.id.toString();
+			return this.id;
 		}
 		return this.anchor.toString();
 	}

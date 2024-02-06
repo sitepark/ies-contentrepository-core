@@ -9,9 +9,15 @@ import org.junit.jupiter.api.Test;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
+@SuppressFBWarnings({
+	"PI_DO_NOT_REUSE_PUBLIC_IDENTIFIERS_CLASS_NAMES",
+	"NP_NULL_PARAM_DEREF_NONVIRTUAL",
+	"NP_NULL_PARAM_DEREF_ALL_TARGETS_DANGEROUS"
+})
 class HistoryEntryTest {
 
 	@Test

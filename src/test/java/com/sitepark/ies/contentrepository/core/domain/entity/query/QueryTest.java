@@ -10,8 +10,14 @@ import org.junit.jupiter.api.Test;
 import com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter;
 import com.sitepark.ies.contentrepository.core.domain.entity.sort.OrderBy;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
+@SuppressFBWarnings({
+	"PI_DO_NOT_REUSE_PUBLIC_IDENTIFIERS_CLASS_NAMES",
+	"NP_NULL_PARAM_DEREF_NONVIRTUAL",
+	"NP_NULL_PARAM_DEREF_ALL_TARGETS_DANGEROUS"
+})
 class QueryTest {
 
 	@Test
