@@ -1,8 +1,5 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
 import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmptyException;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
@@ -15,87 +12,95 @@ import com.sitepark.ies.contentrepository.core.port.Publisher;
 import com.sitepark.ies.contentrepository.core.port.RecycleBin;
 import com.sitepark.ies.contentrepository.core.port.SearchIndex;
 import com.sitepark.ies.contentrepository.core.port.VersioningManager;
-
 import jakarta.inject.Inject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class PurgeEntity {
 
-	private final ContentRepository repository;
+  private final ContentRepository repository;
 
-	private final EntityLockManager lockManager;
+  private final EntityLockManager lockManager;
 
-	private final VersioningManager versioningManager;
+  private final VersioningManager versioningManager;
 
-	private final HistoryManager historyManager;
+  private final HistoryManager historyManager;
 
-	private final AccessControl accessControl;
+  private final AccessControl accessControl;
 
-	private final RecycleBin recycleBin;
+  private final RecycleBin recycleBin;
 
-	private final SearchIndex searchIndex;
+  private final SearchIndex searchIndex;
 
-	private final MediaReferenceManager mediaReferenceManager;
+  private final MediaReferenceManager mediaReferenceManager;
 
-	private final Publisher publisher;
+  private final Publisher publisher;
 
-	private final ExtensionsNotifier extensionsNotifier;
+  private final ExtensionsNotifier extensionsNotifier;
 
-	private static Logger LOGGER = LogManager.getLogger();
+  private static Logger LOGGER = LogManager.getLogger();
 
-	@Inject
-	@SuppressWarnings("PMD.ExcessiveParameterList")
-	protected PurgeEntity(ContentRepository repository, EntityLockManager lockManager,
-			VersioningManager versioningManager, HistoryManager historyManager, AccessControl accessControl,
-			RecycleBin recycleBin, SearchIndex searchIndex, MediaReferenceManager mediaReferenceManager,
-			Publisher publisher, ExtensionsNotifier extensionsNotifier) {
+  @Inject
+  @SuppressWarnings("PMD.ExcessiveParameterList")
+  protected PurgeEntity(
+      ContentRepository repository,
+      EntityLockManager lockManager,
+      VersioningManager versioningManager,
+      HistoryManager historyManager,
+      AccessControl accessControl,
+      RecycleBin recycleBin,
+      SearchIndex searchIndex,
+      MediaReferenceManager mediaReferenceManager,
+      Publisher publisher,
+      ExtensionsNotifier extensionsNotifier) {
 
-		this.repository = repository;
-		this.lockManager = lockManager;
-		this.historyManager = historyManager;
-		this.versioningManager = versioningManager;
-		this.accessControl = accessControl;
-		this.recycleBin = recycleBin;
-		this.searchIndex = searchIndex;
-		this.mediaReferenceManager = mediaReferenceManager;
-		this.publisher = publisher;
-		this.extensionsNotifier = extensionsNotifier;
-	}
+    this.repository = repository;
+    this.lockManager = lockManager;
+    this.historyManager = historyManager;
+    this.versioningManager = versioningManager;
+    this.accessControl = accessControl;
+    this.recycleBin = recycleBin;
+    this.searchIndex = searchIndex;
+    this.mediaReferenceManager = mediaReferenceManager;
+    this.publisher = publisher;
+    this.extensionsNotifier = extensionsNotifier;
+  }
 
-	public void purgeEntity(String id) {
+  public void purgeEntity(String id) {
 
-		if (!this.accessControl.isEntityRemovable(id)) {
-			throw new AccessDeniedException("Not allowed to remove entity " + id);
-		}
+    if (!this.accessControl.isEntityRemovable(id)) {
+      throw new AccessDeniedException("Not allowed to remove entity " + id);
+    }
 
-		if (this.repository.isGroup(id) && !this.repository.isEmptyGroup(id)) {
-			throw new GroupNotEmptyException(id);
-		}
+    if (this.repository.isGroup(id) && !this.repository.isEmptyGroup(id)) {
+      throw new GroupNotEmptyException(id);
+    }
 
-		try {
-			this.lockManager.lock(id);
+    try {
+      this.lockManager.lock(id);
 
-			this.publisher.depublish(id);
+      this.publisher.depublish(id);
 
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("purge: {}", this.repository.get(id));
-			}
+      if (LOGGER.isInfoEnabled()) {
+        LOGGER.info("purge: {}", this.repository.get(id));
+      }
 
-			this.searchIndex.remove(id);
+      this.searchIndex.remove(id);
 
-			this.mediaReferenceManager.removeByReference(id);
+      this.mediaReferenceManager.removeByReference(id);
 
-			this.repository.removeEntity(id);
+      this.repository.removeEntity(id);
 
-			this.historyManager.purge(id);
+      this.historyManager.purge(id);
 
-			this.versioningManager.removeAllVersions(id);
+      this.versioningManager.removeAllVersions(id);
 
-			this.recycleBin.removeByObject(id);
+      this.recycleBin.removeByObject(id);
 
-			this.extensionsNotifier.notifyPurge(id);
+      this.extensionsNotifier.notifyPurge(id);
 
-		} finally {
-			this.lockManager.unlock(id);
-		}
-	}
+    } finally {
+      this.lockManager.unlock(id);
+    }
+  }
 }

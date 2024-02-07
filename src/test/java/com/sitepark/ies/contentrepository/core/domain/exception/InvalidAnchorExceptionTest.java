@@ -7,15 +7,15 @@ import org.junit.jupiter.api.Test;
 
 class InvalidAnchorExceptionTest {
 
-	@Test
-	void testGetAnchor() {
-		InvalidAnchorException a = new InvalidAnchorException("abc", null);
-		assertEquals("abc", a.getName(), "unexpected name");
-	}
+  @Test
+  void testGetAnchor() {
+    InvalidAnchorException a = new InvalidAnchorException("abc", null);
+    assertEquals("abc", a.getName(), "unexpected name");
+  }
 
-	@Test
-	void testGetMessage() {
-		InvalidAnchorException a = new InvalidAnchorException("abc", null);
-		assertTrue(a.getMessage().contains("'abc'"), "name missing in message");
-	}
+  @Test
+  void testGetMessage() {
+    InvalidAnchorException a = new InvalidAnchorException("abc", null);
+    assertTrue(a.getMessage().contains("'abc'"), "name missing in message");
+  }
 }

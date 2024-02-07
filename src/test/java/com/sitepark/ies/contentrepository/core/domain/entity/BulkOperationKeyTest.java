@@ -6,11 +6,9 @@ import org.junit.jupiter.api.Test;
 
 class BulkOperationKeyTest {
 
-	@Test
-	void testGetName() {
-		assertEquals(
-				"contentrepository.purge.lock",
-				BulkOperationKey.PURGE_LOCK.getName(),
-				"unexpected name");
-	}
+  @Test
+  void testGetName() {
+    assertEquals(
+        "contentrepository.purge.lock", BulkOperationKey.PURGE_LOCK.getName(), "unexpected name");
+  }
 }

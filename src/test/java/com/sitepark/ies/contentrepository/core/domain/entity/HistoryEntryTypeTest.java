@@ -6,12 +6,8 @@ import org.junit.jupiter.api.Test;
 
 class HistoryEntryTypeTest {
 
-	@Test
-	void testName() {
-		assertEquals(
-				"CREATED",
-				HistoryEntryType.CREATED.name(),
-				"unexpected name");
-	}
-
+  @Test
+  void testName() {
+    assertEquals("CREATED", HistoryEntryType.CREATED.name(), "unexpected name");
+  }
 }

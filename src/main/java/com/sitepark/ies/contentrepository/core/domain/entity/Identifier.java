@@ -1,103 +1,99 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 public final class Identifier {
 
-	private static final int MAX_ID_LENGTH = 19;
+  private static final int MAX_ID_LENGTH = 19;
 
-	private static final String ZERO_ID = "0";
+  private static final String ZERO_ID = "0";
 
-	private final String id;
+  private final String id;
 
-	private final Anchor anchor;
+  private final Anchor anchor;
 
-	private Identifier(String id) {
-		this.id = id;
-		this.anchor = null;
-	}
+  private Identifier(String id) {
+    this.id = id;
+    this.anchor = null;
+  }
 
-	private Identifier(Anchor anchor) {
-		this.id = null;
-		this.anchor = anchor;
-	}
+  private Identifier(Anchor anchor) {
+    this.id = null;
+    this.anchor = anchor;
+  }
 
-	public static Identifier ofId(String id) {
-		return new Identifier(id);
-	}
+  public static Identifier ofId(String id) {
+    return new Identifier(id);
+  }
 
-	public static Identifier ofAnchor(Anchor anchor) {
-		Objects.requireNonNull(anchor, "anchor is null");
-		return new Identifier(anchor);
-	}
+  public static Identifier ofAnchor(Anchor anchor) {
+    Objects.requireNonNull(anchor, "anchor is null");
+    return new Identifier(anchor);
+  }
 
-	@JsonCreator
-	public static Identifier ofString(String identifier) {
-		Objects.requireNonNull(identifier, "identifier is null");
-		if (identifier.isBlank()) {
-			throw new IllegalArgumentException("identifier is blank");
-		}
-		if (isId(identifier)) {
-			return new Identifier(identifier);
-		}
-		return new Identifier(Anchor.ofString(identifier));
-	}
+  @JsonCreator
+  public static Identifier ofString(String identifier) {
+    Objects.requireNonNull(identifier, "identifier is null");
+    if (identifier.isBlank()) {
+      throw new IllegalArgumentException("identifier is blank");
+    }
+    if (isId(identifier)) {
+      return new Identifier(identifier);
+    }
+    return new Identifier(Anchor.ofString(identifier));
+  }
 
-	public Optional<String> getId() {
-		return Optional.ofNullable(this.id);
-	}
+  public Optional<String> getId() {
+    return Optional.ofNullable(this.id);
+  }
 
-	public Optional<Anchor> getAnchor() {
-		return Optional.ofNullable(this.anchor);
-	}
+  public Optional<Anchor> getAnchor() {
+    return Optional.ofNullable(this.anchor);
+  }
 
-	public static boolean isId(String str) {
+  public static boolean isId(String str) {
 
-		if (ZERO_ID.equals(str)) {
-			throw new IllegalArgumentException("id should be greater than 0");
-		}
+    if (ZERO_ID.equals(str)) {
+      throw new IllegalArgumentException("id should be greater than 0");
+    }
 
-		int length = str.length();
-		if (length > MAX_ID_LENGTH) {
-			return false;
-		}
+    int length = str.length();
+    if (length > MAX_ID_LENGTH) {
+      return false;
+    }
 
-		for (int i = 0; i < length; i++) {
-			char c = str.charAt(i);
-			if (c < '0' || c > '9') {
-				return false;
-			}
-		}
-		return true;
-	}
+    for (int i = 0; i < length; i++) {
+      char c = str.charAt(i);
+      if (c < '0' || c > '9') {
+        return false;
+      }
+    }
+    return true;
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(this.id, this.anchor);
-	}
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.id, this.anchor);
+  }
 
+  @Override
+  public boolean equals(Object o) {
 
-	@Override
-	public boolean equals(Object o) {
+    if (!(o instanceof Identifier)) {
+      return false;
+    }
 
-		if (!(o instanceof Identifier)) {
-			return false;
-		}
+    Identifier that = (Identifier) o;
+    return Objects.equals(this.id, that.id) && Objects.equals(this.anchor, that.anchor);
+  }
 
-		Identifier that = (Identifier)o;
-		return
-				Objects.equals(this.id, that.id) &&
-				Objects.equals(this.anchor, that.anchor);
-	}
-
-	@Override
-	public String toString() {
-		if (this.id != null) {
-			return this.id;
-		}
-		return this.anchor.toString();
-	}
+  @Override
+  public String toString() {
+    if (this.id != null) {
+      return this.id;
+    }
+    return this.anchor.toString();
+  }
 }

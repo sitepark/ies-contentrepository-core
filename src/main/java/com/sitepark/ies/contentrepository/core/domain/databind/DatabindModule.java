@@ -6,9 +6,9 @@ import com.sitepark.ies.contentrepository.core.domain.entity.filter.FilterDeseri
 
 public class DatabindModule extends SimpleModule {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	public DatabindModule() {
-		super.addDeserializer(Filter.class, new FilterDeserializer());
-	}
+  public DatabindModule() {
+    super.addDeserializer(Filter.class, new FilterDeserializer());
+  }
 }

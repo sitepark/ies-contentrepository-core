@@ -6,10 +6,9 @@ import org.junit.jupiter.api.Test;
 
 class ChangeSetTest {
 
-	@Test
-	void testIsEmpty() {
-		ChangeSet changeSet = new ChangeSet();
-		assertTrue(changeSet.isEmpty(), "changeSet should be empty");
-	}
-
+  @Test
+  void testIsEmpty() {
+    ChangeSet changeSet = new ChangeSet();
+    assertTrue(changeSet.isEmpty(), "changeSet should be empty");
+  }
 }

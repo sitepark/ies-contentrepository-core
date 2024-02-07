@@ -6,12 +6,8 @@ import org.junit.jupiter.api.Test;
 
 class MediaReferenceTypeTest {
 
-	@Test
-	void testName() {
-		assertEquals(
-				"EMBEDDED",
-				MediaReferenceType.EMBEDDED.name(),
-				"unexpected name");
-	}
-
+  @Test
+  void testName() {
+    assertEquals("EMBEDDED", MediaReferenceType.EMBEDDED.name(), "unexpected name");
+  }
 }
