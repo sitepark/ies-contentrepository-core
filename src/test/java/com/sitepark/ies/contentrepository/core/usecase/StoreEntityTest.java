@@ -30,6 +30,7 @@ import com.sitepark.ies.contentrepository.core.port.IdGenerator;
 import com.sitepark.ies.contentrepository.core.port.SearchIndex;
 import com.sitepark.ies.contentrepository.core.port.VersioningManager;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 class StoreEntityTest {
 
 	@Test
@@ -78,6 +79,7 @@ class StoreEntityTest {
 	}
 
 	@Test
+	@SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
 	void testCreate() {
 
 		Entity entity = Entity.builder()
@@ -214,6 +216,7 @@ class StoreEntityTest {
 	}
 
 	@Test
+	@SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
 	void testUpdate() {
 
 		Entity entity = Entity.builder()

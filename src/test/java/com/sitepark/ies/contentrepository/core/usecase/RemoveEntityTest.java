@@ -74,6 +74,7 @@ class RemoveEntityTest {
 	}
 
 	@Test
+	@SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
 	void test() {
 
 		AccessControl accessControl = mock();

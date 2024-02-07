@@ -48,6 +48,7 @@ class RecoverEntityTest {
 	}
 
 	@Test
+	@SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
 	void test() {
 
 		ContentRepository repository = mock();

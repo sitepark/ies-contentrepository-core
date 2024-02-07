@@ -25,6 +25,9 @@ class GetAllEntitiesTest {
 
 		var getAllEntities = new GetAllEntities(repository);
 
-		assertEquals(list, getAllEntities.getAllEntities(null));
+		assertEquals(
+				list,
+				getAllEntities.getAllEntities(null),
+				"unexpected entities");
 	}
 }

@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,6 +28,8 @@ import com.sitepark.ies.contentrepository.core.port.Publisher;
 import com.sitepark.ies.contentrepository.core.port.RecycleBin;
 import com.sitepark.ies.contentrepository.core.port.SearchIndex;
 import com.sitepark.ies.contentrepository.core.port.VersioningManager;
+
+import jakarta.inject.Inject;
 
 public class BulkPurge {
 

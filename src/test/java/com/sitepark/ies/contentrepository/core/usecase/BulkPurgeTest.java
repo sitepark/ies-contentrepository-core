@@ -101,6 +101,7 @@ class BulkPurgeTest {
 	}
 
 	@Test
+	@SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
 	void test() {
 
 		BulkPurgeInput input = BulkPurgeInput.builder()

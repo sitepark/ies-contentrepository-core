@@ -2,11 +2,11 @@ package com.sitepark.ies.contentrepository.core.usecase;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.domain.entity.query.Query;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
+
+import jakarta.inject.Inject;
 
 public final class GetAllEntities {
 
