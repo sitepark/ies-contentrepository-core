@@ -78,11 +78,8 @@ class UniquePropertyPolymorphicDeserializerTest {
   }
 
   private static class A {}
-  ;
 
   private static final class B extends A {}
-  ;
 
   private static final class C extends A {}
-  ;
 }

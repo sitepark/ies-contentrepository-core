@@ -26,7 +26,7 @@ public class UniquePropertyPolymorphicDeserializer<T> extends StdDeserializer<T>
 
   public UniquePropertyPolymorphicDeserializer(Class<T> clazz) {
     super(clazz);
-    this.registry = new HashMap<String, Class<? extends T>>();
+    this.registry = new HashMap<>();
   }
 
   public void register(String uniqueProperty, Class<? extends T> clazz) {
