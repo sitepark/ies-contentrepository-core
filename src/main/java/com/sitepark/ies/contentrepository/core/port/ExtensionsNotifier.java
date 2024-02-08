@@ -1,5 +1,5 @@
 package com.sitepark.ies.contentrepository.core.port;
 
 public interface ExtensionsNotifier {
-	void notifyPurge(String id);
+  void notifyPurge(String id);
 }

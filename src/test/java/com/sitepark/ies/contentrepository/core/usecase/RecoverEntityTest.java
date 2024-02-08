@@ -7,10 +7,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
-
-import org.junit.jupiter.api.Test;
-
 import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItem;
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
@@ -18,61 +14,58 @@ import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.HistoryManager;
 import com.sitepark.ies.contentrepository.core.port.RecycleBin;
 import com.sitepark.ies.contentrepository.core.port.SearchIndex;
+import java.util.Optional;
+import org.junit.jupiter.api.Test;
 
 class RecoverEntityTest {
 
-	@Test
-	void testAccessDenied() {
+  @Test
+  void testAccessDenied() {
 
-		ContentRepository repository = mock();
-		HistoryManager historyManager = mock();
-		RecycleBin recycleBin = mock();
-		SearchIndex searchIndex = mock();
+    ContentRepository repository = mock();
+    HistoryManager historyManager = mock();
+    RecycleBin recycleBin = mock();
+    SearchIndex searchIndex = mock();
 
-		RecycleBinItem recycleBinItem = mock();
-		when(recycleBin.get(anyString())).thenReturn(Optional.of(recycleBinItem));
+    RecycleBinItem recycleBinItem = mock();
+    when(recycleBin.get(anyString())).thenReturn(Optional.of(recycleBinItem));
 
-		AccessControl accessControl = mock();
-		when(accessControl.isGroupCreateable(anyString())).thenReturn(false);
+    AccessControl accessControl = mock();
+    when(accessControl.isGroupCreateable(anyString())).thenReturn(false);
 
-		RecoverEntity recoverEntity = new RecoverEntity(
-				repository,
-				historyManager,
-				accessControl,
-				recycleBin,
-				searchIndex);
+    RecoverEntity recoverEntity =
+        new RecoverEntity(repository, historyManager, accessControl, recycleBin, searchIndex);
 
-		assertThrows(AccessDeniedException.class, () -> {
-			recoverEntity.recover("123");
-		}, "recover should be denied access");
-	}
+    assertThrows(
+        AccessDeniedException.class,
+        () -> {
+          recoverEntity.recover("123");
+        },
+        "recover should be denied access");
+  }
 
-	@Test
-	@SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
-	void test() {
+  @Test
+  @SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
+  void test() {
 
-		ContentRepository repository = mock();
-		HistoryManager historyManager = mock();
-		RecycleBin recycleBin = mock();
-		SearchIndex searchIndex = mock();
+    ContentRepository repository = mock();
+    HistoryManager historyManager = mock();
+    RecycleBin recycleBin = mock();
+    SearchIndex searchIndex = mock();
 
-		RecycleBinItem recycleBinItem = mock();
-		when(recycleBin.get(anyString())).thenReturn(Optional.of(recycleBinItem));
+    RecycleBinItem recycleBinItem = mock();
+    when(recycleBin.get(anyString())).thenReturn(Optional.of(recycleBinItem));
 
-		AccessControl accessControl = mock();
-		when(accessControl.isGroupCreateable(any())).thenReturn(true);
+    AccessControl accessControl = mock();
+    when(accessControl.isGroupCreateable(any())).thenReturn(true);
 
-		RecoverEntity recoverEntity = new RecoverEntity(
-				repository,
-				historyManager,
-				accessControl,
-				recycleBin,
-				searchIndex);
+    RecoverEntity recoverEntity =
+        new RecoverEntity(repository, historyManager, accessControl, recycleBin, searchIndex);
 
-		recoverEntity.recover("123");
+    recoverEntity.recover("123");
 
-		verify(repository).store(any());
-		verify(historyManager).createEntry(any(), any(), any());
-		verify(searchIndex).index(anyString());
-	}
+    verify(repository).store(any());
+    verify(historyManager).createEntry(any(), any(), any());
+    verify(searchIndex).index(anyString());
+  }
 }

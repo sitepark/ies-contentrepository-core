@@ -1,7 +1,5 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
-import java.util.Optional;
-
 import com.sitepark.ies.contentrepository.core.domain.entity.ChangeSet;
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
@@ -18,100 +16,108 @@ import com.sitepark.ies.contentrepository.core.port.HistoryManager;
 import com.sitepark.ies.contentrepository.core.port.IdGenerator;
 import com.sitepark.ies.contentrepository.core.port.SearchIndex;
 import com.sitepark.ies.contentrepository.core.port.VersioningManager;
+import java.util.Optional;
 
 public final class StoreEntity {
 
-	private final ContentRepository repository;
-	private final EntityLockManager lockManager;
-	private final VersioningManager versioningManager;
-	private final HistoryManager historyManager;
-	private final AccessControl accessControl;
-	private final IdGenerator idGenerator;
-	private final SearchIndex searchIndex;
-	private final ContentDiffer contentDiffer;
+  private final ContentRepository repository;
+  private final EntityLockManager lockManager;
+  private final VersioningManager versioningManager;
+  private final HistoryManager historyManager;
+  private final AccessControl accessControl;
+  private final IdGenerator idGenerator;
+  private final SearchIndex searchIndex;
+  private final ContentDiffer contentDiffer;
 
-	protected StoreEntity(ContentRepository repository, EntityLockManager lockManager,
-			VersioningManager versioningManager, HistoryManager historyManager, AccessControl accessControl,
-			IdGenerator idGenerator, SearchIndex searchIndex, ContentDiffer contentDiffer) {
-		this.repository = repository;
-		this.lockManager = lockManager;
-		this.versioningManager = versioningManager;
-		this.historyManager = historyManager;
-		this.accessControl = accessControl;
-		this.idGenerator = idGenerator;
-		this.searchIndex = searchIndex;
-		this.contentDiffer = contentDiffer;
-	}
+  protected StoreEntity(
+      ContentRepository repository,
+      EntityLockManager lockManager,
+      VersioningManager versioningManager,
+      HistoryManager historyManager,
+      AccessControl accessControl,
+      IdGenerator idGenerator,
+      SearchIndex searchIndex,
+      ContentDiffer contentDiffer) {
+    this.repository = repository;
+    this.lockManager = lockManager;
+    this.versioningManager = versioningManager;
+    this.historyManager = historyManager;
+    this.accessControl = accessControl;
+    this.idGenerator = idGenerator;
+    this.searchIndex = searchIndex;
+    this.contentDiffer = contentDiffer;
+  }
 
-	public String store(Entity entity) {
-		if (entity.getId().isEmpty()) {
-			return this.create(entity);
-		} else {
-			return this.update(entity);
-		}
-	}
+  public String store(Entity entity) {
+    if (entity.getId().isEmpty()) {
+      return this.create(entity);
+    } else {
+      return this.update(entity);
+    }
+  }
 
-	private String create(Entity newEntity) {
+  private String create(Entity newEntity) {
 
-		Optional<String> parent = newEntity.getParent();
-		parent.orElseThrow(() -> new ParentMissingException());
+    Optional<String> parent = newEntity.getParent();
+    parent.orElseThrow(() -> new ParentMissingException());
 
-		String parentId = parent.get();
+    String parentId = parent.get();
 
-		if (!this.accessControl.isEntityCreateable(parentId)) {
-			throw new AccessDeniedException("Not allowed to create entity in group " + parent);
-		}
+    if (!this.accessControl.isEntityCreateable(parentId)) {
+      throw new AccessDeniedException("Not allowed to create entity in group " + parent);
+    }
 
-		String generatedId = this.idGenerator.generate();
+    String generatedId = this.idGenerator.generate();
 
-		Entity entityWithId = newEntity.toBuilder().id(generatedId).build();
+    Entity entityWithId = newEntity.toBuilder().id(generatedId).build();
 
-		Entity versioned = this.versioningManager.createNewVersion(entityWithId);
+    Entity versioned = this.versioningManager.createNewVersion(entityWithId);
 
-		this.repository.store(versioned);
-		this.historyManager.createEntry(generatedId, versioned.getVersion().get(),
-				HistoryEntryType.CREATED);
-		this.searchIndex.index(generatedId);
+    this.repository.store(versioned);
+    this.historyManager.createEntry(
+        generatedId, versioned.getVersion().get(), HistoryEntryType.CREATED);
+    this.searchIndex.index(generatedId);
 
-		return versioned.getId().get();
-	}
+    return versioned.getId().get();
+  }
 
-	private String update(Entity updateEntity) {
+  private String update(Entity updateEntity) {
 
-		updateEntity.getId()
-				.orElseThrow(() -> new IllegalArgumentException("Update failed, identifier missing"));
+    updateEntity
+        .getId()
+        .orElseThrow(() -> new IllegalArgumentException("Update failed, identifier missing"));
 
-		String id = updateEntity.getId().get();
+    String id = updateEntity.getId().get();
 
-		Optional<Entity> existsEntity = this.repository.get(id);
-		existsEntity.orElseThrow(() -> new EntityNotFoundException(id));
+    Optional<Entity> existsEntity = this.repository.get(id);
+    existsEntity.orElseThrow(() -> new EntityNotFoundException(id));
 
-		if (!this.accessControl.isEntityWritable(id)) {
-			throw new AccessDeniedException("Not allowed to update entity " + id);
-		}
+    if (!this.accessControl.isEntityWritable(id)) {
+      throw new AccessDeniedException("Not allowed to update entity " + id);
+    }
 
-		try {
-			Optional<EntityLock> lock = this.lockManager.getLock(id);
-			lock.ifPresent(l -> {
-				throw new EntityLockedException(l);
-			});
+    try {
+      Optional<EntityLock> lock = this.lockManager.getLock(id);
+      lock.ifPresent(
+          l -> {
+            throw new EntityLockedException(l);
+          });
 
-			ChangeSet changeSet = this.contentDiffer.diff(updateEntity, existsEntity.get());
-			if (changeSet.isEmpty()) {
-				return updateEntity.getId().get();
-			}
+      ChangeSet changeSet = this.contentDiffer.diff(updateEntity, existsEntity.get());
+      if (changeSet.isEmpty()) {
+        return updateEntity.getId().get();
+      }
 
-			Entity versioned = this.versioningManager.createNewVersion(updateEntity);
+      Entity versioned = this.versioningManager.createNewVersion(updateEntity);
 
-			this.repository.store(versioned);
-			this.historyManager.createEntry(id, versioned.getVersion().get(),
-					HistoryEntryType.UPDATED);
-			this.searchIndex.index(id);
+      this.repository.store(versioned);
+      this.historyManager.createEntry(id, versioned.getVersion().get(), HistoryEntryType.UPDATED);
+      this.searchIndex.index(id);
 
-			return versioned.getId().get();
+      return versioned.getId().get();
 
-		} finally {
-			this.lockManager.unlock(id);
-		}
-	}
+    } finally {
+      this.lockManager.unlock(id);
+    }
+  }
 }
