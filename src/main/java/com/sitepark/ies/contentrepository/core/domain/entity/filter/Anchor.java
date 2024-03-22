@@ -1,20 +1,21 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.filter;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
 
 public class Anchor implements Filter {
 
-	@SuppressWarnings("PMD.AvoidFieldNameMatchingTypeName") // so that when deserializing it has the desired format
-	private final com.sitepark.ies.contentrepository.core.domain.entity.Anchor anchor;
+  @SuppressWarnings(
+      "PMD.AvoidFieldNameMatchingTypeName") // so that when deserializing it has the desired format
+  private final com.sitepark.ies.contentrepository.core.domain.entity.Anchor anchor;
 
-	protected Anchor(@JsonProperty("anchor") com.sitepark.ies.contentrepository.core.domain.entity.Anchor anchor) {
-		Objects.requireNonNull(anchor, "anchor is null");
-		this.anchor = anchor;
-	}
+  protected Anchor(
+      @JsonProperty("anchor") com.sitepark.ies.contentrepository.core.domain.entity.Anchor anchor) {
+    Objects.requireNonNull(anchor, "anchor is null");
+    this.anchor = anchor;
+  }
 
-	public com.sitepark.ies.contentrepository.core.domain.entity.Anchor getAnchor() {
-		return this.anchor;
-	}
+  public com.sitepark.ies.contentrepository.core.domain.entity.Anchor getAnchor() {
+    return this.anchor;
+  }
 }

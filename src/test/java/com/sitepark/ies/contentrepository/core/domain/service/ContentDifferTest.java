@@ -6,12 +6,14 @@ import org.junit.jupiter.api.Test;
 
 class ContentDifferTest {
 
-	@Test
-	void testDiff() {
-		assertThrows(UnsupportedOperationException.class, () -> {
-			ContentDiffer differ = new ContentDiffer();
-			differ.diff(null, null);
-		}, "should be unsupported");
-	}
-
+  @Test
+  void testDiff() {
+    assertThrows(
+        UnsupportedOperationException.class,
+        () -> {
+          ContentDiffer differ = new ContentDiffer();
+          differ.diff(null, null);
+        },
+        "should be unsupported");
+  }
 }

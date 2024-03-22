@@ -8,15 +8,15 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 class GroupNotEmptyExceptionTest {
 
-	@Test
-	void testGetLock() {
-		GroupNotEmptyException a = new GroupNotEmptyException("123");
-		assertEquals("123", a.getId(), "unexpected id");
-	}
+  @Test
+  void testGetLock() {
+    GroupNotEmptyException a = new GroupNotEmptyException("123");
+    assertEquals("123", a.getId(), "unexpected id");
+  }
 
-	@Test
-	void testGetMessage() {
-		GroupNotEmptyException a = new GroupNotEmptyException("123");
-		assertTrue(a.getMessage().contains("123"), "id expected in message");
-	}
+  @Test
+  void testGetMessage() {
+    GroupNotEmptyException a = new GroupNotEmptyException("123");
+    assertTrue(a.getMessage().contains("123"), "id expected in message");
+  }
 }
