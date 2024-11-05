@@ -17,18 +17,18 @@ import org.junit.jupiter.api.Test;
   "NP_NULL_PARAM_DEREF_NONVIRTUAL",
   "NP_NULL_PARAM_DEREF_ALL_TARGETS_DANGEROUS"
 })
-class EntityBulkOperationTest {
+class EntityBackgroundOperationTest {
 
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEquals() {
-    EqualsVerifier.forClass(EntityBulkOperation.class).verify();
+    EqualsVerifier.forClass(EntityBackgroundOperation.class).verify();
   }
 
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   public void testToString() {
-    ToStringVerifier.forClass(EntityBulkOperation.class)
+    ToStringVerifier.forClass(EntityBackgroundOperation.class)
         .withClassName(NameStyle.SIMPLE_NAME)
         .verify();
   }
@@ -37,14 +37,14 @@ class EntityBulkOperationTest {
   void testSetKey() {
     Entity entity = mock();
     Consumer<Entity> consumer = mock();
-    EntityBulkOperation op =
-        EntityBulkOperation.builder()
-            .key(BulkOperationKey.PURGE_LOCK)
+    EntityBackgroundOperation op =
+        EntityBackgroundOperation.builder()
+            .key(BackgroundOperationKey.PURGE_LOCK)
             .entityList(Arrays.asList(entity))
             .consumer(consumer)
             .build();
 
-    assertEquals(BulkOperationKey.PURGE_LOCK, op.getKey(), "unexpected key");
+    assertEquals(BackgroundOperationKey.PURGE_LOCK, op.getKey(), "unexpected key");
   }
 
   @Test
@@ -52,7 +52,7 @@ class EntityBulkOperationTest {
     assertThrows(
         NullPointerException.class,
         () -> {
-          EntityBulkOperation.builder().key(null);
+          EntityBackgroundOperation.builder().key(null);
         },
         "key must not be null");
   }
@@ -64,7 +64,7 @@ class EntityBulkOperationTest {
     assertThrows(
         IllegalStateException.class,
         () -> {
-          EntityBulkOperation.builder()
+          EntityBackgroundOperation.builder()
               .entityList(Arrays.asList(entity))
               .consumer(consumer)
               .build();
@@ -76,9 +76,9 @@ class EntityBulkOperationTest {
   void testSetEntity() {
     Entity entity = mock();
     Consumer<Entity> consumer = mock();
-    EntityBulkOperation op =
-        EntityBulkOperation.builder()
-            .key(BulkOperationKey.PURGE_LOCK)
+    EntityBackgroundOperation op =
+        EntityBackgroundOperation.builder()
+            .key(BackgroundOperationKey.PURGE_LOCK)
             .entityList(Arrays.asList(entity))
             .consumer(consumer)
             .build();
@@ -91,7 +91,7 @@ class EntityBulkOperationTest {
     assertThrows(
         NullPointerException.class,
         () -> {
-          EntityBulkOperation.builder().entityList(null);
+          EntityBackgroundOperation.builder().entityList(null);
         },
         "entityList must not be null");
   }
@@ -102,7 +102,10 @@ class EntityBulkOperationTest {
     assertThrows(
         IllegalStateException.class,
         () -> {
-          EntityBulkOperation.builder().key(BulkOperationKey.PURGE_LOCK).consumer(consumer).build();
+          EntityBackgroundOperation.builder()
+              .key(BackgroundOperationKey.PURGE_LOCK)
+              .consumer(consumer)
+              .build();
         },
         "entity must not be missing");
   }
@@ -111,9 +114,9 @@ class EntityBulkOperationTest {
   void testSetConsumer() {
     Entity entity = mock();
     Consumer<Entity> consumer = mock();
-    EntityBulkOperation op =
-        EntityBulkOperation.builder()
-            .key(BulkOperationKey.PURGE_LOCK)
+    EntityBackgroundOperation op =
+        EntityBackgroundOperation.builder()
+            .key(BackgroundOperationKey.PURGE_LOCK)
             .entityList(Arrays.asList(entity))
             .consumer(consumer)
             .build();
@@ -126,7 +129,7 @@ class EntityBulkOperationTest {
     assertThrows(
         NullPointerException.class,
         () -> {
-          EntityBulkOperation.builder().consumer(null);
+          EntityBackgroundOperation.builder().consumer(null);
         },
         "consumer must not be null");
   }
@@ -137,8 +140,8 @@ class EntityBulkOperationTest {
     assertThrows(
         IllegalStateException.class,
         () -> {
-          EntityBulkOperation.builder()
-              .key(BulkOperationKey.PURGE_LOCK)
+          EntityBackgroundOperation.builder()
+              .key(BackgroundOperationKey.PURGE_LOCK)
               .entityList(Arrays.asList(entity))
               .build();
         },

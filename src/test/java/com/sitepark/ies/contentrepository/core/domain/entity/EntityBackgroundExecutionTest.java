@@ -20,27 +20,27 @@ import org.junit.jupiter.api.Test;
   "NP_NULL_PARAM_DEREF_NONVIRTUAL",
   "NP_NULL_PARAM_DEREF_ALL_TARGETS_DANGEROUS"
 })
-class EntityBulkExecutionTest {
+class EntityBackgroundExecutionTest {
 
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEquals() {
-    EqualsVerifier.forClass(EntityBulkExecution.class).verify();
+    EqualsVerifier.forClass(EntityBackgroundExecution.class).verify();
   }
 
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   public void testToString() {
-    ToStringVerifier.forClass(EntityBulkExecution.class)
+    ToStringVerifier.forClass(EntityBackgroundExecution.class)
         .withClassName(NameStyle.SIMPLE_NAME)
         .verify();
   }
 
   @Test
   void testSetTopic() {
-    EntityBulkOperation op = mock(EntityBulkOperation.class);
-    EntityBulkExecution execution =
-        EntityBulkExecution.builder().topic("topic").operation(op).build();
+    EntityBackgroundOperation op = mock(EntityBackgroundOperation.class);
+    EntityBackgroundExecution execution =
+        EntityBackgroundExecution.builder().topic("topic").operation(op).build();
 
     String[] expected = new String[] {"topic"};
 
@@ -52,7 +52,7 @@ class EntityBulkExecutionTest {
     assertThrows(
         NullPointerException.class,
         () -> {
-          EntityBulkExecution.builder().topic((String[]) null);
+          EntityBackgroundExecution.builder().topic((String[]) null);
         },
         "topic must not be null");
   }
@@ -62,7 +62,7 @@ class EntityBulkExecutionTest {
     assertThrows(
         NullPointerException.class,
         () -> {
-          EntityBulkExecution.builder().topic((String) null);
+          EntityBackgroundExecution.builder().topic((String) null);
         },
         "topic part must not be null");
   }
@@ -72,19 +72,19 @@ class EntityBulkExecutionTest {
     assertThrows(
         IllegalStateException.class,
         () -> {
-          EntityBulkOperation op = mock(EntityBulkOperation.class);
-          EntityBulkExecution.builder().operation(op).build();
+          EntityBackgroundOperation op = mock(EntityBackgroundOperation.class);
+          EntityBackgroundExecution.builder().operation(op).build();
         },
         "topic must be set");
   }
 
   @Test
   void testSetOperation() {
-    EntityBulkOperation op = mock(EntityBulkOperation.class);
-    EntityBulkExecution execution =
-        EntityBulkExecution.builder().topic("topic").operation(op).build();
+    EntityBackgroundOperation op = mock(EntityBackgroundOperation.class);
+    EntityBackgroundExecution execution =
+        EntityBackgroundExecution.builder().topic("topic").operation(op).build();
 
-    List<EntityBulkOperation> expected = Arrays.asList(op);
+    List<EntityBackgroundOperation> expected = Arrays.asList(op);
 
     assertEquals(expected, execution.getOperations(), "unexpected operations");
   }
@@ -94,7 +94,7 @@ class EntityBulkExecutionTest {
     assertThrows(
         NullPointerException.class,
         () -> {
-          EntityBulkExecution.builder().operation((EntityBulkOperation) null);
+          EntityBackgroundExecution.builder().operation((EntityBackgroundOperation) null);
         },
         "operation must not be null");
   }
@@ -104,7 +104,7 @@ class EntityBulkExecutionTest {
     assertThrows(
         NullPointerException.class,
         () -> {
-          EntityBulkExecution.builder().operation((EntityBulkOperation[]) null);
+          EntityBackgroundExecution.builder().operation((EntityBackgroundOperation[]) null);
         },
         "operations must not be null");
   }
@@ -114,26 +114,30 @@ class EntityBulkExecutionTest {
     assertThrows(
         IllegalStateException.class,
         () -> {
-          EntityBulkExecution.builder().topic("topic").build();
+          EntityBackgroundExecution.builder().topic("topic").build();
         },
         "operation must be set");
   }
 
   @Test
   void testSetFinalizer() {
-    EntityBulkOperation op = mock(EntityBulkOperation.class);
-    EntityBulkOperation finalizer = mock(EntityBulkOperation.class);
-    EntityBulkExecution execution =
-        EntityBulkExecution.builder().topic("topic").operation(op).finalizer(finalizer).build();
+    EntityBackgroundOperation op = mock(EntityBackgroundOperation.class);
+    EntityBackgroundOperation finalizer = mock(EntityBackgroundOperation.class);
+    EntityBackgroundExecution execution =
+        EntityBackgroundExecution.builder()
+            .topic("topic")
+            .operation(op)
+            .finalizer(finalizer)
+            .build();
 
     assertEquals(finalizer, execution.getFinalizer().get(), "unexpected finalizer");
   }
 
   @Test
   void testEmptyFinalizer() {
-    EntityBulkOperation op = mock(EntityBulkOperation.class);
-    EntityBulkExecution execution =
-        EntityBulkExecution.builder().topic("topic").operation(op).build();
+    EntityBackgroundOperation op = mock(EntityBackgroundOperation.class);
+    EntityBackgroundExecution execution =
+        EntityBackgroundExecution.builder().topic("topic").operation(op).build();
 
     assertTrue(execution.getFinalizer().isEmpty(), "finalizer optional should be empty");
   }

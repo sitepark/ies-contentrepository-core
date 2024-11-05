@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class EntityBulkExecution {
+public class EntityBackgroundExecution {
 
   private final String[] topic;
 
-  private final List<EntityBulkOperation> operations;
+  private final List<EntityBackgroundOperation> operations;
 
-  private final EntityBulkOperation finalizer;
+  private final EntityBackgroundOperation finalizer;
 
-  protected EntityBulkExecution(Builder builder) {
+  protected EntityBackgroundExecution(Builder builder) {
     this.topic = builder.topic;
     this.operations = Collections.unmodifiableList(builder.operations);
     this.finalizer = builder.finalizer;
@@ -28,11 +28,11 @@ public class EntityBulkExecution {
   }
 
   @SuppressFBWarnings("EI_EXPOSE_REP")
-  public List<EntityBulkOperation> getOperations() {
+  public List<EntityBackgroundOperation> getOperations() {
     return this.operations;
   }
 
-  public Optional<EntityBulkOperation> getFinalizer() {
+  public Optional<EntityBackgroundOperation> getFinalizer() {
     return Optional.ofNullable(this.finalizer);
   }
 
@@ -44,11 +44,11 @@ public class EntityBulkExecution {
   @Override
   public final boolean equals(Object o) {
 
-    if (!(o instanceof EntityBulkExecution)) {
+    if (!(o instanceof EntityBackgroundExecution)) {
       return false;
     }
 
-    EntityBulkExecution execution = (EntityBulkExecution) o;
+    EntityBackgroundExecution execution = (EntityBackgroundExecution) o;
 
     return Arrays.equals(this.topic, execution.topic)
         && Objects.equals(this.operations, execution.operations)
@@ -59,7 +59,7 @@ public class EntityBulkExecution {
   public String toString() {
     StringBuilder b =
         new StringBuilder(100)
-            .append("EntityBulkExecution[topic:")
+            .append("EntityBackgroundExecution[topic:")
             .append(Arrays.toString(this.topic))
             .append(", operations:")
             .append(this.operations)
@@ -77,18 +77,16 @@ public class EntityBulkExecution {
 
     private String[] topic;
 
-    private final List<EntityBulkOperation> operations = new ArrayList<>();
+    private final List<EntityBackgroundOperation> operations = new ArrayList<>();
 
-    private EntityBulkOperation finalizer;
+    private EntityBackgroundOperation finalizer;
 
     protected Builder() {}
 
     /**
-     * Topics are used to display all bulk operations for a specific topic.
-     * Topics are hierarchical and the path of the topic is specified via
-     * a string array. Topics are freely definable.
-     * If e.g. all Topics of <code>level1</code> are queried, all
-     * BulkExecutions recursively below <code>level1</code> are returned.
+     * Topics are used to display all bulk operations for a specific topic. Topics are hierarchical and the path of
+     * the topic is specified via a string array. Topics are freely definable. If e.g. all Topics of
+     * <code>level1</code> are queried, all BulkExecutions recursively below <code>level1</code> are returned.
      */
     public Builder topic(String... topic) {
       Objects.requireNonNull(topic, "topic is null");
@@ -101,29 +99,29 @@ public class EntityBulkExecution {
     }
 
     @SuppressWarnings("PMD.UseArraysAsList")
-    public Builder operation(EntityBulkOperation... operations) {
+    public Builder operation(EntityBackgroundOperation... operations) {
       Objects.requireNonNull(operations, "operations is null");
-      for (EntityBulkOperation operation : operations) {
+      for (EntityBackgroundOperation operation : operations) {
         Objects.requireNonNull(operation, "operations contains null values");
         this.operations.add(operation);
       }
       return this;
     }
 
-    public Builder finalizer(EntityBulkOperation finalizer) {
+    public Builder finalizer(EntityBackgroundOperation finalizer) {
       Objects.requireNonNull(finalizer, "finalizer is null");
       this.finalizer = finalizer;
       return this;
     }
 
-    public EntityBulkExecution build() {
+    public EntityBackgroundExecution build() {
       if (this.topic == null) {
         throw new IllegalStateException("topic must be set");
       }
       if (this.operations.isEmpty()) {
         throw new IllegalStateException("operation must be set");
       }
-      return new EntityBulkExecution(this);
+      return new EntityBackgroundExecution(this);
     }
   }
 }

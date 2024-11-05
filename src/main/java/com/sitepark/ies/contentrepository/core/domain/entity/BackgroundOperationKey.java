@@ -1,6 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
-public enum BulkOperationKey {
+public enum BackgroundOperationKey {
   PURGE_LOCK("contentrepository.purge.lock"),
   PURGE_DEPUBLISH("contentrepository.purge.depublish"),
   PURGE_PURGE("contentrepository.purge.purge"),
@@ -8,7 +8,7 @@ public enum BulkOperationKey {
 
   private final String name;
 
-  private BulkOperationKey(String name) {
+  private BackgroundOperationKey(String name) {
     this.name = name;
   }
 

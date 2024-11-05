@@ -29,8 +29,8 @@ public final class HistoryEntry implements Serializable {
   }
 
   /**
-   * The initiator can be a user of a system-service or other subjects who
-   * could authenticate themselves to work with the system.
+   * The initiator can be a user of a system-service or other subjects who could authenticate themselves to work with
+   * the system.
    */
   public String getInitiator() {
     return initiator;
@@ -64,18 +64,16 @@ public final class HistoryEntry implements Serializable {
   @Override
   public final boolean equals(Object o) {
 
-    if (!(o instanceof HistoryEntry)) {
+    if (!(o instanceof HistoryEntry that)) {
       return false;
     }
 
-    HistoryEntry entry = (HistoryEntry) o;
-
-    return Objects.equals(this.entity, entry.entity)
-        && Objects.equals(this.initiator, entry.initiator)
-        && Objects.equals(this.user, entry.user)
-        && Objects.equals(this.timestamp, entry.timestamp)
-        && Objects.equals(this.type, entry.type)
-        && Objects.equals(this.comment, entry.comment);
+    return Objects.equals(this.entity, that.entity)
+        && Objects.equals(this.initiator, that.initiator)
+        && Objects.equals(this.user, that.user)
+        && Objects.equals(this.timestamp, that.timestamp)
+        && Objects.equals(this.type, that.type)
+        && Objects.equals(this.comment, that.comment);
   }
 
   @Override

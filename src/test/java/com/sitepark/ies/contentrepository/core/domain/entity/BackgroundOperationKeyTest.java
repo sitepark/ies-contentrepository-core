@@ -4,11 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-class BulkOperationKeyTest {
+class BackgroundOperationKeyTest {
 
   @Test
   void testGetName() {
     assertEquals(
-        "contentrepository.purge.lock", BulkOperationKey.PURGE_LOCK.getName(), "unexpected name");
+        "contentrepository.purge.lock",
+        BackgroundOperationKey.PURGE_LOCK.getName(),
+        "unexpected name");
   }
 }

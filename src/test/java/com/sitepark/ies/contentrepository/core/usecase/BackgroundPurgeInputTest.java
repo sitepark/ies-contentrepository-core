@@ -16,18 +16,19 @@ import org.junit.jupiter.api.Test;
   "NP_NULL_PARAM_DEREF_NONVIRTUAL",
   "NP_NULL_PARAM_DEREF_ALL_TARGETS_DANGEROUS"
 })
-class BulkPurgeInputTest {
+class BackgroundPurgeInputTest {
 
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEquals() {
-    EqualsVerifier.forClass(BulkPurgeInput.class).verify();
+    EqualsVerifier.forClass(BackgroundPurgeInput.class).verify();
   }
 
   @Test
   void testSetRootList() {
 
-    BulkPurgeInput input = BulkPurgeInput.builder().rootList(Arrays.asList(123L)).build();
+    BackgroundPurgeInput input =
+        BackgroundPurgeInput.builder().rootList(Arrays.asList(123L)).build();
     assertEquals(Arrays.asList(123L), input.getRootList(), "unexpected rootList");
   }
 
@@ -36,7 +37,7 @@ class BulkPurgeInputTest {
     assertThrows(
         NullPointerException.class,
         () -> {
-          BulkPurgeInput.builder().rootList(null);
+          BackgroundPurgeInput.builder().rootList(null);
         },
         "rootList must not be null");
   }
@@ -44,7 +45,7 @@ class BulkPurgeInputTest {
   @Test
   void testSetRoot() {
 
-    BulkPurgeInput input = BulkPurgeInput.builder().root(123L).build();
+    BackgroundPurgeInput input = BackgroundPurgeInput.builder().root(123L).build();
     assertEquals(Arrays.asList(123L), input.getRootList(), "unexpected root");
   }
 
@@ -53,7 +54,7 @@ class BulkPurgeInputTest {
     assertThrows(
         NullPointerException.class,
         () -> {
-          BulkPurgeInput.builder().root(null);
+          BackgroundPurgeInput.builder().root(null);
         },
         "root must not be null");
   }
@@ -63,7 +64,7 @@ class BulkPurgeInputTest {
 
     Filter filter = mock();
 
-    BulkPurgeInput input = BulkPurgeInput.builder().filterBy(filter).build();
+    BackgroundPurgeInput input = BackgroundPurgeInput.builder().filterBy(filter).build();
     assertEquals(filter, input.getFilter().get(), "unexpected root");
   }
 
@@ -72,14 +73,14 @@ class BulkPurgeInputTest {
     assertThrows(
         NullPointerException.class,
         () -> {
-          BulkPurgeInput.builder().filterBy(null);
+          BackgroundPurgeInput.builder().filterBy(null);
         },
         "filterBy must not be null");
   }
 
   @Test
   void testForceLock() {
-    BulkPurgeInput input = BulkPurgeInput.builder().root(123L).forceLock(true).build();
+    BackgroundPurgeInput input = BackgroundPurgeInput.builder().root(123L).forceLock(true).build();
     assertTrue(input.isForceLock(), "unexpected forceLock");
   }
 
@@ -88,7 +89,7 @@ class BulkPurgeInputTest {
     assertThrows(
         IllegalStateException.class,
         () -> {
-          BulkPurgeInput.builder().build();
+          BackgroundPurgeInput.builder().build();
         });
   }
 
@@ -97,13 +98,13 @@ class BulkPurgeInputTest {
 
     Filter filter = mock();
 
-    BulkPurgeInput input =
-        BulkPurgeInput.builder().root(123L).filterBy(filter).forceLock(true).build();
+    BackgroundPurgeInput input =
+        BackgroundPurgeInput.builder().root(123L).filterBy(filter).forceLock(true).build();
 
-    BulkPurgeInput copy = input.toBuilder().rootList(Arrays.asList(345L)).build();
+    BackgroundPurgeInput copy = input.toBuilder().rootList(Arrays.asList(345L)).build();
 
-    BulkPurgeInput expected =
-        BulkPurgeInput.builder().root(345L).filterBy(filter).forceLock(true).build();
+    BackgroundPurgeInput expected =
+        BackgroundPurgeInput.builder().root(345L).filterBy(filter).forceLock(true).build();
 
     assertEquals(expected, copy, "unexpected copy");
   }
@@ -113,13 +114,13 @@ class BulkPurgeInputTest {
 
     Filter filter = mock();
 
-    BulkPurgeInput input =
-        BulkPurgeInput.builder().root(123L).filterBy(filter).forceLock(true).build();
+    BackgroundPurgeInput input =
+        BackgroundPurgeInput.builder().root(123L).filterBy(filter).forceLock(true).build();
 
-    BulkPurgeInput copy = input.toBuilder().root(345L).build();
+    BackgroundPurgeInput copy = input.toBuilder().root(345L).build();
 
-    BulkPurgeInput expected =
-        BulkPurgeInput.builder()
+    BackgroundPurgeInput expected =
+        BackgroundPurgeInput.builder()
             .rootList(Arrays.asList(123L, 345L))
             .filterBy(filter)
             .forceLock(true)

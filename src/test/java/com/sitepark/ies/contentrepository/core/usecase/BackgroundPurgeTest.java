@@ -8,12 +8,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
-import com.sitepark.ies.contentrepository.core.domain.entity.EntityBulkExecution;
-import com.sitepark.ies.contentrepository.core.domain.entity.EntityBulkOperation;
+import com.sitepark.ies.contentrepository.core.domain.entity.EntityBackgroundExecution;
+import com.sitepark.ies.contentrepository.core.domain.entity.EntityBackgroundOperation;
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
-import com.sitepark.ies.contentrepository.core.port.EntityBulkExecutor;
+import com.sitepark.ies.contentrepository.core.port.EntityBackgroundExecutor;
 import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
 import com.sitepark.ies.contentrepository.core.port.ExtensionsNotifier;
 import com.sitepark.ies.contentrepository.core.port.HistoryManager;
@@ -25,12 +25,12 @@ import com.sitepark.ies.contentrepository.core.port.VersioningManager;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
-class BulkPurgeTest {
+class BackgroundPurgeTest {
 
   @Test
   void testAccessDeniedForEntity() {
 
-    BulkPurgeInput input = BulkPurgeInput.builder().root(123L).build();
+    BackgroundPurgeInput input = BackgroundPurgeInput.builder().root(123L).build();
 
     Entity entity = Entity.builder().id("200").build();
 
@@ -40,14 +40,14 @@ class BulkPurgeTest {
     AccessControl accessControl = mock();
     when(accessControl.isEntityRemovable(anyString())).thenReturn(false);
 
-    BulkPurge bulkPurge =
-        new BulkPurge(
+    BackgroundPurge bulkPurge =
+        new BackgroundPurge(
             repository, null, null, null, accessControl, null, null, null, null, null, null);
 
     assertThrows(
         AccessDeniedException.class,
         () -> {
-          bulkPurge.bulkPurge(input);
+          bulkPurge.backgroundPurge(input);
         },
         "AccessDeniedException expected");
   }
@@ -55,7 +55,7 @@ class BulkPurgeTest {
   @Test
   void testAccessDeniedForGroup() {
 
-    BulkPurgeInput input = BulkPurgeInput.builder().root(123L).build();
+    BackgroundPurgeInput input = BackgroundPurgeInput.builder().root(123L).build();
 
     Entity entity = Entity.builder().id("200").isGroup(true).build();
 
@@ -65,14 +65,14 @@ class BulkPurgeTest {
     AccessControl accessControl = mock();
     when(accessControl.isGroupRemoveable(anyString())).thenReturn(false);
 
-    BulkPurge bulkPurge =
-        new BulkPurge(
+    BackgroundPurge bulkPurge =
+        new BackgroundPurge(
             repository, null, null, null, accessControl, null, null, null, null, null, null);
 
     assertThrows(
         AccessDeniedException.class,
         () -> {
-          bulkPurge.bulkPurge(input);
+          bulkPurge.backgroundPurge(input);
         },
         "AccessDeniedException expected");
   }
@@ -81,7 +81,7 @@ class BulkPurgeTest {
   @SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
   void test() {
 
-    BulkPurgeInput input = BulkPurgeInput.builder().root(123L).build();
+    BackgroundPurgeInput input = BackgroundPurgeInput.builder().root(123L).build();
 
     Entity entity = Entity.builder().id("200").build();
 
@@ -91,13 +91,13 @@ class BulkPurgeTest {
     AccessControl accessControl = mock();
     when(accessControl.isEntityRemovable(anyString())).thenReturn(true);
 
-    EntityBulkExecutor entityBulkExecutor = mock();
-    when(entityBulkExecutor.execute(any(EntityBulkExecution.class)))
+    EntityBackgroundExecutor entityBulkExecutor = mock();
+    when(entityBulkExecutor.execute(any(EntityBackgroundExecution.class)))
         .thenAnswer(
             args -> {
-              EntityBulkExecution execution = args.getArgument(0);
+              EntityBackgroundExecution execution = args.getArgument(0);
 
-              for (EntityBulkOperation operation : execution.getOperations()) {
+              for (EntityBackgroundOperation operation : execution.getOperations()) {
                 operation.getConsumer().accept(entity);
               }
               execution.getFinalizer().get().getConsumer().accept(entity);
@@ -114,8 +114,8 @@ class BulkPurgeTest {
     RecycleBin recycleBin = mock();
     ExtensionsNotifier extensionsNotifier = mock();
 
-    BulkPurge bulkPurge =
-        new BulkPurge(
+    BackgroundPurge bulkPurge =
+        new BackgroundPurge(
             repository,
             lockManager,
             versioningManager,
@@ -128,7 +128,7 @@ class BulkPurgeTest {
             extensionsNotifier,
             entityBulkExecutor);
 
-    bulkPurge.bulkPurge(input);
+    bulkPurge.backgroundPurge(input);
 
     verify(lockManager).lock(anyString());
     verify(publisher).depublish(anyString());

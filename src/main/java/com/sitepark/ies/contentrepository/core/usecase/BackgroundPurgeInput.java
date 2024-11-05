@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public final class BulkPurgeInput {
+public final class BackgroundPurgeInput {
 
   private final List<Long> rootList;
 
@@ -16,7 +16,7 @@ public final class BulkPurgeInput {
 
   private final boolean forceLock;
 
-  private BulkPurgeInput(Builder builder) {
+  private BackgroundPurgeInput(Builder builder) {
     this.rootList = Collections.unmodifiableList(builder.rootList);
     this.filterBy = builder.filterBy;
     this.forceLock = builder.forceLock;
@@ -43,11 +43,11 @@ public final class BulkPurgeInput {
   @Override
   public final boolean equals(Object o) {
 
-    if (!(o instanceof BulkPurgeInput)) {
+    if (!(o instanceof BackgroundPurgeInput)) {
       return false;
     }
 
-    BulkPurgeInput that = (BulkPurgeInput) o;
+    BackgroundPurgeInput that = (BackgroundPurgeInput) o;
 
     return Objects.equals(this.rootList, that.rootList)
         && Objects.equals(this.filterBy, that.filterBy)
@@ -72,7 +72,7 @@ public final class BulkPurgeInput {
 
     private Builder() {}
 
-    private Builder(BulkPurgeInput bulkPurgeRequest) {
+    private Builder(BackgroundPurgeInput bulkPurgeRequest) {
       this.rootList.addAll(bulkPurgeRequest.rootList);
       this.filterBy = bulkPurgeRequest.filterBy;
       this.forceLock = bulkPurgeRequest.forceLock;
@@ -104,11 +104,11 @@ public final class BulkPurgeInput {
       return this;
     }
 
-    public BulkPurgeInput build() {
+    public BackgroundPurgeInput build() {
       if (this.rootList.isEmpty() && this.filterBy == null) {
         throw new IllegalStateException("Either rootList or filterBy must be specified");
       }
-      return new BulkPurgeInput(this);
+      return new BackgroundPurgeInput(this);
     }
   }
 }

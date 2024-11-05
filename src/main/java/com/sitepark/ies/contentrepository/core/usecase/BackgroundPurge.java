@@ -1,9 +1,9 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
-import com.sitepark.ies.contentrepository.core.domain.entity.BulkOperationKey;
+import com.sitepark.ies.contentrepository.core.domain.entity.BackgroundOperationKey;
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
-import com.sitepark.ies.contentrepository.core.domain.entity.EntityBulkExecution;
-import com.sitepark.ies.contentrepository.core.domain.entity.EntityBulkOperation;
+import com.sitepark.ies.contentrepository.core.domain.entity.EntityBackgroundExecution;
+import com.sitepark.ies.contentrepository.core.domain.entity.EntityBackgroundOperation;
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityTree;
 import com.sitepark.ies.contentrepository.core.domain.entity.query.Query;
 import com.sitepark.ies.contentrepository.core.domain.entity.query.SubTreeQuery;
@@ -11,7 +11,7 @@ import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedExce
 import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmptyException;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
-import com.sitepark.ies.contentrepository.core.port.EntityBulkExecutor;
+import com.sitepark.ies.contentrepository.core.port.EntityBackgroundExecutor;
 import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
 import com.sitepark.ies.contentrepository.core.port.ExtensionsNotifier;
 import com.sitepark.ies.contentrepository.core.port.HistoryManager;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class BulkPurge {
+public class BackgroundPurge {
 
   private final ContentRepository repository;
 
@@ -50,13 +50,13 @@ public class BulkPurge {
 
   private final ExtensionsNotifier extensionsNotifier;
 
-  private final EntityBulkExecutor entityBulkExecutor;
+  private final EntityBackgroundExecutor entityBulkExecutor;
 
   private static Logger LOGGER = LogManager.getLogger();
 
   @Inject
   @SuppressWarnings("PMD.ExcessiveParameterList")
-  protected BulkPurge(
+  protected BackgroundPurge(
       ContentRepository repository,
       EntityLockManager lockManager,
       VersioningManager versioningManager,
@@ -67,7 +67,7 @@ public class BulkPurge {
       MediaReferenceManager mediaReferenceManager,
       Publisher publisher,
       ExtensionsNotifier extensionsNotifier,
-      EntityBulkExecutor entityBulkExecutor) {
+      EntityBackgroundExecutor entityBulkExecutor) {
 
     this.repository = repository;
     this.lockManager = lockManager;
@@ -89,20 +89,20 @@ public class BulkPurge {
    * @param input Input argument for the bulk operations
    * @return BulkExecution ID that can be used to track the progress
    */
-  public String bulkPurge(BulkPurgeInput input) {
+  public String backgroundPurge(BackgroundPurgeInput input) {
 
     List<Entity> entityList = this.getEntityList(input);
 
     this.accessControl(entityList);
 
-    EntityBulkOperation lock = this.buildLockOperation(entityList, false);
-    EntityBulkOperation depublish = this.buildDepublishOperation(entityList);
-    EntityBulkOperation purge = this.buildPurgeOperation(entityList);
+    EntityBackgroundOperation lock = this.buildLockOperation(entityList, false);
+    EntityBackgroundOperation depublish = this.buildDepublishOperation(entityList);
+    EntityBackgroundOperation purge = this.buildPurgeOperation(entityList);
 
-    EntityBulkOperation unlock = this.buildUnlockOperation(entityList);
+    EntityBackgroundOperation unlock = this.buildUnlockOperation(entityList);
 
-    EntityBulkExecution execution =
-        EntityBulkExecution.builder()
+    EntityBackgroundExecution execution =
+        EntityBackgroundExecution.builder()
             .topic("contentrepository", "purge")
             .operation(lock, depublish, purge)
             .finalizer(unlock)
@@ -111,12 +111,12 @@ public class BulkPurge {
     return this.entityBulkExecutor.execute(execution);
   }
 
-  private List<Entity> getEntityList(BulkPurgeInput input) {
+  private List<Entity> getEntityList(BackgroundPurgeInput input) {
     Query query = this.buildQuery(input);
     return this.repository.getAll(query);
   }
 
-  private Query buildQuery(BulkPurgeInput input) {
+  private Query buildQuery(BackgroundPurgeInput input) {
     if (!input.getRootList().isEmpty()) {
       return SubTreeQuery.builder()
           .rootList(input.getRootList())
@@ -145,10 +145,10 @@ public class BulkPurge {
             });
   }
 
-  private EntityBulkOperation buildLockOperation(List<Entity> entityList, boolean forceLock) {
+  private EntityBackgroundOperation buildLockOperation(List<Entity> entityList, boolean forceLock) {
 
-    return EntityBulkOperation.builder()
-        .key(BulkOperationKey.PURGE_LOCK)
+    return EntityBackgroundOperation.builder()
+        .key(BackgroundOperationKey.PURGE_LOCK)
         .entityList(entityList)
         .consumer(
             entity -> {
@@ -163,10 +163,10 @@ public class BulkPurge {
         .build();
   }
 
-  private EntityBulkOperation buildDepublishOperation(List<Entity> entityList) {
+  private EntityBackgroundOperation buildDepublishOperation(List<Entity> entityList) {
 
-    return EntityBulkOperation.builder()
-        .key(BulkOperationKey.PURGE_DEPUBLISH)
+    return EntityBackgroundOperation.builder()
+        .key(BackgroundOperationKey.PURGE_DEPUBLISH)
         .entityList(entityList)
         .consumer(
             entity -> {
@@ -176,7 +176,7 @@ public class BulkPurge {
         .build();
   }
 
-  private EntityBulkOperation buildPurgeOperation(List<Entity> entityList) {
+  private EntityBackgroundOperation buildPurgeOperation(List<Entity> entityList) {
 
     List<Entity> nonGroupList =
         entityList.stream().filter(entity -> !entity.isGroup()).collect(Collectors.toList());
@@ -202,8 +202,8 @@ public class BulkPurge {
               });
     }
 
-    return EntityBulkOperation.builder()
-        .key(BulkOperationKey.PURGE_PURGE)
+    return EntityBackgroundOperation.builder()
+        .key(BackgroundOperationKey.PURGE_PURGE)
         .entityList(orderedList)
         .consumer(
             entity -> {
@@ -243,10 +243,10 @@ public class BulkPurge {
     return hierarchicalOrder;
   }
 
-  private EntityBulkOperation buildUnlockOperation(List<Entity> entityList) {
+  private EntityBackgroundOperation buildUnlockOperation(List<Entity> entityList) {
 
-    return EntityBulkOperation.builder()
-        .key(BulkOperationKey.PURGE_CLEANUP)
+    return EntityBackgroundOperation.builder()
+        .key(BackgroundOperationKey.PURGE_CLEANUP)
         .entityList(entityList)
         .consumer(
             entity -> {

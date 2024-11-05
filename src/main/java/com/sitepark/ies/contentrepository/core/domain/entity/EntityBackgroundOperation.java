@@ -7,21 +7,21 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class EntityBulkOperation {
+public class EntityBackgroundOperation {
 
-  private final BulkOperationKey key;
+  private final BackgroundOperationKey key;
 
   private final List<Entity> entityList;
 
   private final Consumer<Entity> consumer;
 
-  protected EntityBulkOperation(Builder builder) {
+  protected EntityBackgroundOperation(Builder builder) {
     this.key = builder.key;
     this.entityList = Collections.unmodifiableList(builder.entityList);
     this.consumer = builder.consumer;
   }
 
-  public BulkOperationKey getKey() {
+  public BackgroundOperationKey getKey() {
     return this.key;
   }
 
@@ -42,11 +42,11 @@ public class EntityBulkOperation {
   @Override
   public final boolean equals(Object o) {
 
-    if (!(o instanceof EntityBulkOperation)) {
+    if (!(o instanceof EntityBackgroundOperation)) {
       return false;
     }
 
-    EntityBulkOperation op = (EntityBulkOperation) o;
+    EntityBackgroundOperation op = (EntityBackgroundOperation) o;
 
     return Objects.equals(this.key, op.key)
         && Objects.equals(this.entityList, op.entityList)
@@ -57,7 +57,7 @@ public class EntityBulkOperation {
   public String toString() {
     StringBuilder b =
         new StringBuilder(100)
-            .append("EntityBulkOperation[key:")
+            .append("EntityBackgroundOperation[key:")
             .append(this.key)
             .append(", entityList:")
             .append(this.entityList)
@@ -73,7 +73,7 @@ public class EntityBulkOperation {
 
   public static class Builder {
 
-    private BulkOperationKey key;
+    private BackgroundOperationKey key;
 
     private final List<Entity> entityList = new ArrayList<>();
 
@@ -81,7 +81,7 @@ public class EntityBulkOperation {
 
     protected Builder() {}
 
-    public Builder key(BulkOperationKey key) {
+    public Builder key(BackgroundOperationKey key) {
       Objects.requireNonNull(key, "key is null");
       this.key = key;
       return this;
@@ -99,7 +99,7 @@ public class EntityBulkOperation {
       return this;
     }
 
-    public EntityBulkOperation build() {
+    public EntityBackgroundOperation build() {
       if (this.key == null) {
         throw new IllegalStateException("key must be set");
       }
@@ -109,7 +109,7 @@ public class EntityBulkOperation {
       if (this.consumer == null) {
         throw new IllegalStateException("consumer must be set");
       }
-      return new EntityBulkOperation(this);
+      return new EntityBackgroundOperation(this);
     }
   }
 }
