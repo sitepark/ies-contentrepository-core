@@ -2,133 +2,166 @@ package com.sitepark.ies.contentrepository.core.domain.entity.query;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter;
-import com.sitepark.ies.contentrepository.core.domain.entity.sort.OrderBy;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.limit.Limit;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.sort.SortCriteria;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @JsonDeserialize(builder = Query.Builder.class)
 public class Query {
 
-  private final Filter filterBy;
+	private final Filter filterBy;
 
-  private final OrderBy orderBy;
+	private final List<SortCriteria> sort;
 
-  private final QueryOptions options;
+	private final Limit limit;
 
-  protected Query(Builder<?> builder) {
-    this.filterBy = builder.filterBy;
-    this.orderBy = builder.orderBy;
-    this.options = builder.options;
-  }
+	private final QueryOptions options;
 
-  public Optional<Filter> getFilterBy() {
-    return Optional.ofNullable(this.filterBy);
-  }
+	protected Query(Builder<?> builder) {
+		this.filterBy = builder.filterBy;
+		this.sort = Collections.unmodifiableList(builder.sort);
+		this.limit = builder.limit;
+		this.options = builder.options;
+	}
 
-  public OrderBy getOrderBy() {
-    return this.orderBy;
-  }
+	public Optional<Filter> getFilterBy() {
+		return Optional.ofNullable(this.filterBy);
+	}
 
-  public QueryOptions getOptions() {
-    return this.options;
-  }
+	public List<SortCriteria> getSort() {
+		return this.sort;
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(this.filterBy, this.orderBy, this.options);
-  }
+	public QueryOptions getOptions() {
+		return this.options;
+	}
 
-  @Override
-  public boolean equals(Object o) {
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.filterBy, this.sort, this.limit, this.options);
+	}
 
-    if (!(o instanceof Query)) {
-      return false;
-    }
+	@Override
+	public boolean equals(Object o) {
 
-    Query that = (Query) o;
+		if (!(o instanceof Query)) {
+			return false;
+		}
 
-    return that.canEqual(this)
-        && Objects.equals(this.filterBy, that.filterBy)
-        && Objects.equals(this.orderBy, that.orderBy)
-        && Objects.equals(this.options, that.options);
-  }
+		Query that = (Query) o;
 
-  /**
-   * @see <a href="https://www.artima.com/articles/how-to-write-an-equality-method-in-java">
-   * 	How to Write an Equality Method in Java
-   * </a>
-   */
-  public boolean canEqual(Object other) {
-    return (other instanceof Query);
-  }
+		return that.canEqual(this) && Objects.equals(this.filterBy, that.filterBy)
+				&& Objects.equals(this.limit, that.limit) && Objects.equals(this.sort, that.sort)
+				&& Objects.equals(this.options, that.options);
+	}
 
-  public static Builder<?> builder() {
-    return new QueryBuilder();
-  }
+	/**
+	 * @see <a href="https://www.artima.com/articles/how-to-write-an-equality-method-in-java"> How to Write an Equality
+	 * Method in Java </a>
+	 */
+	public boolean canEqual(Object other) {
+		return (other instanceof Query);
+	}
 
-  public Builder<?> toBuilder() {
-    return new QueryBuilder(this);
-  }
+	public static Builder<?> builder() {
+		return new QueryBuilder();
+	}
 
-  public abstract static class Builder<B extends Builder<B>> {
+	public Builder<?> toBuilder() {
+		return new QueryBuilder(this);
+	}
 
-    protected Filter filterBy;
+	public abstract static class Builder<B extends Builder<B>> {
 
-    protected OrderBy orderBy;
+		protected Filter filterBy;
 
-    protected QueryOptions options;
+		private final List<SortCriteria> sort = new ArrayList<>();
 
-    protected Builder() {}
+		private Limit limit;
 
-    protected Builder(Query query) {
-      this.filterBy = query.filterBy;
-      this.orderBy = query.orderBy;
-      this.options = query.options;
-    }
+		protected QueryOptions options;
 
-    public B filterBy(Filter filterBy) {
-      this.filterBy = filterBy;
-      return this.self();
-    }
+		protected Builder() {
+		}
 
-    public B orderBy(OrderBy orderBy) {
-      Objects.requireNonNull(orderBy, "orderBy is null");
-      this.orderBy = orderBy;
-      return this.self();
-    }
+		protected Builder(Query query) {
+			this.filterBy = query.filterBy;
+			this.sort.addAll(query.sort);
+			this.limit = query.limit;
+			this.options = query.options;
+		}
 
-    public B options(QueryOptions options) {
-      Objects.requireNonNull(options, "options is null");
-      this.options = options;
-      return this.self();
-    }
+		public B filterBy(Filter filterBy) {
+			this.filterBy = filterBy;
+			return this.self();
+		}
 
-    public abstract B self();
+		public B sort(SortCriteria sortCriteria) {
+			Objects.requireNonNull(sortCriteria, "sortCriteria is null");
+			this.sort.add(sortCriteria);
+			return this.self();
+		}
 
-    public abstract Query build();
-  }
+		public B sort(SortCriteria[] sortCriterias) {
+			Objects.requireNonNull(sortCriterias, "sortCriterias is null");
+			for (SortCriteria criteria : sortCriterias) {
+				this.sort(criteria);
+			}
+			return this.self();
+		}
 
-  @JsonPOJOBuilder(withPrefix = "", buildMethodName = "build")
-  public static class QueryBuilder extends Query.Builder<QueryBuilder> {
+		public B sort(Collection<SortCriteria> sortCriterias) {
+			Objects.requireNonNull(sortCriterias, "sortCriterias is null");
+			for (SortCriteria criteria : sortCriterias) {
+				this.sort(criteria);
+			}
+			return this.self();
+		}
 
-    protected QueryBuilder() {}
+		public B limit(Limit limit) {
+			Objects.requireNonNull(limit, "limit is null");
+			this.limit = limit;
+			return this.self();
+		}
 
-    protected QueryBuilder(Query query) {
-      super(query);
-    }
+		public B options(QueryOptions options) {
+			Objects.requireNonNull(options, "options is null");
+			this.options = options;
+			return this.self();
+		}
 
-    @Override
-    public QueryBuilder self() {
-      return this;
-    }
+		public abstract B self();
 
-    @Override
-    public Query build() {
-      if (this.options == null) {
-        this.options = QueryOptions.builder().build();
-      }
-      return new Query(this);
-    }
-  }
+		public abstract Query build();
+	}
+
+	@JsonPOJOBuilder(withPrefix = "", buildMethodName = "build")
+	public static class QueryBuilder extends Query.Builder<QueryBuilder> {
+
+		protected QueryBuilder() {
+		}
+
+		protected QueryBuilder(Query query) {
+			super(query);
+		}
+
+		@Override
+		public QueryBuilder self() {
+			return this;
+		}
+
+		@Override
+		public Query build() {
+			if (this.options == null) {
+				this.options = QueryOptions.builder().build();
+			}
+			return new Query(this);
+		}
+	}
 }

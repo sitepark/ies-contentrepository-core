@@ -1,12 +1,12 @@
-package com.sitepark.ies.contentrepository.core.domain.entity.filter;
+package com.sitepark.ies.contentrepository.core.domain.entity.query.filter;
 
-import static com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter.anchor;
-import static com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter.and;
-import static com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter.idList;
-import static com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter.not;
-import static com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter.or;
-import static com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter.parent;
-import static com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter.root;
+import static com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter.anchor;
+import static com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter.and;
+import static com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter.idList;
+import static com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter.not;
+import static com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter.or;
+import static com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter.parent;
+import static com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter.root;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,6 +14,21 @@ import static org.mockito.Mockito.mock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sitepark.ies.contentrepository.core.domain.databind.DatabindModule;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Anchor;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.AnchorList;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.And;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Id;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.IdList;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.IsGroup;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Not;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Or;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Parent;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.ParentAnchor;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.ParentAnchorList;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.ParentList;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Root;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.RootList;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
