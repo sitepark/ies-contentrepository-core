@@ -14,21 +14,6 @@ import static org.mockito.Mockito.mock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sitepark.ies.contentrepository.core.domain.databind.DatabindModule;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Anchor;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.AnchorList;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.And;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Id;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.IdList;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.IsGroup;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Not;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Or;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Parent;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.ParentAnchor;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.ParentAnchorList;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.ParentList;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Root;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.RootList;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
