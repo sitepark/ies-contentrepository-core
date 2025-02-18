@@ -18,11 +18,11 @@ public final class OffsetLimit implements Limit {
     this.limit = limit;
   }
 
-  public Integer offset() {
+  public Integer getOffset() {
     return this.offset;
   }
 
-  public Optional<Integer> limit() {
+  public Optional<Integer> getLimit() {
     return Optional.ofNullable(this.limit);
   }
 
