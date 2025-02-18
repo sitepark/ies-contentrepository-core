@@ -38,6 +38,10 @@ public class Query {
     return this.sort;
   }
 
+  public Limit getLimit() {
+    return this.limit;
+  }
+
   public QueryOptions getOptions() {
     return this.options;
   }

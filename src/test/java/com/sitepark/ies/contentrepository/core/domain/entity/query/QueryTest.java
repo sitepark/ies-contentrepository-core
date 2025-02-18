@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.limit.Limit;
 import com.sitepark.ies.contentrepository.core.domain.entity.query.sort.SortCriteria;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;
@@ -49,13 +50,34 @@ class QueryTest {
   }
 
   @Test
-  void testWithNullOrderBy() {
+  void testSetSortAsArray() {
+    SortCriteria[] sortCriterias = new SortCriteria[] {mock(SortCriteria.class)};
+    Query query = Query.builder().sort(sortCriterias).build();
+    assertEquals(List.of(sortCriterias), query.getSort(), "unexpected sort");
+  }
+
+  @Test
+  void testSetSortAsCollection() {
+    List<SortCriteria> sortCriterias = List.of(mock(SortCriteria.class));
+    Query query = Query.builder().sort(sortCriterias).build();
+    assertEquals(sortCriterias, query.getSort(), "unexpected sort");
+  }
+
+  @Test
+  void testWithNullSort() {
     assertThrows(
         NullPointerException.class,
         () -> {
           Query.builder().sort((SortCriteria) null);
         },
         "orderBy must not be null");
+  }
+
+  @Test
+  void testSetLimt() {
+    Limit limit = mock(Limit.class);
+    Query query = Query.builder().limit(limit).build();
+    assertEquals(limit, query.getLimit(), "unexpected options");
   }
 
   @Test
