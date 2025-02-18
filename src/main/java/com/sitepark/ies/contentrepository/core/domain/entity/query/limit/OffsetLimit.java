@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 import java.util.Optional;
 
-@SuppressWarnings(
-    "PMD.AvoidFieldNameMatchingTypeName") // so that when deserializing it has the desired format
 public final class OffsetLimit implements Limit {
 
   private final Integer offset;
