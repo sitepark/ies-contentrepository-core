@@ -84,9 +84,9 @@ public class EntityBackgroundExecution {
     protected Builder() {}
 
     /**
-     * Topics are used to display all bulk operations for a specific topic. Topics are hierarchical and the path of
-     * the topic is specified via a string array. Topics are freely definable. If e.g. all Topics of
-     * <code>level1</code> are queried, all BulkExecutions recursively below <code>level1</code> are returned.
+     * Topics are used to display all background operations for a specific topic. Topics are hierarchical and the
+     * path of the topic is specified via a string array. Topics are freely definable. If e.g. all Topics of
+     * <code>level1</code> are queried, all BackgroundExecutions recursively below <code>level1</code> are returned.
      */
     public Builder topic(String... topic) {
       Objects.requireNonNull(topic, "topic is null");

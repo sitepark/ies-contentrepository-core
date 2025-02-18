@@ -29,19 +29,16 @@ public class SubTreeQuery extends Query {
   @Override
   public final boolean equals(Object o) {
 
-    if (!(o instanceof SubTreeQuery)) {
+    if (!(o instanceof SubTreeQuery that)) {
       return false;
     }
-
-    SubTreeQuery that = (SubTreeQuery) o;
 
     return that.canEqual(this) && super.equals(o) && Objects.equals(this.rootList, that.rootList);
   }
 
   /**
-   * @see <a href="https://www.artima.com/articles/how-to-write-an-equality-method-in-java">
-   * 	How to Write an Equality Method in Java
-   * </a>
+   * @see <a href="https://www.artima.com/articles/how-to-write-an-equality-method-in-java">How to
+   *     Write an Equality Method in Java </a>
    */
   @Override
   public boolean canEqual(Object other) {

@@ -1,0 +1,28 @@
+package com.sitepark.ies.contentrepository.core.domain.entity.query.sort;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import com.jparams.verifier.tostring.ToStringVerifier;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.Test;
+
+class NameTest {
+
+  @Test
+  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
+  void testEquals() {
+    EqualsVerifier.forClass(Name.class).verify();
+  }
+
+  @Test
+  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
+  public void testToString() {
+    ToStringVerifier.forClass(Name.class).verify();
+  }
+
+  @Test
+  public void testConstructor() {
+    Name name = new Name(Direction.ASC);
+    assertEquals(Direction.ASC, name.getDirection());
+  }
+}

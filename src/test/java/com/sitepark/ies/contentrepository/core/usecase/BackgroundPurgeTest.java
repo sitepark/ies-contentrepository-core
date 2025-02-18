@@ -40,14 +40,14 @@ class BackgroundPurgeTest {
     AccessControl accessControl = mock();
     when(accessControl.isEntityRemovable(anyString())).thenReturn(false);
 
-    BackgroundPurge bulkPurge =
+    BackgroundPurge backgroundPurge =
         new BackgroundPurge(
             repository, null, null, null, accessControl, null, null, null, null, null, null);
 
     assertThrows(
         AccessDeniedException.class,
         () -> {
-          bulkPurge.backgroundPurge(input);
+          backgroundPurge.backgroundPurge(input);
         },
         "AccessDeniedException expected");
   }
@@ -65,14 +65,14 @@ class BackgroundPurgeTest {
     AccessControl accessControl = mock();
     when(accessControl.isGroupRemoveable(anyString())).thenReturn(false);
 
-    BackgroundPurge bulkPurge =
+    BackgroundPurge backgroundPurge =
         new BackgroundPurge(
             repository, null, null, null, accessControl, null, null, null, null, null, null);
 
     assertThrows(
         AccessDeniedException.class,
         () -> {
-          bulkPurge.backgroundPurge(input);
+          backgroundPurge.backgroundPurge(input);
         },
         "AccessDeniedException expected");
   }
@@ -91,8 +91,8 @@ class BackgroundPurgeTest {
     AccessControl accessControl = mock();
     when(accessControl.isEntityRemovable(anyString())).thenReturn(true);
 
-    EntityBackgroundExecutor entityBulkExecutor = mock();
-    when(entityBulkExecutor.execute(any(EntityBackgroundExecution.class)))
+    EntityBackgroundExecutor entityBackgroundExecutor = mock();
+    when(entityBackgroundExecutor.execute(any(EntityBackgroundExecution.class)))
         .thenAnswer(
             args -> {
               EntityBackgroundExecution execution = args.getArgument(0);
@@ -114,7 +114,7 @@ class BackgroundPurgeTest {
     RecycleBin recycleBin = mock();
     ExtensionsNotifier extensionsNotifier = mock();
 
-    BackgroundPurge bulkPurge =
+    BackgroundPurge backgroundPurge =
         new BackgroundPurge(
             repository,
             lockManager,
@@ -126,9 +126,9 @@ class BackgroundPurgeTest {
             mediaReferenceManager,
             publisher,
             extensionsNotifier,
-            entityBulkExecutor);
+            entityBackgroundExecutor);
 
-    bulkPurge.backgroundPurge(input);
+    backgroundPurge.backgroundPurge(input);
 
     verify(lockManager).lock(anyString());
     verify(publisher).depublish(anyString());

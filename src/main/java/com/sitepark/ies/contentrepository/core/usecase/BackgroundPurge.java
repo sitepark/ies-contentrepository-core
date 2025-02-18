@@ -50,7 +50,7 @@ public class BackgroundPurge {
 
   private final ExtensionsNotifier extensionsNotifier;
 
-  private final EntityBackgroundExecutor entityBulkExecutor;
+  private final EntityBackgroundExecutor entityBackgroundExecutor;
 
   private static Logger LOGGER = LogManager.getLogger();
 
@@ -67,7 +67,7 @@ public class BackgroundPurge {
       MediaReferenceManager mediaReferenceManager,
       Publisher publisher,
       ExtensionsNotifier extensionsNotifier,
-      EntityBackgroundExecutor entityBulkExecutor) {
+      EntityBackgroundExecutor entityBackgroundExecutor) {
 
     this.repository = repository;
     this.lockManager = lockManager;
@@ -79,15 +79,15 @@ public class BackgroundPurge {
     this.mediaReferenceManager = mediaReferenceManager;
     this.publisher = publisher;
     this.extensionsNotifier = extensionsNotifier;
-    this.entityBulkExecutor = entityBulkExecutor;
+    this.entityBackgroundExecutor = entityBackgroundExecutor;
   }
 
   /**
-   * Create a BulkExecution and pass it to the EntityBulkExecutor to execute the purge.
-   * The return is a BulkExecution ID that can be used to track the progress.
+   * Create a BackgroundExecution and pass it to the EntityBackgroundExecutor to execute the purge. The return is a
+   * BackgroundExecution ID that can be used to track the progress.
    *
-   * @param input Input argument for the bulk operations
-   * @return BulkExecution ID that can be used to track the progress
+   * @param input Input argument for the background operations
+   * @return BackgroundExecution ID that can be used to track the progress
    */
   public String backgroundPurge(BackgroundPurgeInput input) {
 
@@ -108,7 +108,7 @@ public class BackgroundPurge {
             .finalizer(unlock)
             .build();
 
-    return this.entityBulkExecutor.execute(execution);
+    return this.entityBackgroundExecutor.execute(execution);
   }
 
   private List<Entity> getEntityList(BackgroundPurgeInput input) {
@@ -185,9 +185,8 @@ public class BackgroundPurge {
         entityList.stream().filter(entity -> entity.isGroup()).collect(Collectors.toList());
 
     /*
-     * Arrange the entityList so that first all group entries are deleted
-     * and then the groups in the hierarchy from bottom to top.
-     * This ensures that only empty pools are deleted.
+     * Arrange the entityList so that first all group entries are deleted and then the groups in the hierarchy from
+     * bottom to top. This ensures that only empty pools are deleted.
      */
     List<Entity> orderedGroupList = this.orderGroupListHierarchicallyFromBottomToTop(groupList);
     List<Entity> orderedList = new ArrayList<>();

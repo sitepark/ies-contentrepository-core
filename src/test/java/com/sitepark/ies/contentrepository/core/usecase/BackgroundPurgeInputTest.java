@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
-import com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Arrays;
 import nl.jqno.equalsverifier.EqualsVerifier;

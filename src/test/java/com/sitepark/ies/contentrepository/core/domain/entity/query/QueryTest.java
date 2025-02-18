@@ -5,9 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
-import com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter;
-import com.sitepark.ies.contentrepository.core.domain.entity.sort.OrderBy;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.limit.Limit;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.sort.SortCriteria;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.util.List;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -17,15 +19,6 @@ import org.junit.jupiter.api.Test;
   "NP_NULL_PARAM_DEREF_ALL_TARGETS_DANGEROUS"
 })
 class QueryTest {
-
-  @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-  void testEqualsWithRedefinedCursorBasedQuery() {
-    EqualsVerifier.forClass(Query.class)
-        // see https://jqno.nl/equalsverifier/manual/inheritance/
-        .withRedefinedSubclass(CursorBasedQuery.class)
-        .verify();
-  }
 
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
@@ -50,20 +43,41 @@ class QueryTest {
   }
 
   @Test
-  void testSetOrderBy() {
-    OrderBy orderBy = mock(OrderBy.class);
-    Query query = Query.builder().orderBy(orderBy).build();
-    assertEquals(orderBy, query.getOrderBy(), "unexpected orderBy");
+  void testSetSort() {
+    SortCriteria sortCriteria = mock(SortCriteria.class);
+    Query query = Query.builder().sort(sortCriteria).build();
+    assertEquals(List.of(sortCriteria), query.getSort(), "unexpected sort");
   }
 
   @Test
-  void testWithNullOrderBy() {
+  void testSetSortAsArray() {
+    SortCriteria[] sortCriterias = new SortCriteria[] {mock(SortCriteria.class)};
+    Query query = Query.builder().sort(sortCriterias).build();
+    assertEquals(List.of(sortCriterias), query.getSort(), "unexpected sort");
+  }
+
+  @Test
+  void testSetSortAsCollection() {
+    List<SortCriteria> sortCriterias = List.of(mock(SortCriteria.class));
+    Query query = Query.builder().sort(sortCriterias).build();
+    assertEquals(sortCriterias, query.getSort(), "unexpected sort");
+  }
+
+  @Test
+  void testWithNullSort() {
     assertThrows(
         NullPointerException.class,
         () -> {
-          Query.builder().orderBy(null);
+          Query.builder().sort((SortCriteria) null);
         },
         "orderBy must not be null");
+  }
+
+  @Test
+  void testSetLimt() {
+    Limit limit = mock(Limit.class);
+    Query query = Query.builder().limit(limit).build();
+    assertEquals(limit, query.getLimit(), "unexpected options");
   }
 
   @Test
@@ -87,16 +101,16 @@ class QueryTest {
   void testToBuilder() {
 
     Filter filter = mock(Filter.class);
-    OrderBy orderBy = mock(OrderBy.class);
+    SortCriteria sortCriteria = mock(SortCriteria.class);
     QueryOptions options = mock(QueryOptions.class);
 
-    Query query = Query.builder().filterBy(filter).orderBy(orderBy).options(options).build();
+    Query query = Query.builder().filterBy(filter).sort(sortCriteria).options(options).build();
 
     Filter filter2 = mock(Filter.class);
 
     Query copy = query.toBuilder().filterBy(filter2).build();
 
-    Query expected = Query.builder().filterBy(filter2).orderBy(orderBy).options(options).build();
+    Query expected = Query.builder().filterBy(filter2).sort(sortCriteria).options(options).build();
 
     assertEquals(expected, copy, "unexpected copy");
   }

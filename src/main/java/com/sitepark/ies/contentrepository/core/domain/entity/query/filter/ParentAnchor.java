@@ -1,4 +1,4 @@
-package com.sitepark.ies.contentrepository.core.domain.entity.filter;
+package com.sitepark.ies.contentrepository.core.domain.entity.query.filter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;

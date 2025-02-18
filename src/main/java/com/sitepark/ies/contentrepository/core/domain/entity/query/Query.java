@@ -2,8 +2,13 @@ package com.sitepark.ies.contentrepository.core.domain.entity.query;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter;
-import com.sitepark.ies.contentrepository.core.domain.entity.sort.OrderBy;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.limit.Limit;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.sort.SortCriteria;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -12,13 +17,16 @@ public class Query {
 
   private final Filter filterBy;
 
-  private final OrderBy orderBy;
+  private final List<SortCriteria> sort;
+
+  private final Limit limit;
 
   private final QueryOptions options;
 
   protected Query(Builder<?> builder) {
     this.filterBy = builder.filterBy;
-    this.orderBy = builder.orderBy;
+    this.sort = Collections.unmodifiableList(builder.sort);
+    this.limit = builder.limit;
     this.options = builder.options;
   }
 
@@ -26,8 +34,12 @@ public class Query {
     return Optional.ofNullable(this.filterBy);
   }
 
-  public OrderBy getOrderBy() {
-    return this.orderBy;
+  public List<SortCriteria> getSort() {
+    return this.sort;
+  }
+
+  public Limit getLimit() {
+    return this.limit;
   }
 
   public QueryOptions getOptions() {
@@ -36,7 +48,7 @@ public class Query {
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.filterBy, this.orderBy, this.options);
+    return Objects.hash(this.filterBy, this.sort, this.limit, this.options);
   }
 
   @Override
@@ -50,14 +62,14 @@ public class Query {
 
     return that.canEqual(this)
         && Objects.equals(this.filterBy, that.filterBy)
-        && Objects.equals(this.orderBy, that.orderBy)
+        && Objects.equals(this.limit, that.limit)
+        && Objects.equals(this.sort, that.sort)
         && Objects.equals(this.options, that.options);
   }
 
   /**
-   * @see <a href="https://www.artima.com/articles/how-to-write-an-equality-method-in-java">
-   * 	How to Write an Equality Method in Java
-   * </a>
+   * @see <a href="https://www.artima.com/articles/how-to-write-an-equality-method-in-java"> How to Write an Equality
+   * Method in Java </a>
    */
   public boolean canEqual(Object other) {
     return (other instanceof Query);
@@ -75,7 +87,9 @@ public class Query {
 
     protected Filter filterBy;
 
-    protected OrderBy orderBy;
+    private final List<SortCriteria> sort = new ArrayList<>();
+
+    private Limit limit;
 
     protected QueryOptions options;
 
@@ -83,7 +97,8 @@ public class Query {
 
     protected Builder(Query query) {
       this.filterBy = query.filterBy;
-      this.orderBy = query.orderBy;
+      this.sort.addAll(query.sort);
+      this.limit = query.limit;
       this.options = query.options;
     }
 
@@ -92,9 +107,31 @@ public class Query {
       return this.self();
     }
 
-    public B orderBy(OrderBy orderBy) {
-      Objects.requireNonNull(orderBy, "orderBy is null");
-      this.orderBy = orderBy;
+    public B sort(SortCriteria sortCriteria) {
+      Objects.requireNonNull(sortCriteria, "sortCriteria is null");
+      this.sort.add(sortCriteria);
+      return this.self();
+    }
+
+    public B sort(SortCriteria[] sortCriterias) {
+      Objects.requireNonNull(sortCriterias, "sortCriterias is null");
+      for (SortCriteria criteria : sortCriterias) {
+        this.sort(criteria);
+      }
+      return this.self();
+    }
+
+    public B sort(Collection<SortCriteria> sortCriterias) {
+      Objects.requireNonNull(sortCriterias, "sortCriterias is null");
+      for (SortCriteria criteria : sortCriterias) {
+        this.sort(criteria);
+      }
+      return this.self();
+    }
+
+    public B limit(Limit limit) {
+      Objects.requireNonNull(limit, "limit is null");
+      this.limit = limit;
       return this.self();
     }
 

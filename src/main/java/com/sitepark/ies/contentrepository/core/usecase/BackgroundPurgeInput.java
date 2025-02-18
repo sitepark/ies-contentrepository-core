@@ -1,6 +1,6 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
-import com.sitepark.ies.contentrepository.core.domain.entity.filter.Filter;
+import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,10 +72,10 @@ public final class BackgroundPurgeInput {
 
     private Builder() {}
 
-    private Builder(BackgroundPurgeInput bulkPurgeRequest) {
-      this.rootList.addAll(bulkPurgeRequest.rootList);
-      this.filterBy = bulkPurgeRequest.filterBy;
-      this.forceLock = bulkPurgeRequest.forceLock;
+    private Builder(BackgroundPurgeInput backgroundPurgeRequest) {
+      this.rootList.addAll(backgroundPurgeRequest.rootList);
+      this.filterBy = backgroundPurgeRequest.filterBy;
+      this.forceLock = backgroundPurgeRequest.forceLock;
     }
 
     public Builder rootList(List<Long> rootList) {
