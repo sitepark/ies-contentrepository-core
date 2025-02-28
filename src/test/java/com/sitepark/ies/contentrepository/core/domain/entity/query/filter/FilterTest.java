@@ -1,20 +1,14 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.query.filter;
 
-import static com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter.anchor;
-import static com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter.and;
-import static com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter.idList;
-import static com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter.not;
-import static com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter.or;
-import static com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter.parent;
-import static com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter.root;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sitepark.ies.contentrepository.core.domain.databind.DatabindModule;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
@@ -35,7 +29,7 @@ class FilterTest {
   @Test
   void testIdList() {
     IdList filter = Filter.idList("123");
-    assertEquals(Arrays.asList("123"), filter.getIdList(), "unexpected idList");
+    assertEquals(List.of("123"), filter.getIdList(), "unexpected idList");
   }
 
   @Test
@@ -51,7 +45,8 @@ class FilterTest {
     com.sitepark.ies.contentrepository.core.domain.entity.Anchor anchor =
         com.sitepark.ies.contentrepository.core.domain.entity.Anchor.ofString("abc");
     AnchorList filter = Filter.anchorList(anchor);
-    assertEquals(Arrays.asList(anchor), filter.getAnchorList(), "unexpected anchorList");
+    assertEquals(
+        Collections.singletonList(anchor), filter.getAnchorList(), "unexpected anchorList");
   }
 
   @Test
@@ -63,7 +58,7 @@ class FilterTest {
   @Test
   void testParentList() {
     ParentList filter = Filter.parentList("123");
-    assertEquals(Arrays.asList("123"), filter.getParentList(), "unexpected parentList");
+    assertEquals(List.of("123"), filter.getParentList(), "unexpected parentList");
   }
 
   @Test
@@ -80,7 +75,9 @@ class FilterTest {
         com.sitepark.ies.contentrepository.core.domain.entity.Anchor.ofString("abc");
     ParentAnchorList filter = Filter.parentAnchorList(anchor);
     assertEquals(
-        Arrays.asList(anchor), filter.getParentAnchorList(), "unexpected parentAnchorList");
+        Collections.singletonList(anchor),
+        filter.getParentAnchorList(),
+        "unexpected parentAnchorList");
   }
 
   @Test
@@ -92,7 +89,7 @@ class FilterTest {
   @Test
   void testRootList() {
     RootList filter = Filter.rootList("123");
-    assertEquals(Arrays.asList("123"), filter.getRootList(), "unexpected rootList");
+    assertEquals(List.of("123"), filter.getRootList(), "unexpected rootList");
   }
 
   @Test
@@ -145,7 +142,7 @@ class FilterTest {
   }
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
+  @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
   void testDeserialize() throws Exception {
 
     ObjectMapper objectMapper = new ObjectMapper();
@@ -170,20 +167,20 @@ class FilterTest {
 
     assertInstanceOf(IdList.class, or.getOr().get(0));
     assertInstanceOf(Anchor.class, or.getOr().get(1));
-    assertEquals("abc", ((Anchor) (or.getOr().get(1))).getAnchor().getName(), "wront root");
+    assertEquals("abc", ((Anchor) (or.getOr().get(1))).getAnchor().getName(), "wrong root");
     assertInstanceOf(And.class, or.getOr().get(2));
 
     And and = (And) or.getOr().get(2);
 
     assertInstanceOf(Root.class, and.getAnd().get(0));
-    assertEquals("5", ((Root) and.getAnd().get(0)).getRoot(), "wront root");
+    assertEquals("5", ((Root) and.getAnd().get(0)).getRoot(), "wrong root");
     assertInstanceOf(Parent.class, and.getAnd().get(1));
-    assertEquals("7", ((Parent) and.getAnd().get(1)).getParent(), "wront parent");
+    assertEquals("7", ((Parent) and.getAnd().get(1)).getParent(), "wrong parent");
     assertInstanceOf(Not.class, and.getAnd().get(2));
 
     Not not = (Not) and.getAnd().get(2);
 
     assertInstanceOf(Parent.class, not.getNot());
-    assertEquals("9", ((Parent) not.getNot()).getParent(), "wront parent (in not)");
+    assertEquals("9", ((Parent) not.getNot()).getParent(), "wrong parent (in not)");
   }
 }

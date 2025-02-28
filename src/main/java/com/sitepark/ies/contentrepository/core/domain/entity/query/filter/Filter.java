@@ -3,62 +3,62 @@ package com.sitepark.ies.contentrepository.core.domain.entity.query.filter;
 @SuppressWarnings("PMD.TooManyMethods")
 public interface Filter {
 
-  public static IsGroup isGroup(Boolean isGroup) {
+  static IsGroup isGroup(Boolean isGroup) {
     return new IsGroup(isGroup);
   }
 
-  public static Id id(String id) {
+  static Id id(String id) {
     return new Id(id);
   }
 
-  public static IdList idList(String... idlist) {
-    return new IdList(idlist);
+  static IdList idList(String... idList) {
+    return new IdList(idList);
   }
 
-  public static Anchor anchor(com.sitepark.ies.contentrepository.core.domain.entity.Anchor anchor) {
+  static Anchor anchor(com.sitepark.ies.contentrepository.core.domain.entity.Anchor anchor) {
     return new Anchor(anchor);
   }
 
-  public static AnchorList anchorList(
+  static AnchorList anchorList(
       com.sitepark.ies.contentrepository.core.domain.entity.Anchor... anchorList) {
     return new AnchorList(anchorList);
   }
 
-  public static Parent parent(String parent) {
+  static Parent parent(String parent) {
     return new Parent(parent);
   }
 
-  public static ParentList parentList(String... parentList) {
+  static ParentList parentList(String... parentList) {
     return new ParentList(parentList);
   }
 
-  public static ParentAnchor parentAnchor(
+  static ParentAnchor parentAnchor(
       com.sitepark.ies.contentrepository.core.domain.entity.Anchor parentAnchor) {
     return new ParentAnchor(parentAnchor);
   }
 
-  public static ParentAnchorList parentAnchorList(
+  static ParentAnchorList parentAnchorList(
       com.sitepark.ies.contentrepository.core.domain.entity.Anchor... parentAnchorList) {
     return new ParentAnchorList(parentAnchorList);
   }
 
-  public static Root root(String root) {
+  static Root root(String root) {
     return new Root(root);
   }
 
-  public static RootList rootList(String... rootList) {
+  static RootList rootList(String... rootList) {
     return new RootList(rootList);
   }
 
-  public static Or or(Filter... filterList) {
+  static Or or(Filter... filterList) {
     return new Or(filterList);
   }
 
-  public static And and(Filter... filterList) {
+  static And and(Filter... filterList) {
     return new And(filterList);
   }
 
-  public static Not not(Filter filter) {
+  static Not not(Filter filter) {
     return new Not(filter);
   }
 }

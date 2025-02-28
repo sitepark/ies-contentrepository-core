@@ -17,4 +17,19 @@ public class Root implements Filter {
   public String getRoot() {
     return this.root;
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.root);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return (o instanceof Root that) && Objects.equals(this.root, that.root);
+  }
+
+  @Override
+  public String toString() {
+    return "Root{" + "root=" + root + '}';
+  }
 }

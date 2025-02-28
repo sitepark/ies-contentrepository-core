@@ -1,6 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.query;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ class QueryOptionsTest {
   @Test
   void testSetShowHidden() {
     QueryOptions options = QueryOptions.builder().showHidden(true).build();
-    assertEquals(true, options.isShowHidden(), "unexpected showHidden");
+    assertTrue(options.isShowHidden(), "unexpected showHidden");
   }
 
   @Test

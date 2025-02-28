@@ -16,13 +16,13 @@ class NameTest {
 
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-  public void testToString() {
+  void testToString() {
     ToStringVerifier.forClass(Name.class).verify();
   }
 
   @Test
-  public void testConstructor() {
+  void testConstructor() {
     Name name = new Name(Direction.ASC);
-    assertEquals(Direction.ASC, name.getDirection());
+    assertEquals(Direction.ASC, name.getDirection(), "unexpected direction");
   }
 }

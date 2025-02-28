@@ -2,16 +2,7 @@ package com.sitepark.ies.contentrepository.core.usecase;
 
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
 import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmptyException;
-import com.sitepark.ies.contentrepository.core.port.AccessControl;
-import com.sitepark.ies.contentrepository.core.port.ContentRepository;
-import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
-import com.sitepark.ies.contentrepository.core.port.ExtensionsNotifier;
-import com.sitepark.ies.contentrepository.core.port.HistoryManager;
-import com.sitepark.ies.contentrepository.core.port.MediaReferenceManager;
-import com.sitepark.ies.contentrepository.core.port.Publisher;
-import com.sitepark.ies.contentrepository.core.port.RecycleBin;
-import com.sitepark.ies.contentrepository.core.port.SearchIndex;
-import com.sitepark.ies.contentrepository.core.port.VersioningManager;
+import com.sitepark.ies.contentrepository.core.port.*;
 import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,11 +29,11 @@ public final class PurgeEntity {
 
   private final ExtensionsNotifier extensionsNotifier;
 
-  private static Logger LOGGER = LogManager.getLogger();
+  private static final Logger LOGGER = LogManager.getLogger();
 
   @Inject
   @SuppressWarnings("PMD.ExcessiveParameterList")
-  protected PurgeEntity(
+  PurgeEntity(
       ContentRepository repository,
       EntityLockManager lockManager,
       VersioningManager versioningManager,

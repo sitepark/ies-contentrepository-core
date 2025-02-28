@@ -22,4 +22,19 @@ public class AnchorList implements Filter {
   public List<com.sitepark.ies.contentrepository.core.domain.entity.Anchor> getAnchorList() {
     return this.anchorList;
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.anchorList);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return (o instanceof AnchorList that) && Objects.equals(this.anchorList, that.anchorList);
+  }
+
+  @Override
+  public String toString() {
+    return "AnchorList{" + "anchorList=" + anchorList + '}';
+  }
 }

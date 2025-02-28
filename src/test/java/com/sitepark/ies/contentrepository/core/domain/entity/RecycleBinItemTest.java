@@ -7,7 +7,7 @@ import static org.mockito.Mockito.mock;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class RecycleBinItemTest {
 
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-  public void testToString() {
+  void testToString() {
     ToStringVerifier.forClass(RecycleBinItem.class).withClassName(NameStyle.SIMPLE_NAME).verify();
   }
 
@@ -47,9 +47,7 @@ class RecycleBinItemTest {
   void testSetIdWithNull() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          RecycleBinItem.builder().id(null);
-        },
+        () -> RecycleBinItem.builder().id(null),
         "id should not be null");
   }
 
@@ -57,9 +55,7 @@ class RecycleBinItemTest {
   void testSetIdWitZero() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          RecycleBinItem.builder().id("0");
-        },
+        () -> RecycleBinItem.builder().id("0"),
         "id should not be zero");
   }
 
@@ -67,9 +63,7 @@ class RecycleBinItemTest {
   void testSetIdWitInvalidValue() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          RecycleBinItem.builder().id("1x");
-        },
+        () -> RecycleBinItem.builder().id("1x"),
         "id should not be zero");
   }
 
@@ -84,9 +78,7 @@ class RecycleBinItemTest {
   void testSetParentWithNull() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          RecycleBinItem.builder().parent(null);
-        },
+        () -> RecycleBinItem.builder().parent(null),
         "parent should not be null");
   }
 
@@ -94,9 +86,7 @@ class RecycleBinItemTest {
   void testSetParentWitZero() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          RecycleBinItem.builder().parent("0");
-        },
+        () -> RecycleBinItem.builder().parent("0"),
         "parent should not be zero");
   }
 
@@ -104,9 +94,7 @@ class RecycleBinItemTest {
   void testSetParentWitInvalidValue() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          RecycleBinItem.builder().parent("1x");
-        },
+        () -> RecycleBinItem.builder().parent("1x"),
         "parent should not be zero");
   }
 
@@ -122,7 +110,7 @@ class RecycleBinItemTest {
   void testSetChild() {
     RecycleBinItem child = mock(RecycleBinItem.class);
     RecycleBinItem item = RecycleBinItem.builder().child(child).build();
-    List<RecycleBinItem> expected = Arrays.asList(child);
+    List<RecycleBinItem> expected = Collections.singletonList(child);
     assertEquals(expected, item.getChildren(), "unexpected children");
   }
 
@@ -130,15 +118,13 @@ class RecycleBinItemTest {
   void testSetNullChild() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          RecycleBinItem.builder().child(null);
-        },
+        () -> RecycleBinItem.builder().child(null),
         "child must not be null");
   }
 
   @Test
   void testSetChildren() {
-    List<RecycleBinItem> children = Arrays.asList(mock(RecycleBinItem.class));
+    List<RecycleBinItem> children = Collections.singletonList(mock(RecycleBinItem.class));
     RecycleBinItem item = RecycleBinItem.builder().children(children).build();
     assertEquals(children, item.getChildren(), "unexpected children");
   }
@@ -147,16 +133,14 @@ class RecycleBinItemTest {
   void testSetNullChildren() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          RecycleBinItem.builder().children(null);
-        },
+        () -> RecycleBinItem.builder().children(null),
         "children must not be null");
   }
 
   @Test
   void testToBuilder() {
     Entity entity = mock();
-    List<RecycleBinItem> children = Arrays.asList(mock(RecycleBinItem.class));
+    List<RecycleBinItem> children = Collections.singletonList(mock(RecycleBinItem.class));
     RecycleBinItem item =
         RecycleBinItem.builder().id("123").parent("345").entity(entity).children(children).build();
 

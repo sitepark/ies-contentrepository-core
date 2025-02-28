@@ -1,12 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class EntityBackgroundExecution {
 
@@ -44,11 +39,9 @@ public class EntityBackgroundExecution {
   @Override
   public final boolean equals(Object o) {
 
-    if (!(o instanceof EntityBackgroundExecution)) {
+    if (!(o instanceof EntityBackgroundExecution execution)) {
       return false;
     }
-
-    EntityBackgroundExecution execution = (EntityBackgroundExecution) o;
 
     return Arrays.equals(this.topic, execution.topic)
         && Objects.equals(this.operations, execution.operations)
@@ -57,16 +50,14 @@ public class EntityBackgroundExecution {
 
   @Override
   public String toString() {
-    StringBuilder b =
-        new StringBuilder(100)
-            .append("EntityBackgroundExecution[topic:")
-            .append(Arrays.toString(this.topic))
-            .append(", operations:")
-            .append(this.operations)
-            .append(", finalizer:")
-            .append(this.finalizer)
-            .append(']');
-    return b.toString();
+    return "EntityBackgroundExecution{"
+        + "topic="
+        + Arrays.toString(topic)
+        + ", operations="
+        + operations
+        + ", finalizer="
+        + finalizer
+        + '}';
   }
 
   public static Builder builder() {
@@ -84,9 +75,10 @@ public class EntityBackgroundExecution {
     protected Builder() {}
 
     /**
-     * Topics are used to display all background operations for a specific topic. Topics are hierarchical and the
-     * path of the topic is specified via a string array. Topics are freely definable. If e.g. all Topics of
-     * <code>level1</code> are queried, all BackgroundExecutions recursively below <code>level1</code> are returned.
+     * Topics are used to display all background operations for a specific topic. Topics are
+     * hierarchical and the path of the topic is specified via a string array. Topics are freely
+     * definable. If e.g. all Topics of <code>level1</code> are queried, all BackgroundExecutions
+     * recursively below <code>level1</code> are returned.
      */
     public Builder topic(String... topic) {
       Objects.requireNonNull(topic, "topic is null");

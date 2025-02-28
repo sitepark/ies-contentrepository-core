@@ -20,4 +20,19 @@ public class Or implements Filter {
   public List<Filter> getOr() {
     return this.or;
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.or);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return (o instanceof Or that) && Objects.equals(this.or, that.or);
+  }
+
+  @Override
+  public String toString() {
+    return "Or{" + "or=" + or + '}';
+  }
 }

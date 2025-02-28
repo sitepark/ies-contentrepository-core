@@ -1,8 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.sitepark.ies.contentrepository.core.domain.exception.InvalidAnchorException;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -51,9 +49,7 @@ class AnchorTest {
   void testOfStringWithOnlyNumbers() {
     assertThrows(
         InvalidAnchorException.class,
-        () -> {
-          Anchor.ofString("123");
-        },
+        () -> Anchor.ofString("123"),
         "anchor must not only contain numbers");
   }
 
@@ -61,29 +57,21 @@ class AnchorTest {
   void testOfStringWithContainsSpace() {
     assertThrows(
         InvalidAnchorException.class,
-        () -> {
-          Anchor.ofString("12 3");
-        },
+        () -> Anchor.ofString("12 3"),
         "anchor must not contain spaces");
   }
 
   @Test
   void testOfStringWithAmp() {
     assertThrows(
-        InvalidAnchorException.class,
-        () -> {
-          Anchor.ofString("12&3");
-        },
-        "anchor must not contain amp");
+        InvalidAnchorException.class, () -> Anchor.ofString("12&3"), "anchor must not contain amp");
   }
 
   @Test
-  void testOfStringWithOtherSpezialCharacter() {
+  void testOfStringWithOtherSpecialCharacter() {
     assertThrows(
         InvalidAnchorException.class,
-        () -> {
-          Anchor.ofString("12$3");
-        },
+        () -> Anchor.ofString("12$3"),
         "anchor must not contain special characters");
   }
 }

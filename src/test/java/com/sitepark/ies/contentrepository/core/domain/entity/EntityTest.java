@@ -1,8 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,43 +31,33 @@ class EntityTest {
 
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-  public void testToString() {
+  void testToString() {
     ToStringVerifier.forClass(Entity.class).withClassName(NameStyle.SIMPLE_NAME).verify();
   }
 
   @Test
   void testSetId() {
     Entity entity = Entity.builder().id("123").build();
-    assertEquals("123", entity.getId().get(), "unexpected id");
+    assertEquals("123", entity.getId().orElse(""), "unexpected id");
   }
 
   @Test
   void testSetIdWithNull() {
     assertThrows(
-        NullPointerException.class,
-        () -> {
-          Entity.builder().id(null);
-        },
-        "id should not be null");
+        NullPointerException.class, () -> Entity.builder().id(null), "id should not be null");
   }
 
   @Test
   void testSetIdWithZero() {
     assertThrows(
-        IllegalArgumentException.class,
-        () -> {
-          Entity.builder().id("0");
-        },
-        "id should not be zero");
+        IllegalArgumentException.class, () -> Entity.builder().id("0"), "id should not be zero");
   }
 
   @Test
   void testSetIdWithInvalidValid() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          Entity.builder().id("0x");
-        },
+        () -> Entity.builder().id("0x"),
         "id should not be invalid");
   }
 
@@ -82,48 +70,42 @@ class EntityTest {
   @Test
   void testSetAnchorAsString() {
     Entity entity = Entity.builder().anchor("abc").build();
-    assertEquals(Anchor.ofString("abc"), entity.getAnchor().get(), "unexpected anchor");
+    assertEquals(Anchor.ofString("abc"), entity.getAnchor().orElse(null), "unexpected anchor");
   }
 
   @Test
   void testSetAnchorWithNullString() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          Entity.builder().anchor((String) null);
-        },
+        () -> Entity.builder().anchor((String) null),
         "anchor should not be allowed to be null");
   }
 
   @Test
   void testSetAnchorAsAnchor() {
     Entity entity = Entity.builder().anchor(Anchor.ofString("abc")).build();
-    assertEquals(Anchor.ofString("abc"), entity.getAnchor().get(), "unexpected anchor");
+    assertEquals(Anchor.ofString("abc"), entity.getAnchor().orElse(null), "unexpected anchor");
   }
 
   @Test
   void testSetAnchorWithNullAnchor() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          Entity.builder().anchor((String) null);
-        },
+        () -> Entity.builder().anchor((String) null),
         "anchor should not be allowed to be null");
   }
 
   @Test
   void testSetName() {
     Entity entity = Entity.builder().name("abc").build();
-    assertEquals("abc", entity.getName().get(), "unexpected name");
+    assertEquals("abc", entity.getName().orElse(""), "unexpected name");
   }
 
   @Test
   void testSetNameWithNull() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          Entity.builder().name(null);
-        },
+        () -> Entity.builder().name(null),
         "name should not be allowed to be null");
   }
 
@@ -131,25 +113,21 @@ class EntityTest {
   void testSetNameWithBlank() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          Entity.builder().name(" ");
-        },
+        () -> Entity.builder().name(" "),
         "name should not be allowed to be blank");
   }
 
   @Test
   void testSetParent() {
     Entity entity = Entity.builder().parent("123").build();
-    assertEquals("123", entity.getParent().get(), "unexpected parent");
+    assertEquals("123", entity.getParent().orElse(""), "unexpected parent");
   }
 
   @Test
   void testSetParentWithNull() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          Entity.builder().parent(null);
-        },
+        () -> Entity.builder().parent(null),
         "parent should not be null");
   }
 
@@ -157,9 +135,7 @@ class EntityTest {
   void testSetParentWithZero() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          Entity.builder().parent("0");
-        },
+        () -> Entity.builder().parent("0"),
         "parent should not be zero");
   }
 
@@ -167,9 +143,7 @@ class EntityTest {
   void testSetParentWithInvalidValid() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          Entity.builder().parent("0x");
-        },
+        () -> Entity.builder().parent("0x"),
         "parent should not be invalid");
   }
 
@@ -183,7 +157,7 @@ class EntityTest {
   void testSetVersion() {
     OffsetDateTime version = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
     Entity entity = Entity.builder().version(version).build();
-    assertEquals(version, entity.getVersion().get(), "unexpected version");
+    assertEquals(version, entity.getVersion().orElse(null), "unexpected version");
   }
 
   @Test
@@ -204,7 +178,7 @@ class EntityTest {
     Entity entity =
         Entity.builder()
             .id("100560100000014842")
-            .name("060 Rathaus")
+            .name("060 Town hall")
             .parent("100560100000014840")
             .version(version)
             .isGroup(false)
@@ -237,7 +211,7 @@ class EntityTest {
     Entity entity =
         Entity.builder()
             .id("100560100000014842")
-            .name("060 Rathaus")
+            .name("060 Town hall")
             .parent("100560100000014840")
             .version(version)
             .isGroup(false)
@@ -247,7 +221,7 @@ class EntityTest {
 
     String expected =
         "{\"id\":\"100560100000014842\",\"anchor\":null,"
-            + "\"name\":\"060 Rathaus\",\"parent\":\"100560100000014840\","
+            + "\"name\":\"060 Town hall\",\"parent\":\"100560100000014840\","
             + "\"version\":\"2024-05-02T10:10:00Z\",\"group\":false}";
 
     assertEquals(expected, json, "unexpected json");

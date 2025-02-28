@@ -20,4 +20,19 @@ public class And implements Filter {
   public List<Filter> getAnd() {
     return this.and;
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.and);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return (o instanceof And that) && Objects.equals(this.and, that.and);
+  }
+
+  @Override
+  public String toString() {
+    return "And{" + "and=" + and + '}';
+  }
 }

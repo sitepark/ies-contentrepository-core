@@ -8,7 +8,7 @@ public enum BackgroundOperationKey {
 
   private final String name;
 
-  private BackgroundOperationKey(String name) {
+  BackgroundOperationKey(String name) {
     this.name = name;
   }
 

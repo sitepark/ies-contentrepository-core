@@ -9,6 +9,6 @@ class LimitTest {
   @Test
   void test() {
     OffsetLimit offsetLimit = Limit.offset(1, 2);
-    assertEquals(new OffsetLimit(1, 2), offsetLimit);
+    assertEquals(new OffsetLimit(1, 2), offsetLimit, "unexpected offset limit");
   }
 }

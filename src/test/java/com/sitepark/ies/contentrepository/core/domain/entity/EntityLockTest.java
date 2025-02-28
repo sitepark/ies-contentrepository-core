@@ -27,7 +27,7 @@ class EntityLockTest {
 
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-  public void testToString() {
+  void testToString() {
     ToStringVerifier.forClass(EntityLock.class).withClassName(NameStyle.SIMPLE_NAME).verify();
   }
 
@@ -42,9 +42,7 @@ class EntityLockTest {
   void testSetEntityWithNull() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          EntityLock.builder().entity(null);
-        },
+        () -> EntityLock.builder().entity(null),
         "entity should not be null");
   }
 
@@ -52,9 +50,7 @@ class EntityLockTest {
   void testSetEntityWitZero() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          EntityLock.builder().entity("0");
-        },
+        () -> EntityLock.builder().entity("0"),
         "entity should not be zero");
   }
 
@@ -62,9 +58,7 @@ class EntityLockTest {
   void testSetEntityWitInvalidValue() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          EntityLock.builder().entity("1x");
-        },
+        () -> EntityLock.builder().entity("1x"),
         "entity should not be zero");
   }
 
@@ -79,9 +73,7 @@ class EntityLockTest {
   void testSetUserWithNull() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          EntityLock.builder().user(null);
-        },
+        () -> EntityLock.builder().user(null),
         "user should not be null");
   }
 
@@ -89,9 +81,7 @@ class EntityLockTest {
   void testSetUserWitZero() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          EntityLock.builder().user("0");
-        },
+        () -> EntityLock.builder().user("0"),
         "user should not be zero");
   }
 
@@ -99,9 +89,7 @@ class EntityLockTest {
   void testSetUserWitInvalidValue() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          EntityLock.builder().user("1x");
-        },
+        () -> EntityLock.builder().user("1x"),
         "user should not be zero");
   }
 
@@ -117,9 +105,7 @@ class EntityLockTest {
   void testInvalidCreated() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          EntityLock.builder().created(null);
-        },
+        () -> EntityLock.builder().created(null),
         "null should not be allowed");
   }
 
@@ -135,9 +121,7 @@ class EntityLockTest {
   void testInvalidLastAccess() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          EntityLock.builder().lastAccess(null);
-        },
+        () -> EntityLock.builder().lastAccess(null),
         "null should not be allowed");
   }
 
@@ -152,9 +136,7 @@ class EntityLockTest {
   void testInvalidTtl() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          EntityLock.builder().ttl(0);
-        },
+        () -> EntityLock.builder().ttl(0),
         "ttl must be greater than 0");
   }
 

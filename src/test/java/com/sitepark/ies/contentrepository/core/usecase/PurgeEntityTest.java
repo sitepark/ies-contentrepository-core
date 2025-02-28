@@ -2,26 +2,13 @@ package com.sitepark.ies.contentrepository.core.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityLockedException;
 import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmptyException;
-import com.sitepark.ies.contentrepository.core.port.AccessControl;
-import com.sitepark.ies.contentrepository.core.port.ContentRepository;
-import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
-import com.sitepark.ies.contentrepository.core.port.ExtensionsNotifier;
-import com.sitepark.ies.contentrepository.core.port.HistoryManager;
-import com.sitepark.ies.contentrepository.core.port.MediaReferenceManager;
-import com.sitepark.ies.contentrepository.core.port.Publisher;
-import com.sitepark.ies.contentrepository.core.port.RecycleBin;
-import com.sitepark.ies.contentrepository.core.port.SearchIndex;
-import com.sitepark.ies.contentrepository.core.port.VersioningManager;
+import com.sitepark.ies.contentrepository.core.port.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
@@ -37,9 +24,7 @@ class PurgeEntityTest {
         new PurgeEntity(null, null, null, null, accessControl, null, null, null, null, null);
     assertThrows(
         AccessDeniedException.class,
-        () -> {
-          purgeEntity.purgeEntity("10");
-        },
+        () -> purgeEntity.purgeEntity("10"),
         "access should be denied");
   }
 
@@ -57,12 +42,11 @@ class PurgeEntityTest {
         new PurgeEntity(repository, null, null, null, accessControl, null, null, null, null, null);
     assertThrows(
         GroupNotEmptyException.class,
-        () -> {
-          purgeEntity.purgeEntity("10");
-        },
+        () -> purgeEntity.purgeEntity("10"),
         "only empty groups may be purged");
   }
 
+  @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
   @Test
   void testEntityIsLocked() {
 
@@ -84,9 +68,7 @@ class PurgeEntityTest {
     EntityLockedException entityLockedException =
         assertThrows(
             EntityLockedException.class,
-            () -> {
-              purgeEntity.purgeEntity("10");
-            },
+            () -> purgeEntity.purgeEntity("10"),
             "entity should be locked");
     assertEquals("10", entityLockedException.getLock().getEntity(), "unexpected entity id");
   }

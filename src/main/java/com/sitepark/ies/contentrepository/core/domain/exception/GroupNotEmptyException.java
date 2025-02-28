@@ -1,7 +1,9 @@
 package com.sitepark.ies.contentrepository.core.domain.exception;
 
+import java.io.Serial;
+
 public class GroupNotEmptyException extends ContentRepositoryException {
-  private static final long serialVersionUID = 1L;
+  @Serial private static final long serialVersionUID = 1L;
 
   private final String id;
 

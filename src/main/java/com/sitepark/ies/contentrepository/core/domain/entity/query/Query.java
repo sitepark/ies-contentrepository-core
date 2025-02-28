@@ -5,12 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter;
 import com.sitepark.ies.contentrepository.core.domain.entity.query.limit.Limit;
 import com.sitepark.ies.contentrepository.core.domain.entity.query.sort.SortCriteria;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.util.*;
 
 @JsonDeserialize(builder = Query.Builder.class)
 public class Query {
@@ -34,6 +30,7 @@ public class Query {
     return Optional.ofNullable(this.filterBy);
   }
 
+  @SuppressFBWarnings("EI_EXPOSE_REP")
   public List<SortCriteria> getSort() {
     return this.sort;
   }
@@ -53,14 +50,8 @@ public class Query {
 
   @Override
   public boolean equals(Object o) {
-
-    if (!(o instanceof Query)) {
-      return false;
-    }
-
-    Query that = (Query) o;
-
-    return that.canEqual(this)
+    return (o instanceof Query that)
+        && that.canEqual(this)
         && Objects.equals(this.filterBy, that.filterBy)
         && Objects.equals(this.limit, that.limit)
         && Objects.equals(this.sort, that.sort)
@@ -68,8 +59,8 @@ public class Query {
   }
 
   /**
-   * @see <a href="https://www.artima.com/articles/how-to-write-an-equality-method-in-java"> How to Write an Equality
-   * Method in Java </a>
+   * @see <a href="https://www.artima.com/articles/how-to-write-an-equality-method-in-java">How to
+   *     Write an Equality Method in Java </a>
    */
   public boolean canEqual(Object other) {
     return (other instanceof Query);
@@ -107,24 +98,19 @@ public class Query {
       return this.self();
     }
 
-    public B sort(SortCriteria sortCriteria) {
+    public B sort(SortCriteria... sortCriteria) {
       Objects.requireNonNull(sortCriteria, "sortCriteria is null");
-      this.sort.add(sortCriteria);
-      return this.self();
-    }
-
-    public B sort(SortCriteria[] sortCriterias) {
-      Objects.requireNonNull(sortCriterias, "sortCriterias is null");
-      for (SortCriteria criteria : sortCriterias) {
-        this.sort(criteria);
+      this.sort.addAll(Arrays.asList(sortCriteria));
+      for (SortCriteria sortCriterion : sortCriteria) {
+        Objects.requireNonNull(sortCriterion, "sortCriterion contains null");
       }
       return this.self();
     }
 
-    public B sort(Collection<SortCriteria> sortCriterias) {
-      Objects.requireNonNull(sortCriterias, "sortCriterias is null");
-      for (SortCriteria criteria : sortCriterias) {
-        this.sort(criteria);
+    public B sort(Collection<SortCriteria> sortCriteria) {
+      Objects.requireNonNull(sortCriteria, "sortCriteria is null");
+      for (SortCriteria sortCriterion : sortCriteria) {
+        this.sort(sortCriterion);
       }
       return this.self();
     }
@@ -146,7 +132,7 @@ public class Query {
     public abstract Query build();
   }
 
-  @JsonPOJOBuilder(withPrefix = "", buildMethodName = "build")
+  @JsonPOJOBuilder(withPrefix = "")
   public static class QueryBuilder extends Query.Builder<QueryBuilder> {
 
     protected QueryBuilder() {}

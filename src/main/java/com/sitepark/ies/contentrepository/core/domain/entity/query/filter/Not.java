@@ -17,4 +17,19 @@ public class Not implements Filter {
   public Filter getNot() {
     return this.not;
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.not);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return (o instanceof Not that) && Objects.equals(this.not, that.not);
+  }
+
+  @Override
+  public String toString() {
+    return "Not{" + "not=" + not + '}';
+  }
 }

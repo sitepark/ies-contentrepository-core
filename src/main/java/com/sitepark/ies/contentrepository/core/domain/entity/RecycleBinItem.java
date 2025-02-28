@@ -36,18 +36,16 @@ public final class RecycleBinItem {
   }
 
   @Override
-  public final int hashCode() {
+  public int hashCode() {
     return Objects.hash(this.id, this.parent, this.entity, this.children);
   }
 
   @Override
-  public final boolean equals(Object o) {
+  public boolean equals(Object o) {
 
-    if (!(o instanceof RecycleBinItem)) {
+    if (!(o instanceof RecycleBinItem item)) {
       return false;
     }
-
-    RecycleBinItem item = (RecycleBinItem) o;
 
     return Objects.equals(this.id, item.id)
         && Objects.equals(this.parent, item.parent)

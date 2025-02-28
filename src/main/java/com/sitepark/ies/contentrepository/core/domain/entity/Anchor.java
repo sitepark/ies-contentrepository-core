@@ -2,13 +2,14 @@ package com.sitepark.ies.contentrepository.core.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.sitepark.ies.contentrepository.core.domain.exception.InvalidAnchorException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
 public final class Anchor implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+  @Serial private static final long serialVersionUID = 1L;
 
   public static final String VALID_CHARS_REGEX = "[a-zA-Z0-9_.\\-]+";
 
@@ -16,9 +17,7 @@ public final class Anchor implements Serializable {
 
   private static final Pattern ONLY_NUMBERS_PATTERN = Pattern.compile("[0-9]+");
 
-  /**
-   * Used to reset anchor when saving entries.
-   */
+  /** Used to reset anchor when saving entries. */
   public static final Anchor EMPTY = new Anchor("");
 
   @JsonValue private final String name;
@@ -46,7 +45,7 @@ public final class Anchor implements Serializable {
   }
 
   /**
-   * @throws InvalidAnchorException
+   * @throws InvalidAnchorException if the anchor is invalid
    */
   private static void validate(String name) {
 
@@ -56,7 +55,7 @@ public final class Anchor implements Serializable {
 
     if (!VALIDATOR_PATTERN.matcher(name).matches()) {
       throw new InvalidAnchorException(
-          name, "Anchor contains invalid characters. Allowd are: " + VALID_CHARS_REGEX);
+          name, "Anchor contains invalid characters. Allowed are: " + VALID_CHARS_REGEX);
     }
   }
 
@@ -67,13 +66,7 @@ public final class Anchor implements Serializable {
 
   @Override
   public boolean equals(Object o) {
-
-    if (!(o instanceof Anchor)) {
-      return false;
-    }
-
-    Anchor anchor = (Anchor) o;
-    return Objects.equals(this.name, anchor.name);
+    return (o instanceof Anchor that) && Objects.equals(this.name, that.name);
   }
 
   @Override

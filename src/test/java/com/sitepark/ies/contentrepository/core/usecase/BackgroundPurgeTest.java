@@ -1,28 +1,14 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityBackgroundExecution;
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityBackgroundOperation;
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
-import com.sitepark.ies.contentrepository.core.port.AccessControl;
-import com.sitepark.ies.contentrepository.core.port.ContentRepository;
-import com.sitepark.ies.contentrepository.core.port.EntityBackgroundExecutor;
-import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
-import com.sitepark.ies.contentrepository.core.port.ExtensionsNotifier;
-import com.sitepark.ies.contentrepository.core.port.HistoryManager;
-import com.sitepark.ies.contentrepository.core.port.MediaReferenceManager;
-import com.sitepark.ies.contentrepository.core.port.Publisher;
-import com.sitepark.ies.contentrepository.core.port.RecycleBin;
-import com.sitepark.ies.contentrepository.core.port.SearchIndex;
-import com.sitepark.ies.contentrepository.core.port.VersioningManager;
-import java.util.Arrays;
+import com.sitepark.ies.contentrepository.core.port.*;
+import java.util.Collections;
 import org.junit.jupiter.api.Test;
 
 class BackgroundPurgeTest {
@@ -35,7 +21,7 @@ class BackgroundPurgeTest {
     Entity entity = Entity.builder().id("200").build();
 
     ContentRepository repository = mock();
-    when(repository.getAll(any())).thenReturn(Arrays.asList(entity));
+    when(repository.getAll(any())).thenReturn(Collections.singletonList(entity));
 
     AccessControl accessControl = mock();
     when(accessControl.isEntityRemovable(anyString())).thenReturn(false);
@@ -46,9 +32,7 @@ class BackgroundPurgeTest {
 
     assertThrows(
         AccessDeniedException.class,
-        () -> {
-          backgroundPurge.backgroundPurge(input);
-        },
+        () -> backgroundPurge.backgroundPurge(input),
         "AccessDeniedException expected");
   }
 
@@ -60,10 +44,10 @@ class BackgroundPurgeTest {
     Entity entity = Entity.builder().id("200").isGroup(true).build();
 
     ContentRepository repository = mock();
-    when(repository.getAll(any())).thenReturn(Arrays.asList(entity));
+    when(repository.getAll(any())).thenReturn(Collections.singletonList(entity));
 
     AccessControl accessControl = mock();
-    when(accessControl.isGroupRemoveable(anyString())).thenReturn(false);
+    when(accessControl.isGroupRemovable(anyString())).thenReturn(false);
 
     BackgroundPurge backgroundPurge =
         new BackgroundPurge(
@@ -71,14 +55,12 @@ class BackgroundPurgeTest {
 
     assertThrows(
         AccessDeniedException.class,
-        () -> {
-          backgroundPurge.backgroundPurge(input);
-        },
+        () -> backgroundPurge.backgroundPurge(input),
         "AccessDeniedException expected");
   }
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
+  @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
   void test() {
 
     BackgroundPurgeInput input = BackgroundPurgeInput.builder().root(123L).build();
@@ -86,7 +68,7 @@ class BackgroundPurgeTest {
     Entity entity = Entity.builder().id("200").build();
 
     ContentRepository repository = mock();
-    when(repository.getAll(any())).thenReturn(Arrays.asList(entity));
+    when(repository.getAll(any())).thenReturn(Collections.singletonList(entity));
 
     AccessControl accessControl = mock();
     when(accessControl.isEntityRemovable(anyString())).thenReturn(true);
@@ -100,6 +82,7 @@ class BackgroundPurgeTest {
               for (EntityBackgroundOperation operation : execution.getOperations()) {
                 operation.getConsumer().accept(entity);
               }
+              assert execution.getFinalizer().isPresent();
               execution.getFinalizer().get().getConsumer().accept(entity);
 
               return "123";

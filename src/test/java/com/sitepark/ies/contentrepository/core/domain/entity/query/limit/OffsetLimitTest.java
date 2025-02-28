@@ -18,31 +18,31 @@ class OffsetLimitTest {
 
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-  public void testToString() {
+  void testToString() {
     ToStringVerifier.forClass(OffsetLimit.class).verify();
   }
 
   @Test
   void testNullOffset() {
     OffsetLimit offsetLimit = new OffsetLimit(null, null);
-    assertEquals(0, offsetLimit.getOffset());
+    assertEquals(0, offsetLimit.getOffset(), "unexpected offset");
   }
 
   @Test
   void testNullLimit() {
     OffsetLimit offsetLimit = new OffsetLimit(null, null);
-    assertTrue(offsetLimit.getLimit().isEmpty());
+    assertTrue(offsetLimit.getLimit().isEmpty(), "unexpected limit");
   }
 
   @Test
   void testOffset() {
     OffsetLimit offsetLimit = new OffsetLimit(1, 2);
-    assertEquals(1, offsetLimit.getOffset());
+    assertEquals(1, offsetLimit.getOffset(), "unexpected offset");
   }
 
   @Test
   void testLimit() {
     OffsetLimit offsetLimit = new OffsetLimit(1, 2);
-    assertEquals(Optional.of(2), offsetLimit.getLimit());
+    assertEquals(Optional.of(2), offsetLimit.getLimit(), "unexpected limit");
   }
 }

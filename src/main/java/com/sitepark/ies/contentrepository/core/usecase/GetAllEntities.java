@@ -11,7 +11,7 @@ public final class GetAllEntities {
   private final ContentRepository repository;
 
   @Inject
-  protected GetAllEntities(ContentRepository repository) {
+  GetAllEntities(ContentRepository repository) {
     this.repository = repository;
   }
 

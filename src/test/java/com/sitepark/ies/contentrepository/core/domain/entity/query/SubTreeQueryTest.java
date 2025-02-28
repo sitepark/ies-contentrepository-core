@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ class SubTreeQueryTest {
   @Test
   void testSetRoot() {
     SubTreeQuery query = SubTreeQuery.builder().root(123L).build();
-    List<Long> expected = Arrays.asList(123L);
+    List<Long> expected = List.of(123L);
     assertEquals(expected, query.getRootList(), "unexpected root");
   }
 
@@ -36,16 +37,14 @@ class SubTreeQueryTest {
   void testSetNullRoot() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          SubTreeQuery.builder().root(null);
-        },
+        () -> SubTreeQuery.builder().root(null),
         "root must not be null");
   }
 
   @Test
   void testSetRootList() {
-    SubTreeQuery query = SubTreeQuery.builder().rootList(Arrays.asList(123L)).build();
-    List<Long> expected = Arrays.asList(123L);
+    SubTreeQuery query = SubTreeQuery.builder().rootList(List.of(123L)).build();
+    List<Long> expected = List.of(123L);
     assertEquals(expected, query.getRootList(), "unexpected rootList");
   }
 
@@ -53,9 +52,7 @@ class SubTreeQueryTest {
   void testSetNullRootList() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          SubTreeQuery.builder().rootList(null);
-        },
+        () -> SubTreeQuery.builder().rootList(null),
         "rootList must not be null");
   }
 
@@ -63,9 +60,7 @@ class SubTreeQueryTest {
   void testSetNullRootListItem() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          SubTreeQuery.builder().rootList(Arrays.asList((Long) null));
-        },
+        () -> SubTreeQuery.builder().rootList(Collections.singletonList(null)),
         "rootList item must not be null");
   }
 
@@ -73,26 +68,24 @@ class SubTreeQueryTest {
   void testEmptyRootList() {
     assertThrows(
         IllegalStateException.class,
-        () -> {
-          SubTreeQuery.builder().build();
-        },
+        () -> SubTreeQuery.builder().build(),
         "rootList must not be empty");
   }
 
   @Test
   void testToBuilderWithNewRootList() {
-    SubTreeQuery query = SubTreeQuery.builder().rootList(Arrays.asList(123L)).build();
+    SubTreeQuery query = SubTreeQuery.builder().rootList(List.of(123L)).build();
 
-    SubTreeQuery copy = query.toBuilder().rootList(Arrays.asList(345L)).build();
+    SubTreeQuery copy = query.toBuilder().rootList(List.of(345L)).build();
 
-    SubTreeQuery expected = SubTreeQuery.builder().rootList(Arrays.asList(345L)).build();
+    SubTreeQuery expected = SubTreeQuery.builder().rootList(List.of(345L)).build();
 
     assertEquals(expected, copy, "unexpected copy");
   }
 
   @Test
   void testToBuilderAppendRoot() {
-    SubTreeQuery query = SubTreeQuery.builder().rootList(Arrays.asList(123L)).build();
+    SubTreeQuery query = SubTreeQuery.builder().rootList(List.of(123L)).build();
 
     SubTreeQuery copy = query.toBuilder().root(345L).build();
 

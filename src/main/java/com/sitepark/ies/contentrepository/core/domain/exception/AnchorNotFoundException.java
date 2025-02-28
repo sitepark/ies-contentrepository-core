@@ -1,10 +1,11 @@
 package com.sitepark.ies.contentrepository.core.domain.exception;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.Anchor;
+import java.io.Serial;
 
 public class AnchorNotFoundException extends ContentRepositoryException {
 
-  private static final long serialVersionUID = 1L;
+  @Serial private static final long serialVersionUID = 1L;
 
   private final Anchor anchor;
 

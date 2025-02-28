@@ -1,15 +1,12 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -30,7 +27,7 @@ class EntityBackgroundExecutionTest {
 
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-  public void testToString() {
+  void testToString() {
     ToStringVerifier.forClass(EntityBackgroundExecution.class)
         .withClassName(NameStyle.SIMPLE_NAME)
         .verify();
@@ -51,9 +48,7 @@ class EntityBackgroundExecutionTest {
   void testSetNullTopic() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          EntityBackgroundExecution.builder().topic((String[]) null);
-        },
+        () -> EntityBackgroundExecution.builder().topic((String[]) null),
         "topic must not be null");
   }
 
@@ -61,9 +56,7 @@ class EntityBackgroundExecutionTest {
   void testSetNullTopicPart() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          EntityBackgroundExecution.builder().topic((String) null);
-        },
+        () -> EntityBackgroundExecution.builder().topic((String) null),
         "topic part must not be null");
   }
 
@@ -84,7 +77,7 @@ class EntityBackgroundExecutionTest {
     EntityBackgroundExecution execution =
         EntityBackgroundExecution.builder().topic("topic").operation(op).build();
 
-    List<EntityBackgroundOperation> expected = Arrays.asList(op);
+    List<EntityBackgroundOperation> expected = Collections.singletonList(op);
 
     assertEquals(expected, execution.getOperations(), "unexpected operations");
   }
@@ -93,9 +86,7 @@ class EntityBackgroundExecutionTest {
   void testSetNullOperation() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          EntityBackgroundExecution.builder().operation((EntityBackgroundOperation) null);
-        },
+        () -> EntityBackgroundExecution.builder().operation((EntityBackgroundOperation) null),
         "operation must not be null");
   }
 
@@ -103,9 +94,7 @@ class EntityBackgroundExecutionTest {
   void testSetNullOperationArray() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          EntityBackgroundExecution.builder().operation((EntityBackgroundOperation[]) null);
-        },
+        () -> EntityBackgroundExecution.builder().operation((EntityBackgroundOperation[]) null),
         "operations must not be null");
   }
 
@@ -113,9 +102,7 @@ class EntityBackgroundExecutionTest {
   void testMissingOperation() {
     assertThrows(
         IllegalStateException.class,
-        () -> {
-          EntityBackgroundExecution.builder().topic("topic").build();
-        },
+        () -> EntityBackgroundExecution.builder().topic("topic").build(),
         "operation must be set");
   }
 
@@ -130,7 +117,7 @@ class EntityBackgroundExecutionTest {
             .finalizer(finalizer)
             .build();
 
-    assertEquals(finalizer, execution.getFinalizer().get(), "unexpected finalizer");
+    assertEquals(finalizer, execution.getFinalizer().orElse(null), "unexpected finalizer");
   }
 
   @Test

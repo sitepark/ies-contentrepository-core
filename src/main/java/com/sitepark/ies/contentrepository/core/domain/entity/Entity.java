@@ -14,7 +14,7 @@ public class Entity {
   private final String name;
   private final String parent;
   private final OffsetDateTime version;
-  private final boolean isGroup;
+  private final boolean group;
 
   protected Entity(Builder<?> builder) {
     this.id = builder.id;
@@ -22,7 +22,7 @@ public class Entity {
     this.name = builder.name;
     this.parent = builder.parent;
     this.version = builder.version;
-    this.isGroup = builder.isGroup;
+    this.group = builder.group;
   }
 
   public Optional<String> getId() {
@@ -58,7 +58,7 @@ public class Entity {
   }
 
   public boolean isGroup() {
-    return this.isGroup;
+    return this.group;
   }
 
   public static Builder<?> builder() {
@@ -72,41 +72,43 @@ public class Entity {
   @Override
   public final int hashCode() {
 
-    return Objects.hash(this.id, this.anchor, this.name, this.parent, this.version, this.isGroup);
+    return Objects.hash(this.id, this.anchor, this.name, this.parent, this.version, this.group);
   }
 
   @Override
   public final boolean equals(Object o) {
 
-    if (!(o instanceof Entity)) {
+    if (!(o instanceof Entity that)) {
       return false;
     }
-
-    Entity that = (Entity) o;
 
     return Objects.equals(this.id, that.id)
         && Objects.equals(this.anchor, that.anchor)
         && Objects.equals(this.name, that.name)
         && Objects.equals(this.parent, that.parent)
         && Objects.equals(this.version, that.version)
-        && Objects.equals(this.isGroup, that.isGroup);
+        && Objects.equals(this.group, that.group);
   }
 
   @Override
   public String toString() {
-    return "Entity [id="
+    return "Entity{"
+        + "id='"
         + id
+        + '\''
         + ", anchor="
         + anchor
-        + ", name="
+        + ", name='"
         + name
-        + ", parent="
+        + '\''
+        + ", parent='"
         + parent
+        + '\''
         + ", version="
         + version
-        + ", isGroup="
-        + isGroup
-        + "]";
+        + ", group="
+        + group
+        + '}';
   }
 
   public abstract static class Builder<B extends Builder<B>> {
@@ -116,7 +118,7 @@ public class Entity {
     private String name;
     private String parent;
     private OffsetDateTime version;
-    private boolean isGroup;
+    private boolean group;
 
     protected Builder() {}
 
@@ -126,7 +128,7 @@ public class Entity {
       this.name = entity.name;
       this.parent = entity.parent;
       this.version = entity.version;
-      this.isGroup = entity.isGroup;
+      this.group = entity.group;
     }
 
     public B id(String id) {
@@ -175,7 +177,7 @@ public class Entity {
     }
 
     public B isGroup(boolean isGroup) {
-      this.isGroup = isGroup;
+      this.group = isGroup;
       return this.self();
     }
 
@@ -186,7 +188,7 @@ public class Entity {
     }
   }
 
-  @JsonPOJOBuilder(withPrefix = "", buildMethodName = "build")
+  @JsonPOJOBuilder(withPrefix = "")
   protected static class EntityBuilder extends Builder<EntityBuilder> {
     protected EntityBuilder() {}
 

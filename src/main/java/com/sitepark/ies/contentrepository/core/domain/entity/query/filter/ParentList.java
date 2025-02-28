@@ -20,4 +20,19 @@ public class ParentList implements Filter {
   public List<String> getParentList() {
     return this.parentList;
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.parentList);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return (o instanceof ParentList that) && Objects.equals(this.parentList, that.parentList);
+  }
+
+  @Override
+  public String toString() {
+    return "ParentList{" + "parentList=" + parentList + '}';
+  }
 }

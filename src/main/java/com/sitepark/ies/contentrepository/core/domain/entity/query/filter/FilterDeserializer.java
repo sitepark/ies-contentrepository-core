@@ -1,10 +1,11 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.query.filter;
 
 import com.sitepark.ies.contentrepository.core.domain.databind.UniquePropertyPolymorphicDeserializer;
+import java.io.Serial;
 
 public class FilterDeserializer extends UniquePropertyPolymorphicDeserializer<Filter> {
 
-  private static final long serialVersionUID = 1L;
+  @Serial private static final long serialVersionUID = 1L;
 
   public FilterDeserializer() {
     super(Filter.class);

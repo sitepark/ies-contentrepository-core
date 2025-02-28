@@ -54,16 +54,16 @@ public class SubTreeQuery extends Query {
     return new Builder(this);
   }
 
-  @JsonPOJOBuilder(withPrefix = "", buildMethodName = "build")
+  @JsonPOJOBuilder(withPrefix = "")
   public static class Builder extends Query.Builder<Builder> {
 
     private final List<Long> rootList = new ArrayList<>();
 
     protected Builder() {}
 
-    protected Builder(SubTreeQuery curserBasedQuery) {
-      super(curserBasedQuery);
-      this.rootList.addAll(curserBasedQuery.rootList);
+    protected Builder(SubTreeQuery cursorBasedQuery) {
+      super(cursorBasedQuery);
+      this.rootList.addAll(cursorBasedQuery.rootList);
     }
 
     public Builder root(Long root) {

@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ class GetAllEntitiesTest {
 
     ContentRepository repository = mock();
     Entity entity = mock();
-    List<Entity> list = Arrays.asList(entity);
+    List<Entity> list = Collections.singletonList(entity);
     when(repository.getAll(any())).thenReturn(list);
 
     var getAllEntities = new GetAllEntities(repository);

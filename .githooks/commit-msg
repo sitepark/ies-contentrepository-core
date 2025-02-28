@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Create a regex for a conventional commit.
-convetional_commit_regex="^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z \-]+\))?!?: .+$"
+conventional_commit_regex="^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z \-]+\))?!?: .+$"
 
 # Accept Merge commits
 merge_msg_regex="^Merge branch '.+'.+$"
@@ -16,7 +16,7 @@ if [[ "$commit_message" =~ $merge_msg_regex ]]; then
 fi
 
 # Check the message, if we match, all good baby.
-if [[ "$commit_message" =~ $convetional_commit_regex ]]; then
+if [[ "$commit_message" =~ $conventional_commit_regex ]]; then
    echo -e "\e[32mCommit message meets Conventional Commit standards...\e[0m"
    exit 0
 fi

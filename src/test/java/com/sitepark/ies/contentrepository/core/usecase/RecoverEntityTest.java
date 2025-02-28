@@ -1,19 +1,11 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItem;
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
-import com.sitepark.ies.contentrepository.core.port.AccessControl;
-import com.sitepark.ies.contentrepository.core.port.ContentRepository;
-import com.sitepark.ies.contentrepository.core.port.HistoryManager;
-import com.sitepark.ies.contentrepository.core.port.RecycleBin;
-import com.sitepark.ies.contentrepository.core.port.SearchIndex;
+import com.sitepark.ies.contentrepository.core.port.*;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
@@ -31,21 +23,19 @@ class RecoverEntityTest {
     when(recycleBin.get(anyString())).thenReturn(Optional.of(recycleBinItem));
 
     AccessControl accessControl = mock();
-    when(accessControl.isGroupCreateable(anyString())).thenReturn(false);
+    when(accessControl.isGroupCreatable(anyString())).thenReturn(false);
 
     RecoverEntity recoverEntity =
         new RecoverEntity(repository, historyManager, accessControl, recycleBin, searchIndex);
 
     assertThrows(
         AccessDeniedException.class,
-        () -> {
-          recoverEntity.recover("123");
-        },
+        () -> recoverEntity.recover("123"),
         "recover should be denied access");
   }
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
+  @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
   void test() {
 
     ContentRepository repository = mock();
@@ -57,7 +47,7 @@ class RecoverEntityTest {
     when(recycleBin.get(anyString())).thenReturn(Optional.of(recycleBinItem));
 
     AccessControl accessControl = mock();
-    when(accessControl.isGroupCreateable(any())).thenReturn(true);
+    when(accessControl.isGroupCreatable(any())).thenReturn(true);
 
     RecoverEntity recoverEntity =
         new RecoverEntity(repository, historyManager, accessControl, recycleBin, searchIndex);

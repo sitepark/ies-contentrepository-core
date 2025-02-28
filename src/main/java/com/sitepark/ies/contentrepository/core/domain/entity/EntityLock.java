@@ -1,5 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -12,7 +13,7 @@ public final class EntityLock implements Serializable {
   private final OffsetDateTime lastAccess;
   private final long ttl;
 
-  private static final long serialVersionUID = 1L;
+  @Serial private static final long serialVersionUID = 1L;
 
   private EntityLock(Builder builder) {
     this.entity = builder.entity;
@@ -43,18 +44,16 @@ public final class EntityLock implements Serializable {
   }
 
   @Override
-  public final int hashCode() {
+  public int hashCode() {
     return Objects.hash(this.entity, this.user, this.created, this.lastAccess, this.ttl);
   }
 
   @Override
-  public final boolean equals(Object o) {
+  public boolean equals(Object o) {
 
-    if (!(o instanceof EntityLock)) {
+    if (!(o instanceof EntityLock lock)) {
       return false;
     }
-
-    EntityLock lock = (EntityLock) o;
 
     return Objects.equals(this.entity, lock.entity)
         && Objects.equals(this.user, lock.user)
@@ -73,20 +72,20 @@ public final class EntityLock implements Serializable {
 
   @Override
   public String toString() {
-    StringBuilder b =
-        new StringBuilder(100)
-            .append("EntityLock[entity:")
-            .append(this.entity)
-            .append(", user:")
-            .append(this.user)
-            .append(", created:")
-            .append(this.created)
-            .append(", lastAccess:")
-            .append(this.lastAccess)
-            .append(", ttl:")
-            .append(this.ttl)
-            .append(']');
-    return b.toString();
+    return "EntityLock{"
+        + "entity='"
+        + entity
+        + '\''
+        + ", user='"
+        + user
+        + '\''
+        + ", created="
+        + created
+        + ", lastAccess="
+        + lastAccess
+        + ", ttl="
+        + ttl
+        + '}';
   }
 
   public static class Builder {

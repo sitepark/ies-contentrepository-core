@@ -1,13 +1,12 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Arrays;
+import java.util.List;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -27,18 +26,15 @@ class BackgroundPurgeInputTest {
   @Test
   void testSetRootList() {
 
-    BackgroundPurgeInput input =
-        BackgroundPurgeInput.builder().rootList(Arrays.asList(123L)).build();
-    assertEquals(Arrays.asList(123L), input.getRootList(), "unexpected rootList");
+    BackgroundPurgeInput input = BackgroundPurgeInput.builder().rootList(List.of(123L)).build();
+    assertEquals(List.of(123L), input.getRootList(), "unexpected rootList");
   }
 
   @Test
   void testNullSetRootList() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          BackgroundPurgeInput.builder().rootList(null);
-        },
+        () -> BackgroundPurgeInput.builder().rootList(null),
         "rootList must not be null");
   }
 
@@ -46,16 +42,14 @@ class BackgroundPurgeInputTest {
   void testSetRoot() {
 
     BackgroundPurgeInput input = BackgroundPurgeInput.builder().root(123L).build();
-    assertEquals(Arrays.asList(123L), input.getRootList(), "unexpected root");
+    assertEquals(List.of(123L), input.getRootList(), "unexpected root");
   }
 
   @Test
   void testSetNullRoot() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          BackgroundPurgeInput.builder().root(null);
-        },
+        () -> BackgroundPurgeInput.builder().root(null),
         "root must not be null");
   }
 
@@ -65,16 +59,14 @@ class BackgroundPurgeInputTest {
     Filter filter = mock();
 
     BackgroundPurgeInput input = BackgroundPurgeInput.builder().filterBy(filter).build();
-    assertEquals(filter, input.getFilter().get(), "unexpected root");
+    assertEquals(filter, input.getFilter().orElse(null), "unexpected root");
   }
 
   @Test
   void testSetNullFilter() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          BackgroundPurgeInput.builder().filterBy(null);
-        },
+        () -> BackgroundPurgeInput.builder().filterBy(null),
         "filterBy must not be null");
   }
 
@@ -86,11 +78,7 @@ class BackgroundPurgeInputTest {
 
   @Test
   void testRootAndFilterNotSet() {
-    assertThrows(
-        IllegalStateException.class,
-        () -> {
-          BackgroundPurgeInput.builder().build();
-        });
+    assertThrows(IllegalStateException.class, () -> BackgroundPurgeInput.builder().build());
   }
 
   @Test
@@ -101,7 +89,7 @@ class BackgroundPurgeInputTest {
     BackgroundPurgeInput input =
         BackgroundPurgeInput.builder().root(123L).filterBy(filter).forceLock(true).build();
 
-    BackgroundPurgeInput copy = input.toBuilder().rootList(Arrays.asList(345L)).build();
+    BackgroundPurgeInput copy = input.toBuilder().rootList(List.of(345L)).build();
 
     BackgroundPurgeInput expected =
         BackgroundPurgeInput.builder().root(345L).filterBy(filter).forceLock(true).build();

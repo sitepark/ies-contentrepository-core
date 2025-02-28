@@ -22,4 +22,20 @@ public class ParentAnchorList implements Filter {
   public List<com.sitepark.ies.contentrepository.core.domain.entity.Anchor> getParentAnchorList() {
     return this.parentAnchorList;
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.parentAnchorList);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return (o instanceof ParentAnchorList that)
+        && Objects.equals(this.parentAnchorList, that.parentAnchorList);
+  }
+
+  @Override
+  public String toString() {
+    return "ParentAnchorList{" + "parentAnchorList=" + parentAnchorList + '}';
+  }
 }

@@ -2,11 +2,7 @@ package com.sitepark.ies.contentrepository.core.usecase;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public final class BackgroundPurgeInput {
 
@@ -36,18 +32,16 @@ public final class BackgroundPurgeInput {
   }
 
   @Override
-  public final int hashCode() {
+  public int hashCode() {
     return Objects.hash(this.rootList, this.filterBy, this.forceLock);
   }
 
   @Override
-  public final boolean equals(Object o) {
+  public boolean equals(Object o) {
 
-    if (!(o instanceof BackgroundPurgeInput)) {
+    if (!(o instanceof BackgroundPurgeInput that)) {
       return false;
     }
-
-    BackgroundPurgeInput that = (BackgroundPurgeInput) o;
 
     return Objects.equals(this.rootList, that.rootList)
         && Objects.equals(this.filterBy, that.filterBy)

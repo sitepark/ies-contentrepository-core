@@ -1,8 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
@@ -26,7 +24,7 @@ class HistoryEntryTest {
 
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-  public void testToString() {
+  void testToString() {
     ToStringVerifier.forClass(HistoryEntry.class).withClassName(NameStyle.SIMPLE_NAME).verify();
   }
 
@@ -48,9 +46,7 @@ class HistoryEntryTest {
   void testSetNullInitiator() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          HistoryEntry.builder().initiator(null);
-        },
+        () -> HistoryEntry.builder().initiator(null),
         "initiator must not be null");
   }
 
@@ -58,7 +54,7 @@ class HistoryEntryTest {
   void testSetUser() {
     HistoryEntry entry = HistoryEntry.builder().user(123L).build();
 
-    assertEquals(123, entry.getUser().get(), "unexpected user");
+    assertEquals(123, entry.getUser().orElse(0L), "unexpected user");
   }
 
   @Test
@@ -79,9 +75,7 @@ class HistoryEntryTest {
   void testSetInvalidTimestamp() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          HistoryEntry.builder().timestamp(0);
-        },
+        () -> HistoryEntry.builder().timestamp(0),
         "timestamp must be greater than 0");
   }
 
@@ -96,9 +90,7 @@ class HistoryEntryTest {
   void testSetNullType() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          HistoryEntry.builder().type(null);
-        },
+        () -> HistoryEntry.builder().type(null),
         "type must not be null");
   }
 
@@ -113,9 +105,7 @@ class HistoryEntryTest {
   void testSetNullComment() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          HistoryEntry.builder().comment(null);
-        },
+        () -> HistoryEntry.builder().comment(null),
         "comment must not be null");
   }
 

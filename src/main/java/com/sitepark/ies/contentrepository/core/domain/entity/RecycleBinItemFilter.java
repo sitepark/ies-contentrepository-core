@@ -31,18 +31,16 @@ public final class RecycleBinItemFilter {
   }
 
   @Override
-  public final int hashCode() {
+  public int hashCode() {
     return Objects.hash(this.from, this.to, this.user);
   }
 
   @Override
-  public final boolean equals(Object o) {
+  public boolean equals(Object o) {
 
-    if (!(o instanceof RecycleBinItemFilter)) {
+    if (!(o instanceof RecycleBinItemFilter filter)) {
       return false;
     }
-
-    RecycleBinItemFilter filter = (RecycleBinItemFilter) o;
 
     return Objects.equals(this.from, filter.from)
         && Objects.equals(this.to, filter.to)

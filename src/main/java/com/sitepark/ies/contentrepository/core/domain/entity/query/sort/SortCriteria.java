@@ -2,11 +2,11 @@ package com.sitepark.ies.contentrepository.core.domain.entity.query.sort;
 
 import java.util.Objects;
 
-public abstract class SortCriteria {
+public class SortCriteria {
 
   private final Direction direction;
 
-  public SortCriteria(Direction direction) {
+  protected SortCriteria(Direction direction) {
     this.direction = direction;
   }
 
@@ -21,11 +21,6 @@ public abstract class SortCriteria {
 
   @Override
   public final boolean equals(Object o) {
-
-    if (!(o instanceof SortCriteria that)) {
-      return false;
-    }
-
-    return Objects.equals(this.direction, that.direction);
+    return (o instanceof SortCriteria that) && Objects.equals(this.direction, that.direction);
   }
 }

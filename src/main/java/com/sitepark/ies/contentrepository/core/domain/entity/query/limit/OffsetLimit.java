@@ -10,8 +10,7 @@ public final class OffsetLimit implements Limit {
 
   private final Integer limit;
 
-  protected OffsetLimit(
-      @JsonProperty("offset") Integer offset, @JsonProperty("limit") Integer limit) {
+  OffsetLimit(@JsonProperty("offset") Integer offset, @JsonProperty("limit") Integer limit) {
     this.offset = (offset == null) ? Integer.valueOf(0) : offset;
     this.limit = limit;
   }

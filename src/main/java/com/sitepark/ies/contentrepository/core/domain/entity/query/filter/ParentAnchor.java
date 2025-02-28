@@ -19,4 +19,19 @@ public class ParentAnchor implements Filter {
   public com.sitepark.ies.contentrepository.core.domain.entity.Anchor getParentAnchor() {
     return this.parentAnchor;
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.parentAnchor);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return (o instanceof ParentAnchor that) && Objects.equals(this.parentAnchor, that.parentAnchor);
+  }
+
+  @Override
+  public String toString() {
+    return "ParentAnchor{" + "parentAnchor=" + parentAnchor + '}';
+  }
 }

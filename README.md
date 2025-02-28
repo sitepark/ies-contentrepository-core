@@ -3,11 +3,18 @@
 
 # Content-Repository
 
-The content repository contains the content-bearing objects and groups. These have master data and schema-less content. There are three types.
+The content repository contains the content-bearing objects and groups. These have master data and schema-less content.
+There are three types.
 
-1. **Media objects** - media objects are linked to a media such as a PDF or an image file and contains master data. The media object represents this linked media file. Each media object must be assigned to exactly one group. Additionally, any content information can be stored at the media object.
-2. **Entity object** - A content object can contain any content information in addition to its master data. Each object must be assigned to exactly one group. An optional property of a content object is to provide a file name.
-3. **Group object** - objects are structured in groups. These groups can be structured hierarchically. A group object can include any content information to its master data.  An optional property of a group object is to provide a directory name. This is used for the objects within the group. Another optional property of a group object is to provide a file name.
+1. **Media objects** - media objects are linked to a media such as a PDF or an image file and contains master data. The
+   media object represents this linked media file. Each media object must be assigned to exactly one group.
+   Additionally, any content information can be stored at the media object.
+2. **Entity object** - A content object can contain any content information in addition to its master data. Each object
+   must be assigned to exactly one group. An optional property of a content object is to provide a file name.
+3. **Group object** - objects are structured in groups. These groups can be structured hierarchically. A group object
+   can include any content information to its master data. An optional property of a group object is to provide a
+   directory name. This is used for the objects within the group. Another optional property of a group object is to
+   provide a file name.
 
 ## Features
 
@@ -31,9 +38,11 @@ Rule when saving objects:
 Only the data specified for saving will be changed. All other data remain unchanged.
 When saving, all changes are compared with the actual state, so that all changed fields are known.
 
-Contents can be structured in lists and sub-objects. If a list is saved, it is not merged but replaced. This means that if a list with three elements is updated with two elements, only the two elements are kept. If not all fields of the list element are specified, only the specified fields are updated, the others remain unchanged.
-
-List elements can be reordered and then saved. In this case, the fields of the list elements that were not specified will also be reordered when saving.
+Content can be structured in lists and sub-objects. When a list is saved, it is not merged but replaced. This means that
+if a list with three elements is updated with two elements, only the two elements are retained. If not all fields of the
+list element are specified, only the specified fields are updated, the others remain unchanged.
+List elements can be reordered and then saved. In this case, the fields of the list elements that were not specified
+will also be reordered when saving.
 
 ### Handling media
 
@@ -43,11 +52,13 @@ The media itself is managed in a media repository.
 
 ## Architecture
 
-The architecture follows the principles of [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+The architecture follows the principles
+of [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 
 ### Ports
 
-Ports are interfaces that the core requires for the execution of the individual usecases. The implementation is provided externally.
+Ports are interfaces that the core requires for the execution of the individual usecases. The implementation is provided
+externally.
 
 #### AccessControl
 
@@ -84,7 +95,6 @@ Recycle Bin Management
 #### VersioningManager
 
 Versioning management to be able to get or restore older versions.
-
 
 ## Coding-Standard
 
@@ -170,4 +180,6 @@ public class Settings {
 }
 ```
 
-Inheritance is a bit of a challenge in the Builder pattern. See [here](https://github.com/rtenhove/eg-builder-inheritance) for a good explanation and apply the proposed solution. `com.sitepark.ies.contentrepository.core.domain.entity.Entity` shows this solution.
+Inheritance is a bit of a challenge in the Builder pattern.
+See [here](https://github.com/rtenhove/eg-builder-inheritance) for a good explanation and apply the proposed solution.
+`com.sitepark.ies.contentrepository.core.domain.entity.Entity` shows this solution.

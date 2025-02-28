@@ -9,6 +9,6 @@ class AccessDeniedExceptionTest {
   @Test
   void testConstructor() {
     AccessDeniedException e = new AccessDeniedException("message", new Exception());
-    assertEquals("message", e.getMessage());
+    assertEquals("message", e.getMessage(), "unexpected message");
   }
 }

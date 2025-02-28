@@ -9,7 +9,6 @@ module com.sitepark.ies.contentrepository.core {
   exports com.sitepark.ies.contentrepository.core.usecase;
 
   requires jakarta.inject;
-  requires org.eclipse.jdt.annotation;
   requires com.github.spotbugs.annotations;
   requires com.fasterxml.jackson.databind;
   requires com.fasterxml.jackson.annotation;

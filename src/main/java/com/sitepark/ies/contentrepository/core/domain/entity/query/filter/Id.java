@@ -17,4 +17,19 @@ public class Id implements Filter {
   public String getId() {
     return this.id;
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.id);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return (o instanceof Id that) && Objects.equals(this.id, that.id);
+  }
+
+  @Override
+  public String toString() {
+    return "Id{" + "id=" + id + '}';
+  }
 }

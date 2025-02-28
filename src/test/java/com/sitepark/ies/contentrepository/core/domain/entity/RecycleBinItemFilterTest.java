@@ -1,8 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -21,7 +19,7 @@ class RecycleBinItemFilterTest {
     LocalDateTime date = LocalDateTime.of(2023, 11, 3, 9, 33);
     RecycleBinItemFilter filter = RecycleBinItemFilter.builder().from(date).build();
 
-    assertEquals(date, filter.getFrom().get(), "unexpected from");
+    assertEquals(date, filter.getFrom().orElse(null), "unexpected from");
   }
 
   @Test
@@ -35,7 +33,7 @@ class RecycleBinItemFilterTest {
     LocalDateTime date = LocalDateTime.of(2023, 11, 3, 9, 33);
     RecycleBinItemFilter filter = RecycleBinItemFilter.builder().to(date).build();
 
-    assertEquals(date, filter.getTo().get(), "unexpected to");
+    assertEquals(date, filter.getTo().orElse(null), "unexpected to");
   }
 
   @Test
@@ -48,16 +46,12 @@ class RecycleBinItemFilterTest {
   void testSetUser() {
     RecycleBinItemFilter filter = RecycleBinItemFilter.builder().user(123).build();
 
-    assertEquals(123, filter.getUser().get(), "unexpected user");
+    assertEquals(123, filter.getUser().orElse(0L), "unexpected user");
   }
 
   @Test
   void testSetInvalidUser() {
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> {
-          RecycleBinItemFilter.builder().user(0);
-        });
+    assertThrows(IllegalArgumentException.class, () -> RecycleBinItemFilter.builder().user(0));
   }
 
   @Test

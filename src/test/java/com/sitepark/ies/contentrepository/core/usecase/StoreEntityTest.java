@@ -2,11 +2,7 @@ package com.sitepark.ies.contentrepository.core.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.ChangeSet;
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
@@ -16,13 +12,7 @@ import com.sitepark.ies.contentrepository.core.domain.exception.EntityLockedExce
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityNotFoundException;
 import com.sitepark.ies.contentrepository.core.domain.exception.ParentMissingException;
 import com.sitepark.ies.contentrepository.core.domain.service.ContentDiffer;
-import com.sitepark.ies.contentrepository.core.port.AccessControl;
-import com.sitepark.ies.contentrepository.core.port.ContentRepository;
-import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
-import com.sitepark.ies.contentrepository.core.port.HistoryManager;
-import com.sitepark.ies.contentrepository.core.port.IdGenerator;
-import com.sitepark.ies.contentrepository.core.port.SearchIndex;
-import com.sitepark.ies.contentrepository.core.port.VersioningManager;
+import com.sitepark.ies.contentrepository.core.port.*;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Optional;
@@ -40,11 +30,7 @@ class StoreEntityTest {
     StoreEntity storeEntity = new StoreEntity(null, null, null, null, null, null, null, null);
 
     assertThrows(
-        ParentMissingException.class,
-        () -> {
-          storeEntity.store(entity);
-        },
-        "entity must have a parent");
+        ParentMissingException.class, () -> storeEntity.store(entity), "entity must have a parent");
   }
 
   @Test
@@ -54,27 +40,23 @@ class StoreEntityTest {
     when(entity.getParent()).thenReturn(Optional.of("123"));
 
     AccessControl accessControl = mock();
-    when(accessControl.isEntityCreateable(anyString())).thenReturn(false);
+    when(accessControl.isEntityCreatable(anyString())).thenReturn(false);
 
     StoreEntity storeEntity =
         new StoreEntity(null, null, null, null, accessControl, null, null, null);
 
     assertThrows(
-        AccessDeniedException.class,
-        () -> {
-          storeEntity.store(entity);
-        },
-        "should be access denied");
+        AccessDeniedException.class, () -> storeEntity.store(entity), "should be access denied");
   }
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
+  @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
   void testCreate() {
 
     Entity entity = Entity.builder().parent("345").build();
 
     AccessControl accessControl = mock();
-    when(accessControl.isEntityCreateable(anyString())).thenReturn(true);
+    when(accessControl.isEntityCreatable(anyString())).thenReturn(true);
 
     ContentRepository repository = mock();
     VersioningManager versioningManager = mock();
@@ -126,11 +108,7 @@ class StoreEntityTest {
     StoreEntity storeEntity = new StoreEntity(repository, null, null, null, null, null, null, null);
 
     assertThrows(
-        EntityNotFoundException.class,
-        () -> {
-          storeEntity.store(entity);
-        },
-        "should be not found");
+        EntityNotFoundException.class, () -> storeEntity.store(entity), "should be not found");
   }
 
   @Test
@@ -149,11 +127,7 @@ class StoreEntityTest {
         new StoreEntity(repository, null, null, null, accessControl, null, null, null);
 
     assertThrows(
-        AccessDeniedException.class,
-        () -> {
-          storeEntity.store(entity);
-        },
-        "should be access denied");
+        AccessDeniedException.class, () -> storeEntity.store(entity), "should be access denied");
   }
 
   @Test
@@ -175,15 +149,11 @@ class StoreEntityTest {
         new StoreEntity(repository, lockManager, null, null, accessControl, null, null, null);
 
     assertThrows(
-        EntityLockedException.class,
-        () -> {
-          storeEntity.store(entity);
-        },
-        "entity should be locked");
+        EntityLockedException.class, () -> storeEntity.store(entity), "entity should be locked");
   }
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
+  @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
   void testUpdate() {
 
     Entity entity = Entity.builder().id("123").parent("345").build();

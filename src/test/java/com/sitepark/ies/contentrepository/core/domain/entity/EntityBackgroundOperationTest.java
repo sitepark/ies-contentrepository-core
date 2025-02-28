@@ -7,7 +7,7 @@ import static org.mockito.Mockito.mock;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.function.Consumer;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class EntityBackgroundOperationTest {
 
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-  public void testToString() {
+  void testToString() {
     ToStringVerifier.forClass(EntityBackgroundOperation.class)
         .withClassName(NameStyle.SIMPLE_NAME)
         .verify();
@@ -40,7 +40,7 @@ class EntityBackgroundOperationTest {
     EntityBackgroundOperation op =
         EntityBackgroundOperation.builder()
             .key(BackgroundOperationKey.PURGE_LOCK)
-            .entityList(Arrays.asList(entity))
+            .entityList(Collections.singletonList(entity))
             .consumer(consumer)
             .build();
 
@@ -51,9 +51,7 @@ class EntityBackgroundOperationTest {
   void testSetNullKey() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          EntityBackgroundOperation.builder().key(null);
-        },
+        () -> EntityBackgroundOperation.builder().key(null),
         "key must not be null");
   }
 
@@ -63,12 +61,11 @@ class EntityBackgroundOperationTest {
     Consumer<Entity> consumer = mock();
     assertThrows(
         IllegalStateException.class,
-        () -> {
-          EntityBackgroundOperation.builder()
-              .entityList(Arrays.asList(entity))
-              .consumer(consumer)
-              .build();
-        },
+        () ->
+            EntityBackgroundOperation.builder()
+                .entityList(Collections.singletonList(entity))
+                .consumer(consumer)
+                .build(),
         "key must not be missing");
   }
 
@@ -79,20 +76,18 @@ class EntityBackgroundOperationTest {
     EntityBackgroundOperation op =
         EntityBackgroundOperation.builder()
             .key(BackgroundOperationKey.PURGE_LOCK)
-            .entityList(Arrays.asList(entity))
+            .entityList(Collections.singletonList(entity))
             .consumer(consumer)
             .build();
 
-    assertEquals(Arrays.asList(entity), op.getEntityList(), "unexpected entityLlist");
+    assertEquals(Collections.singletonList(entity), op.getEntityList(), "unexpected entityList");
   }
 
   @Test
   void testSetNullEntityList() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          EntityBackgroundOperation.builder().entityList(null);
-        },
+        () -> EntityBackgroundOperation.builder().entityList(null),
         "entityList must not be null");
   }
 
@@ -101,12 +96,11 @@ class EntityBackgroundOperationTest {
     Consumer<Entity> consumer = mock();
     assertThrows(
         IllegalStateException.class,
-        () -> {
-          EntityBackgroundOperation.builder()
-              .key(BackgroundOperationKey.PURGE_LOCK)
-              .consumer(consumer)
-              .build();
-        },
+        () ->
+            EntityBackgroundOperation.builder()
+                .key(BackgroundOperationKey.PURGE_LOCK)
+                .consumer(consumer)
+                .build(),
         "entity must not be missing");
   }
 
@@ -117,7 +111,7 @@ class EntityBackgroundOperationTest {
     EntityBackgroundOperation op =
         EntityBackgroundOperation.builder()
             .key(BackgroundOperationKey.PURGE_LOCK)
-            .entityList(Arrays.asList(entity))
+            .entityList(Collections.singletonList(entity))
             .consumer(consumer)
             .build();
 
@@ -128,23 +122,20 @@ class EntityBackgroundOperationTest {
   void testSetNullConsumer() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          EntityBackgroundOperation.builder().consumer(null);
-        },
+        () -> EntityBackgroundOperation.builder().consumer(null),
         "consumer must not be null");
   }
 
   @Test
-  void testMissingComsumer() {
+  void testMissingConsumer() {
     Entity entity = mock();
     assertThrows(
         IllegalStateException.class,
-        () -> {
-          EntityBackgroundOperation.builder()
-              .key(BackgroundOperationKey.PURGE_LOCK)
-              .entityList(Arrays.asList(entity))
-              .build();
-        },
+        () ->
+            EntityBackgroundOperation.builder()
+                .key(BackgroundOperationKey.PURGE_LOCK)
+                .entityList(Collections.singletonList(entity))
+                .build(),
         "entity must not be missing");
   }
 }

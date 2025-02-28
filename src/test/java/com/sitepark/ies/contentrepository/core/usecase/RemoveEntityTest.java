@@ -1,23 +1,13 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityLockedException;
-import com.sitepark.ies.contentrepository.core.port.AccessControl;
-import com.sitepark.ies.contentrepository.core.port.ContentRepository;
-import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
-import com.sitepark.ies.contentrepository.core.port.HistoryManager;
-import com.sitepark.ies.contentrepository.core.port.Publisher;
-import com.sitepark.ies.contentrepository.core.port.RecycleBin;
-import com.sitepark.ies.contentrepository.core.port.SearchIndex;
+import com.sitepark.ies.contentrepository.core.port.*;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
@@ -33,9 +23,7 @@ class RemoveEntityTest {
 
     assertThrows(
         AccessDeniedException.class,
-        () -> {
-          removeEntity.remove("123");
-        },
+        () -> removeEntity.remove("123"),
         "remove should be denied access");
   }
 
@@ -57,15 +45,11 @@ class RemoveEntityTest {
         new RemoveEntity(repository, lockManager, null, accessControl, null, null, null);
 
     assertThrows(
-        EntityLockedException.class,
-        () -> {
-          removeEntity.remove("123");
-        },
-        "entity should be locked");
+        EntityLockedException.class, () -> removeEntity.remove("123"), "entity should be locked");
   }
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
+  @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
   void test() {
 
     AccessControl accessControl = mock();

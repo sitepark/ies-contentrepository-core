@@ -1,5 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
@@ -13,7 +14,7 @@ public final class HistoryEntry implements Serializable {
   private final HistoryEntryType type;
   private final String comment;
 
-  private static final long serialVersionUID = 1L;
+  @Serial private static final long serialVersionUID = 1L;
 
   private HistoryEntry(Builder builder) {
     this.entity = builder.entity;
@@ -29,16 +30,14 @@ public final class HistoryEntry implements Serializable {
   }
 
   /**
-   * The initiator can be a user of a system-service or other subjects who could authenticate themselves to work with
-   * the system.
+   * The initiator can be a user of a system-service or other subjects who could authenticate
+   * themselves to work with the system.
    */
   public String getInitiator() {
     return initiator;
   }
 
-  /**
-   * If the initiator is a user of the IES, this returns the ID of the user.
-   */
+  /** If the initiator is a user of the IES, this returns the ID of the user. */
   public Optional<Long> getUser() {
     return Optional.ofNullable(this.user);
   }
@@ -56,13 +55,13 @@ public final class HistoryEntry implements Serializable {
   }
 
   @Override
-  public final int hashCode() {
+  public int hashCode() {
     return Objects.hash(
         this.entity, this.initiator, this.user, this.timestamp, this.type, this.comment);
   }
 
   @Override
-  public final boolean equals(Object o) {
+  public boolean equals(Object o) {
 
     if (!(o instanceof HistoryEntry that)) {
       return false;
@@ -78,22 +77,22 @@ public final class HistoryEntry implements Serializable {
 
   @Override
   public String toString() {
-    StringBuilder b =
-        new StringBuilder(100)
-            .append("HistoryEntry[entity:")
-            .append(this.entity)
-            .append(", initiator:")
-            .append(this.initiator)
-            .append(", user:")
-            .append(this.user)
-            .append(", timestamp:")
-            .append(this.timestamp)
-            .append(", type:")
-            .append(this.type)
-            .append(", comment:")
-            .append(this.comment)
-            .append(']');
-    return b.toString();
+    return "HistoryEntry{"
+        + "entity="
+        + entity
+        + ", initiator='"
+        + initiator
+        + '\''
+        + ", user="
+        + user
+        + ", timestamp="
+        + timestamp
+        + ", type="
+        + type
+        + ", comment='"
+        + comment
+        + '\''
+        + '}';
   }
 
   public static Builder builder() {

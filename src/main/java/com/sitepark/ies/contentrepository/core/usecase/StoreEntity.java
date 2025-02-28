@@ -9,13 +9,7 @@ import com.sitepark.ies.contentrepository.core.domain.exception.EntityLockedExce
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityNotFoundException;
 import com.sitepark.ies.contentrepository.core.domain.exception.ParentMissingException;
 import com.sitepark.ies.contentrepository.core.domain.service.ContentDiffer;
-import com.sitepark.ies.contentrepository.core.port.AccessControl;
-import com.sitepark.ies.contentrepository.core.port.ContentRepository;
-import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
-import com.sitepark.ies.contentrepository.core.port.HistoryManager;
-import com.sitepark.ies.contentrepository.core.port.IdGenerator;
-import com.sitepark.ies.contentrepository.core.port.SearchIndex;
-import com.sitepark.ies.contentrepository.core.port.VersioningManager;
+import com.sitepark.ies.contentrepository.core.port.*;
 import java.util.Optional;
 
 public final class StoreEntity {
@@ -29,7 +23,7 @@ public final class StoreEntity {
   private final SearchIndex searchIndex;
   private final ContentDiffer contentDiffer;
 
-  protected StoreEntity(
+  StoreEntity(
       ContentRepository repository,
       EntityLockManager lockManager,
       VersioningManager versioningManager,
@@ -59,11 +53,11 @@ public final class StoreEntity {
   private String create(Entity newEntity) {
 
     Optional<String> parent = newEntity.getParent();
-    parent.orElseThrow(() -> new ParentMissingException());
+    parent.orElseThrow(ParentMissingException::new);
 
     String parentId = parent.get();
 
-    if (!this.accessControl.isEntityCreateable(parentId)) {
+    if (!this.accessControl.isEntityCreatable(parentId)) {
       throw new AccessDeniedException("Not allowed to create entity in group " + parent);
     }
 
@@ -73,11 +67,14 @@ public final class StoreEntity {
 
     Entity versioned = this.versioningManager.createNewVersion(entityWithId);
 
+    assert versioned.getVersion().isPresent();
+
     this.repository.store(versioned);
     this.historyManager.createEntry(
         generatedId, versioned.getVersion().get(), HistoryEntryType.CREATED);
     this.searchIndex.index(generatedId);
 
+    assert versioned.getId().isPresent();
     return versioned.getId().get();
   }
 
@@ -109,11 +106,13 @@ public final class StoreEntity {
       }
 
       Entity versioned = this.versioningManager.createNewVersion(updateEntity);
+      assert versioned.getVersion().isPresent();
 
       this.repository.store(versioned);
       this.historyManager.createEntry(id, versioned.getVersion().get(), HistoryEntryType.UPDATED);
       this.searchIndex.index(id);
 
+      assert versioned.getId().isPresent();
       return versioned.getId().get();
 
     } finally {

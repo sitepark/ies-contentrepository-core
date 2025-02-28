@@ -42,11 +42,9 @@ public class EntityBackgroundOperation {
   @Override
   public final boolean equals(Object o) {
 
-    if (!(o instanceof EntityBackgroundOperation)) {
+    if (!(o instanceof EntityBackgroundOperation op)) {
       return false;
     }
-
-    EntityBackgroundOperation op = (EntityBackgroundOperation) o;
 
     return Objects.equals(this.key, op.key)
         && Objects.equals(this.entityList, op.entityList)
@@ -55,16 +53,14 @@ public class EntityBackgroundOperation {
 
   @Override
   public String toString() {
-    StringBuilder b =
-        new StringBuilder(100)
-            .append("EntityBackgroundOperation[key:")
-            .append(this.key)
-            .append(", entityList:")
-            .append(this.entityList)
-            .append(", consumer:")
-            .append(this.consumer)
-            .append(']');
-    return b.toString();
+    return "EntityBackgroundOperation{"
+        + "key="
+        + key
+        + ", entityList="
+        + entityList
+        + ", consumer="
+        + consumer
+        + '}';
   }
 
   public static Builder builder() {

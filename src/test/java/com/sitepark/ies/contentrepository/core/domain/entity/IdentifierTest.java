@@ -30,29 +30,17 @@ class IdentifierTest {
 
   @Test
   void testToStringWithNull() {
-    assertThrows(
-        NullPointerException.class,
-        () -> {
-          Identifier.ofString(null);
-        });
+    assertThrows(NullPointerException.class, () -> Identifier.ofString(null));
   }
 
   @Test
   void testToStringWithZero() {
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> {
-          Identifier.ofString("0");
-        });
+    assertThrows(IllegalArgumentException.class, () -> Identifier.ofString("0"));
   }
 
   @Test
   void testToStringWithBlank() {
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> {
-          Identifier.ofString(" ");
-        });
+    assertThrows(IllegalArgumentException.class, () -> Identifier.ofString(" "));
   }
 
   @Test
@@ -64,49 +52,45 @@ class IdentifierTest {
   @Test
   void testOfStringToId() {
     Identifier identifier = Identifier.ofString("123");
-    assertEquals(Optional.of("123"), identifier.getId(), "id exprected");
+    assertEquals(Optional.of("123"), identifier.getId(), "id expected");
   }
 
   @Test
   void testOfStringToAnchor() {
     Identifier identifier = Identifier.ofString("abc");
     Anchor anchor = Anchor.ofString("abc");
-    assertEquals(Optional.of(anchor), identifier.getAnchor(), "anchor exprected");
+    assertEquals(Optional.of(anchor), identifier.getAnchor(), "anchor expected");
   }
 
   @Test
   void testOfStringWithLongString() {
     Identifier identifier = Identifier.ofString("abcdefghijklmnopqrstuvwxyz");
     Anchor anchor = Anchor.ofString("abcdefghijklmnopqrstuvwxyz");
-    assertEquals(Optional.of(anchor), identifier.getAnchor(), "anchor exprected");
+    assertEquals(Optional.of(anchor), identifier.getAnchor(), "anchor expected");
   }
 
   @Test
   void testOfStringWithDot() {
     Identifier identifier = Identifier.ofString("123.b");
     Anchor anchor = Anchor.ofString("123.b");
-    assertEquals(Optional.of(anchor), identifier.getAnchor(), "anchor exprected");
+    assertEquals(Optional.of(anchor), identifier.getAnchor(), "anchor expected");
   }
 
   @Test
   void testOfId() {
     Identifier identifier = Identifier.ofId("123");
-    assertEquals(Optional.of("123"), identifier.getId(), "id exprected");
+    assertEquals(Optional.of("123"), identifier.getId(), "id expected");
   }
 
   @Test
   void testOfAnchor() {
     Anchor anchor = Anchor.ofString("abc");
     Identifier identifier = Identifier.ofAnchor(anchor);
-    assertEquals(Optional.of(Anchor.ofString("abc")), identifier.getAnchor(), "anchor exprected");
+    assertEquals(Optional.of(Anchor.ofString("abc")), identifier.getAnchor(), "anchor expected");
   }
 
   @Test
   void testOfAnchorWithNull() {
-    assertThrows(
-        NullPointerException.class,
-        () -> {
-          Identifier.ofAnchor(null);
-        });
+    assertThrows(NullPointerException.class, () -> Identifier.ofAnchor((String) null));
   }
 }

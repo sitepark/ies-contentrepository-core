@@ -1,8 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.query;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter;
@@ -33,7 +31,7 @@ class QueryTest {
   void testSetFilter() {
     Filter filter = mock(Filter.class);
     Query query = Query.builder().filterBy(filter).build();
-    assertEquals(filter, query.getFilterBy().get(), "unexpected filter");
+    assertEquals(filter, query.getFilterBy().orElse(null), "unexpected filter");
   }
 
   @Test
@@ -51,30 +49,28 @@ class QueryTest {
 
   @Test
   void testSetSortAsArray() {
-    SortCriteria[] sortCriterias = new SortCriteria[] {mock(SortCriteria.class)};
-    Query query = Query.builder().sort(sortCriterias).build();
-    assertEquals(List.of(sortCriterias), query.getSort(), "unexpected sort");
+    SortCriteria[] sortCriteria = new SortCriteria[] {mock(SortCriteria.class)};
+    Query query = Query.builder().sort(sortCriteria).build();
+    assertEquals(List.of(sortCriteria), query.getSort(), "unexpected sort");
   }
 
   @Test
   void testSetSortAsCollection() {
-    List<SortCriteria> sortCriterias = List.of(mock(SortCriteria.class));
-    Query query = Query.builder().sort(sortCriterias).build();
-    assertEquals(sortCriterias, query.getSort(), "unexpected sort");
+    List<SortCriteria> sortCriteria = List.of(mock(SortCriteria.class));
+    Query query = Query.builder().sort(sortCriteria).build();
+    assertEquals(sortCriteria, query.getSort(), "unexpected sort");
   }
 
   @Test
   void testWithNullSort() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          Query.builder().sort((SortCriteria) null);
-        },
+        () -> Query.builder().sort((SortCriteria) null),
         "orderBy must not be null");
   }
 
   @Test
-  void testSetLimt() {
+  void testSetLimit() {
     Limit limit = mock(Limit.class);
     Query query = Query.builder().limit(limit).build();
     assertEquals(limit, query.getLimit(), "unexpected options");
@@ -91,9 +87,7 @@ class QueryTest {
   void testWithNullOptions() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          Query.builder().options(null);
-        },
+        () -> Query.builder().options(null),
         "options must not be null");
   }
 

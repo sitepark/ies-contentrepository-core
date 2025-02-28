@@ -1,25 +1,11 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
-import com.sitepark.ies.contentrepository.core.domain.entity.BackgroundOperationKey;
-import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
-import com.sitepark.ies.contentrepository.core.domain.entity.EntityBackgroundExecution;
-import com.sitepark.ies.contentrepository.core.domain.entity.EntityBackgroundOperation;
-import com.sitepark.ies.contentrepository.core.domain.entity.EntityTree;
+import com.sitepark.ies.contentrepository.core.domain.entity.*;
 import com.sitepark.ies.contentrepository.core.domain.entity.query.Query;
 import com.sitepark.ies.contentrepository.core.domain.entity.query.SubTreeQuery;
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
 import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmptyException;
-import com.sitepark.ies.contentrepository.core.port.AccessControl;
-import com.sitepark.ies.contentrepository.core.port.ContentRepository;
-import com.sitepark.ies.contentrepository.core.port.EntityBackgroundExecutor;
-import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
-import com.sitepark.ies.contentrepository.core.port.ExtensionsNotifier;
-import com.sitepark.ies.contentrepository.core.port.HistoryManager;
-import com.sitepark.ies.contentrepository.core.port.MediaReferenceManager;
-import com.sitepark.ies.contentrepository.core.port.Publisher;
-import com.sitepark.ies.contentrepository.core.port.RecycleBin;
-import com.sitepark.ies.contentrepository.core.port.SearchIndex;
-import com.sitepark.ies.contentrepository.core.port.VersioningManager;
+import com.sitepark.ies.contentrepository.core.port.*;
 import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +38,7 @@ public class BackgroundPurge {
 
   private final EntityBackgroundExecutor entityBackgroundExecutor;
 
-  private static Logger LOGGER = LogManager.getLogger();
+  private static final Logger LOGGER = LogManager.getLogger();
 
   @Inject
   @SuppressWarnings("PMD.ExcessiveParameterList")
@@ -83,17 +69,18 @@ public class BackgroundPurge {
   }
 
   /**
-   * Create a BackgroundExecution and pass it to the EntityBackgroundExecutor to execute the purge. The return is a
-   * BackgroundExecution ID that can be used to track the progress.
+   * Create a BackgroundExecution and pass it to the EntityBackgroundExecutor to execute the purge.
+   * The return is a BackgroundExecution ID that can be used to track the progress.
    *
    * @param input Input argument for the background operations
    * @return BackgroundExecution ID that can be used to track the progress
    */
   public String backgroundPurge(BackgroundPurgeInput input) {
 
-    List<Entity> entityList = this.getEntityList(input);
+    List<Entity> entityList =
+        this.getEntityList(input).stream().filter(entity -> entity.getId().isPresent()).toList();
 
-    this.accessControl(entityList);
+    this.checkAccessControl(entityList);
 
     EntityBackgroundOperation lock = this.buildLockOperation(entityList, false);
     EntityBackgroundOperation depublish = this.buildDepublishOperation(entityList);
@@ -124,25 +111,25 @@ public class BackgroundPurge {
           .build();
     }
 
-    return Query.builder().filterBy(input.getFilter().get()).build();
+    return Query.builder().filterBy(input.getFilter().orElse(null)).build();
   }
 
-  private void accessControl(List<Entity> entityList) {
+  private void checkAccessControl(List<Entity> entityList) {
 
-    entityList.stream()
-        .forEach(
-            entity -> {
-              String id = entity.getId().get();
-              if (entity.isGroup()) {
-                if (!this.accessControl.isGroupRemoveable(id)) {
-                  throw new AccessDeniedException("Not allowed to remove group " + id);
-                }
-              } else {
-                if (!this.accessControl.isEntityRemovable(id)) {
-                  throw new AccessDeniedException("Not allowed to remove entity " + id);
-                }
-              }
-            });
+    entityList.forEach(
+        entity -> {
+          assert entity.getId().isPresent();
+          String id = entity.getId().get();
+          if (entity.isGroup()) {
+            if (!this.accessControl.isGroupRemovable(id)) {
+              throw new AccessDeniedException("Not allowed to remove group " + id);
+            }
+          } else {
+            if (!this.accessControl.isEntityRemovable(id)) {
+              throw new AccessDeniedException("Not allowed to remove entity " + id);
+            }
+          }
+        });
   }
 
   private EntityBackgroundOperation buildLockOperation(List<Entity> entityList, boolean forceLock) {
@@ -152,6 +139,7 @@ public class BackgroundPurge {
         .entityList(entityList)
         .consumer(
             entity -> {
+              assert entity.getId().isPresent();
               String id = entity.getId().get();
 
               if (forceLock) {
@@ -170,6 +158,8 @@ public class BackgroundPurge {
         .entityList(entityList)
         .consumer(
             entity -> {
+              assert entity.getId().isPresent();
+
               String id = entity.getId().get();
               this.publisher.depublish(id);
             })
@@ -178,11 +168,10 @@ public class BackgroundPurge {
 
   private EntityBackgroundOperation buildPurgeOperation(List<Entity> entityList) {
 
-    List<Entity> nonGroupList =
-        entityList.stream().filter(entity -> !entity.isGroup()).collect(Collectors.toList());
+    List<Entity> nonGroupList = entityList.stream().filter(entity -> !entity.isGroup()).toList();
 
     List<Entity> groupList =
-        entityList.stream().filter(entity -> entity.isGroup()).collect(Collectors.toList());
+        entityList.stream().filter(Entity::isGroup).collect(Collectors.toList());
 
     /*
      * Arrange the entityList so that first all group entries are deleted and then the groups in the hierarchy from
@@ -194,11 +183,7 @@ public class BackgroundPurge {
     orderedList.addAll(orderedGroupList);
 
     if (LOGGER.isDebugEnabled()) {
-      orderedList.stream()
-          .forEach(
-              entity -> {
-                LOGGER.debug("purge order: {}", entity);
-              });
+      orderedList.forEach(entity -> LOGGER.debug("purge order: {}", entity));
     }
 
     return EntityBackgroundOperation.builder()
@@ -206,6 +191,7 @@ public class BackgroundPurge {
         .entityList(orderedList)
         .consumer(
             entity -> {
+              assert entity.getId().isPresent();
               String id = entity.getId().get();
 
               if (this.repository.isGroup(id) && !this.repository.isEmptyGroup(id)) {
@@ -227,13 +213,11 @@ public class BackgroundPurge {
         .build();
   }
 
-  /**
-   * Arranges the groups according to their hierarchy from bottom to top.
-   */
+  /** Arranges the groups according to their hierarchy from bottom to top. */
   private List<Entity> orderGroupListHierarchicallyFromBottomToTop(List<Entity> groupList) {
 
     EntityTree tree = new EntityTree();
-    groupList.stream().forEach(tree::add);
+    groupList.forEach(tree::add);
 
     List<Entity> hierarchicalOrder = tree.getAll();
 
@@ -249,14 +233,9 @@ public class BackgroundPurge {
         .entityList(entityList)
         .consumer(
             entity -> {
+              assert entity.getId().isPresent();
               String id = entity.getId().get();
-              try {
-                this.lockManager.unlock(id);
-              } catch (Exception e) {
-                if (LOGGER.isTraceEnabled()) {
-                  LOGGER.atTrace().withThrowable(e).log("Unable to unlock {}", entity);
-                }
-              }
+              this.lockManager.unlock(id);
             })
         .build();
   }

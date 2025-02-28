@@ -32,10 +32,8 @@ class MediaReferenceTest {
   void testInvalidMediaId() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          MediaReference.builder().mediaId(null);
-        },
-        "mediaId should't be null");
+        () -> MediaReference.builder().mediaId(null),
+        "mediaId should not be null");
   }
 
   @Test
@@ -49,10 +47,8 @@ class MediaReferenceTest {
   void testInvalidUsedBy() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          MediaReference.builder().usedBy(null);
-        },
-        "usedBy should't be null");
+        () -> MediaReference.builder().usedBy(null),
+        "usedBy should not be null");
   }
 
   @Test
@@ -66,9 +62,7 @@ class MediaReferenceTest {
   void testSetNullType() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          MediaReference.builder().type(null);
-        },
+        () -> MediaReference.builder().type(null),
         "usedBy must not be null");
   }
 

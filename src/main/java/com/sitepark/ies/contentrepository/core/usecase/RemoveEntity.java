@@ -6,13 +6,7 @@ import com.sitepark.ies.contentrepository.core.domain.entity.HistoryEntryType;
 import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItem;
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityLockedException;
-import com.sitepark.ies.contentrepository.core.port.AccessControl;
-import com.sitepark.ies.contentrepository.core.port.ContentRepository;
-import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
-import com.sitepark.ies.contentrepository.core.port.HistoryManager;
-import com.sitepark.ies.contentrepository.core.port.Publisher;
-import com.sitepark.ies.contentrepository.core.port.RecycleBin;
-import com.sitepark.ies.contentrepository.core.port.SearchIndex;
+import com.sitepark.ies.contentrepository.core.port.*;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
@@ -26,7 +20,7 @@ public final class RemoveEntity {
   private final SearchIndex searchIndex;
   private final Publisher publisher;
 
-  protected RemoveEntity(
+  RemoveEntity(
       ContentRepository repository,
       EntityLockManager lockManager,
       HistoryManager historyManager,

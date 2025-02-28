@@ -1,12 +1,11 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +22,9 @@ class EntityTreeTest {
     tree.add(Entity.builder().id("20").parent("2").build());
 
     List<String> all =
-        tree.getRoots().stream().map(entity -> entity.getId().get()).collect(Collectors.toList());
+        tree.getRoots().stream()
+            .map(entity -> entity.getId().orElse(""))
+            .collect(Collectors.toList());
 
     assertThat("Unexpected entries", all, Matchers.contains("1", "2"));
   }
@@ -37,9 +38,7 @@ class EntityTreeTest {
 
     assertThrows(
         IllegalStateException.class,
-        () -> {
-          tree.getRoots();
-        },
+        tree::getRoots,
         "Entity 2 is missing. Here an IllegalStateException should be thrown");
   }
 
@@ -56,14 +55,14 @@ class EntityTreeTest {
 
     List<String> all =
         tree.getChildren("1").stream()
-            .map(entity -> entity.getId().get())
+            .map(entity -> entity.getId().orElse(""))
             .collect(Collectors.toList());
 
-    assertThat("Unexpected chilldren", all, Matchers.contains("11", "10"));
+    assertThat("Unexpected children", all, Matchers.contains("11", "10"));
   }
 
   @Test
-  void testaddWithNull() {
+  void testAddWithNull() {
 
     EntityTree tree = new EntityTree();
     tree.add(null);
@@ -90,7 +89,7 @@ class EntityTreeTest {
 
     Entity entity = tree.get("1");
 
-    assertEquals("1", entity.getId().get(), "unexpected entity");
+    assertEquals("1", entity.getId().orElse(""), "unexpected entity");
   }
 
   @Test
@@ -104,7 +103,9 @@ class EntityTreeTest {
     tree.add(Entity.builder().id("20").parent("2").build());
 
     List<String> all =
-        tree.getAll().stream().map(entity -> entity.getId().get()).collect(Collectors.toList());
+        tree.getAll().stream()
+            .map(entity -> entity.getId().orElse(""))
+            .collect(Collectors.toList());
 
     assertThat("Unexpected entries", all, Matchers.containsInAnyOrder("1", "10", "11", "2", "20"));
   }
@@ -118,9 +119,7 @@ class EntityTreeTest {
 
     assertThrows(
         IllegalStateException.class,
-        () -> {
-          tree.getAll();
-        },
+        tree::getAll,
         "Entity 2 is missing. Here an IllegalStateException should be thrown");
   }
 
@@ -130,21 +129,6 @@ class EntityTreeTest {
     tree.add(Entity.builder().id("1").build());
 
     String s = tree.toString();
-    assertTrue(s.contains("id=1,"), "entity with id 1 not found");
-  }
-
-  @Test
-  void testToStringWithIndent() {
-    EntityTree tree = new EntityTree();
-
-    tree.add(Entity.builder().id("1").build());
-    tree.add(Entity.builder().id("2").build());
-    tree.add(Entity.builder().id("10").parent("1").build());
-    tree.add(Entity.builder().id("11").parent("1").build());
-    tree.add(Entity.builder().id("20").parent("2").build());
-
-    String s = tree.toString(3);
-
-    assertTrue(s.contains("\n   Entity"), "indent missing");
+    assertThat("missing id", s, CoreMatchers.containsString("id='1',"));
   }
 }

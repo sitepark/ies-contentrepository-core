@@ -20,4 +20,19 @@ public class IdList implements Filter {
   public List<String> getIdList() {
     return this.idList;
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.idList);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return (o instanceof IdList that) && Objects.equals(this.idList, that.idList);
+  }
+
+  @Override
+  public String toString() {
+    return "IdList{" + "idList=" + idList + '}';
+  }
 }
