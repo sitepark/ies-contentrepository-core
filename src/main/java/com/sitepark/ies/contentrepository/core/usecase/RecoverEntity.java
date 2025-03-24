@@ -3,9 +3,9 @@ package com.sitepark.ies.contentrepository.core.usecase;
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.domain.entity.HistoryEntryType;
 import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItem;
-import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityNotFoundException;
 import com.sitepark.ies.contentrepository.core.port.*;
+import com.sitepark.ies.shared.security.exceptions.AccessDeniedException;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
