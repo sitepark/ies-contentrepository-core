@@ -163,7 +163,7 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-			<id>central</id>
+			<id>sitepark</id>
 			<name>Sitepark Maven Repository</name>
 			<url>https://nexus.sitepark.com/nexus/content/groups/public</url>
 			<layout>default</layout>
