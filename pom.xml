@@ -154,6 +154,19 @@
 		</dependency>
 
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>central</id>
+			<name>Sitepark Maven Repository</name>
+			<url>https://nexus.sitepark.com/nexus/content/groups/public</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
+
 	<build>
 		<plugins>
 			<plugin>
