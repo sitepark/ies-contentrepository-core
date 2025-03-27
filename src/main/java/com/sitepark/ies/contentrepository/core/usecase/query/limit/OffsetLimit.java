@@ -1,4 +1,4 @@
-package com.sitepark.ies.contentrepository.core.domain.entity.query.limit;
+package com.sitepark.ies.contentrepository.core.usecase.query.limit;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
@@ -10,7 +10,7 @@ public final class OffsetLimit implements Limit {
 
   private final Integer limit;
 
-  OffsetLimit(@JsonProperty("offset") Integer offset, @JsonProperty("limit") Integer limit) {
+  public OffsetLimit(@JsonProperty("offset") Integer offset, @JsonProperty("limit") Integer limit) {
     this.offset = (offset == null) ? Integer.valueOf(0) : offset;
     this.limit = limit;
   }

@@ -1,11 +1,12 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.query.filter;
 
-import static com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter.*;
+import static com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sitepark.ies.contentrepository.core.domain.databind.DatabindModule;
+import com.sitepark.ies.contentrepository.core.usecase.query.filter.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

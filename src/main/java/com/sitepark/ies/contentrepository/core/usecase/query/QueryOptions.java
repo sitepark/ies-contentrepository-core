@@ -1,4 +1,4 @@
-package com.sitepark.ies.contentrepository.core.domain.entity.query;
+package com.sitepark.ies.contentrepository.core.usecase.query;
 
 import java.util.Objects;
 

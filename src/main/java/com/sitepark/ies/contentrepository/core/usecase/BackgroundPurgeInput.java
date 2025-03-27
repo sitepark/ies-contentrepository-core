@@ -1,30 +1,21 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter;
 import java.util.*;
 
 public final class BackgroundPurgeInput {
 
-  private final List<Long> rootList;
-
-  private final Filter filterBy;
+  private final Filter filter;
 
   private final boolean forceLock;
 
   private BackgroundPurgeInput(Builder builder) {
-    this.rootList = Collections.unmodifiableList(builder.rootList);
-    this.filterBy = builder.filterBy;
+    this.filter = builder.filter;
     this.forceLock = builder.forceLock;
   }
 
-  @SuppressFBWarnings("EI_EXPOSE_REP")
-  public List<Long> getRootList() {
-    return this.rootList;
-  }
-
   public Optional<Filter> getFilter() {
-    return Optional.ofNullable(this.filterBy);
+    return Optional.ofNullable(this.filter);
   }
 
   public boolean isForceLock() {
@@ -33,7 +24,7 @@ public final class BackgroundPurgeInput {
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.rootList, this.filterBy, this.forceLock);
+    return Objects.hash(this.filter, this.forceLock);
   }
 
   @Override
@@ -43,8 +34,7 @@ public final class BackgroundPurgeInput {
       return false;
     }
 
-    return Objects.equals(this.rootList, that.rootList)
-        && Objects.equals(this.filterBy, that.filterBy)
+    return Objects.equals(this.filter, that.filter)
         && Objects.equals(this.forceLock, that.forceLock);
   }
 
@@ -58,38 +48,20 @@ public final class BackgroundPurgeInput {
 
   public static final class Builder {
 
-    private final List<Long> rootList = new ArrayList<>();
-
-    private Filter filterBy;
+    private Filter filter;
 
     private boolean forceLock;
 
     private Builder() {}
 
     private Builder(BackgroundPurgeInput backgroundPurgeRequest) {
-      this.rootList.addAll(backgroundPurgeRequest.rootList);
-      this.filterBy = backgroundPurgeRequest.filterBy;
+      this.filter = backgroundPurgeRequest.filter;
       this.forceLock = backgroundPurgeRequest.forceLock;
     }
 
-    public Builder rootList(List<Long> rootList) {
-      Objects.requireNonNull(rootList, "rootList is null");
-      this.rootList.clear();
-      for (Long root : rootList) {
-        this.root(root);
-      }
-      return this;
-    }
-
-    public Builder root(Long root) {
-      Objects.requireNonNull(root, "root is null");
-      this.rootList.add(root);
-      return this;
-    }
-
-    public Builder filterBy(Filter filterBy) {
-      Objects.requireNonNull(filterBy, "filterBy is null");
-      this.filterBy = filterBy;
+    public Builder filter(Filter filter) {
+      Objects.requireNonNull(filter, "filter is null");
+      this.filter = filter;
       return this;
     }
 
@@ -99,8 +71,8 @@ public final class BackgroundPurgeInput {
     }
 
     public BackgroundPurgeInput build() {
-      if (this.rootList.isEmpty() && this.filterBy == null) {
-        throw new IllegalStateException("Either rootList or filterBy must be specified");
+      if (this.filter == null) {
+        throw new IllegalStateException("filter must be specified");
       }
       return new BackgroundPurgeInput(this);
     }

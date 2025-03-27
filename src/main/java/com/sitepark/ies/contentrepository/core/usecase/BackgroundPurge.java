@@ -1,10 +1,9 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.*;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.Query;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.SubTreeQuery;
 import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmptyException;
 import com.sitepark.ies.contentrepository.core.port.*;
+import com.sitepark.ies.contentrepository.core.usecase.query.Query;
 import com.sitepark.ies.shared.security.exceptions.AccessDeniedException;
 import jakarta.inject.Inject;
 import java.util.ArrayList;
@@ -104,14 +103,7 @@ public class BackgroundPurge {
   }
 
   private Query buildQuery(BackgroundPurgeInput input) {
-    if (!input.getRootList().isEmpty()) {
-      return SubTreeQuery.builder()
-          .rootList(input.getRootList())
-          .filterBy(input.getFilter().orElse(null))
-          .build();
-    }
-
-    return Query.builder().filterBy(input.getFilter().orElse(null)).build();
+    return Query.builder().filter(input.getFilter().orElse(null)).build();
   }
 
   private void checkAccessControl(List<Entity> entityList) {

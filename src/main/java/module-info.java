@@ -1,10 +1,10 @@
 module com.sitepark.ies.contentrepository.core {
   exports com.sitepark.ies.contentrepository.core.domain.entity;
   exports com.sitepark.ies.contentrepository.core.domain.entity.permission;
-  exports com.sitepark.ies.contentrepository.core.domain.entity.query.filter;
-  exports com.sitepark.ies.contentrepository.core.domain.entity.query.sort;
-  exports com.sitepark.ies.contentrepository.core.domain.entity.query.limit;
-  exports com.sitepark.ies.contentrepository.core.domain.entity.query;
+  exports com.sitepark.ies.contentrepository.core.usecase.query.filter;
+  exports com.sitepark.ies.contentrepository.core.usecase.query.sort;
+  exports com.sitepark.ies.contentrepository.core.usecase.query.limit;
+  exports com.sitepark.ies.contentrepository.core.usecase.query;
   exports com.sitepark.ies.contentrepository.core.domain.exception;
   exports com.sitepark.ies.contentrepository.core.port;
   exports com.sitepark.ies.contentrepository.core.usecase;
@@ -19,9 +19,9 @@ module com.sitepark.ies.contentrepository.core {
   requires com.sitepark.ies.shared.security;
 
   opens com.sitepark.ies.contentrepository.core.domain.entity;
-  opens com.sitepark.ies.contentrepository.core.domain.entity.query.filter;
-  opens com.sitepark.ies.contentrepository.core.domain.entity.query.sort;
-  opens com.sitepark.ies.contentrepository.core.domain.entity.query.limit;
-  opens com.sitepark.ies.contentrepository.core.domain.entity.query;
+  opens com.sitepark.ies.contentrepository.core.usecase.query.filter;
+  opens com.sitepark.ies.contentrepository.core.usecase.query.sort;
+  opens com.sitepark.ies.contentrepository.core.usecase.query.limit;
+  opens com.sitepark.ies.contentrepository.core.usecase.query;
   opens com.sitepark.ies.contentrepository.core.domain.entity.permission;
 }

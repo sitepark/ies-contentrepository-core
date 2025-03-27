@@ -2,7 +2,7 @@ package com.sitepark.ies.contentrepository.core.port;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.Anchor;
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.Query;
+import com.sitepark.ies.contentrepository.core.usecase.query.Query;
 import java.util.List;
 import java.util.Optional;
 

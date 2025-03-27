@@ -1,8 +1,8 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.Query;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
+import com.sitepark.ies.contentrepository.core.usecase.query.Query;
 import jakarta.inject.Inject;
 import java.util.List;
 

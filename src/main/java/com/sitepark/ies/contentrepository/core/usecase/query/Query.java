@@ -1,17 +1,17 @@
-package com.sitepark.ies.contentrepository.core.domain.entity.query;
+package com.sitepark.ies.contentrepository.core.usecase.query;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.limit.Limit;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.sort.SortCriteria;
+import com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter;
+import com.sitepark.ies.contentrepository.core.usecase.query.limit.Limit;
+import com.sitepark.ies.contentrepository.core.usecase.query.sort.SortCriteria;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.*;
 
 @JsonDeserialize(builder = Query.Builder.class)
-public class Query {
+public final class Query {
 
-  private final Filter filterBy;
+  private final Filter filter;
 
   private final List<SortCriteria> sort;
 
@@ -19,15 +19,15 @@ public class Query {
 
   private final QueryOptions options;
 
-  protected Query(Builder<?> builder) {
-    this.filterBy = builder.filterBy;
-    this.sort = Collections.unmodifiableList(builder.sort);
+  private Query(Builder builder) {
+    this.filter = builder.filter;
+    this.sort = List.copyOf(builder.sort);
     this.limit = builder.limit;
     this.options = builder.options;
   }
 
-  public Optional<Filter> getFilterBy() {
-    return Optional.ofNullable(this.filterBy);
+  public Optional<Filter> getFilter() {
+    return Optional.ofNullable(this.filter);
   }
 
   @SuppressFBWarnings("EI_EXPOSE_REP")
@@ -45,14 +45,14 @@ public class Query {
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.filterBy, this.sort, this.limit, this.options);
+    return Objects.hash(this.filter, this.sort, this.limit, this.options);
   }
 
   @Override
   public boolean equals(Object o) {
     return (o instanceof Query that)
         && that.canEqual(this)
-        && Objects.equals(this.filterBy, that.filterBy)
+        && Objects.equals(this.filter, that.filter)
         && Objects.equals(this.limit, that.limit)
         && Objects.equals(this.sort, that.sort)
         && Objects.equals(this.options, that.options);
@@ -66,17 +66,18 @@ public class Query {
     return (other instanceof Query);
   }
 
-  public static Builder<?> builder() {
-    return new QueryBuilder();
+  public static Builder builder() {
+    return new Builder();
   }
 
-  public Builder<?> toBuilder() {
-    return new QueryBuilder(this);
+  public Builder toBuilder() {
+    return new Builder(this);
   }
 
-  public abstract static class Builder<B extends Builder<B>> {
+  @JsonPOJOBuilder(withPrefix = "")
+  public static class Builder {
 
-    protected Filter filterBy;
+    protected Filter filter;
 
     private final List<SortCriteria> sort = new ArrayList<>();
 
@@ -87,66 +88,46 @@ public class Query {
     protected Builder() {}
 
     protected Builder(Query query) {
-      this.filterBy = query.filterBy;
+      this.filter = query.filter;
       this.sort.addAll(query.sort);
       this.limit = query.limit;
       this.options = query.options;
     }
 
-    public B filterBy(Filter filterBy) {
-      this.filterBy = filterBy;
-      return this.self();
+    public Builder filter(Filter filter) {
+      this.filter = filter;
+      return this;
     }
 
-    public B sort(SortCriteria... sortCriteria) {
+    public Builder sort(SortCriteria... sortCriteria) {
       Objects.requireNonNull(sortCriteria, "sortCriteria is null");
       this.sort.addAll(Arrays.asList(sortCriteria));
       for (SortCriteria sortCriterion : sortCriteria) {
         Objects.requireNonNull(sortCriterion, "sortCriterion contains null");
       }
-      return this.self();
+      return this;
     }
 
-    public B sort(Collection<SortCriteria> sortCriteria) {
+    public Builder sort(Collection<SortCriteria> sortCriteria) {
       Objects.requireNonNull(sortCriteria, "sortCriteria is null");
       for (SortCriteria sortCriterion : sortCriteria) {
         this.sort(sortCriterion);
       }
-      return this.self();
-    }
-
-    public B limit(Limit limit) {
-      Objects.requireNonNull(limit, "limit is null");
-      this.limit = limit;
-      return this.self();
-    }
-
-    public B options(QueryOptions options) {
-      Objects.requireNonNull(options, "options is null");
-      this.options = options;
-      return this.self();
-    }
-
-    public abstract B self();
-
-    public abstract Query build();
-  }
-
-  @JsonPOJOBuilder(withPrefix = "")
-  public static class QueryBuilder extends Query.Builder<QueryBuilder> {
-
-    protected QueryBuilder() {}
-
-    protected QueryBuilder(Query query) {
-      super(query);
-    }
-
-    @Override
-    public QueryBuilder self() {
       return this;
     }
 
-    @Override
+    public Builder limit(Limit limit) {
+      Objects.requireNonNull(limit, "limit is null");
+      this.limit = limit;
+      return this;
+    }
+
+    public Builder options(QueryOptions options) {
+      Objects.requireNonNull(options, "options is null");
+      this.options = options;
+      return this;
+    }
+
     public Query build() {
       if (this.options == null) {
         this.options = QueryOptions.builder().build();

@@ -1,4 +1,4 @@
-package com.sitepark.ies.contentrepository.core.domain.entity.query.sort;
+package com.sitepark.ies.contentrepository.core.usecase.query.sort;
 
 import java.util.Objects;
 

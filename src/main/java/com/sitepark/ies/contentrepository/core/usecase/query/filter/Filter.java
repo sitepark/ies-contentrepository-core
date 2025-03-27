@@ -1,4 +1,4 @@
-package com.sitepark.ies.contentrepository.core.domain.entity.query.filter;
+package com.sitepark.ies.contentrepository.core.usecase.query.filter;
 
 @SuppressWarnings("PMD.TooManyMethods")
 public interface Filter {
@@ -48,6 +48,10 @@ public interface Filter {
 
   static RootList rootList(String... rootList) {
     return new RootList(rootList);
+  }
+
+  static Name name(String name) {
+    return new Name(name);
   }
 
   static Or or(Filter... filterList) {
