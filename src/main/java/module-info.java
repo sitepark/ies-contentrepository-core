@@ -11,12 +11,10 @@ module com.sitepark.ies.contentrepository.core {
 
   requires jakarta.inject;
   requires com.github.spotbugs.annotations;
-  requires com.fasterxml.jackson.databind;
-  requires com.fasterxml.jackson.annotation;
   requires com.fasterxml.jackson.datatype.jdk8;
-  requires org.apache.logging.log4j;
   requires com.fasterxml.jackson.datatype.jsr310;
-  requires com.sitepark.ies.shared.security;
+  requires com.sitepark.ies.sharedkernel;
+  requires org.apache.logging.log4j;
 
   opens com.sitepark.ies.contentrepository.core.domain.entity;
   opens com.sitepark.ies.contentrepository.core.usecase.query.filter;

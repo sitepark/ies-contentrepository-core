@@ -15,12 +15,11 @@ public interface Filter {
     return new IdList(idList);
   }
 
-  static Anchor anchor(com.sitepark.ies.contentrepository.core.domain.entity.Anchor anchor) {
+  static Anchor anchor(com.sitepark.ies.sharedkernel.anchor.domain.Anchor anchor) {
     return new Anchor(anchor);
   }
 
-  static AnchorList anchorList(
-      com.sitepark.ies.contentrepository.core.domain.entity.Anchor... anchorList) {
+  static AnchorList anchorList(com.sitepark.ies.sharedkernel.anchor.domain.Anchor... anchorList) {
     return new AnchorList(anchorList);
   }
 
@@ -33,12 +32,12 @@ public interface Filter {
   }
 
   static ParentAnchor parentAnchor(
-      com.sitepark.ies.contentrepository.core.domain.entity.Anchor parentAnchor) {
+      com.sitepark.ies.sharedkernel.anchor.domain.Anchor parentAnchor) {
     return new ParentAnchor(parentAnchor);
   }
 
   static ParentAnchorList parentAnchorList(
-      com.sitepark.ies.contentrepository.core.domain.entity.Anchor... parentAnchorList) {
+      com.sitepark.ies.sharedkernel.anchor.domain.Anchor... parentAnchorList) {
     return new ParentAnchorList(parentAnchorList);
   }
 

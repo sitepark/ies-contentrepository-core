@@ -6,7 +6,7 @@ import com.sitepark.ies.contentrepository.core.domain.entity.HistoryEntryType;
 import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItem;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityLockedException;
 import com.sitepark.ies.contentrepository.core.port.*;
-import com.sitepark.ies.shared.security.exceptions.AccessDeniedException;
+import com.sitepark.ies.sharedkernel.security.exceptions.AccessDeniedException;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 

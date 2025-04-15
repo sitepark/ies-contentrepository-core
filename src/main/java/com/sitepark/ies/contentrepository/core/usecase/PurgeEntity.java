@@ -2,7 +2,7 @@ package com.sitepark.ies.contentrepository.core.usecase;
 
 import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmptyException;
 import com.sitepark.ies.contentrepository.core.port.*;
-import com.sitepark.ies.shared.security.exceptions.AccessDeniedException;
+import com.sitepark.ies.sharedkernel.security.exceptions.AccessDeniedException;
 import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

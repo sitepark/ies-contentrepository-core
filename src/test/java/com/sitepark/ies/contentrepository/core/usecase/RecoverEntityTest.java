@@ -5,7 +5,7 @@ import static org.mockito.Mockito.*;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItem;
 import com.sitepark.ies.contentrepository.core.port.*;
-import com.sitepark.ies.shared.security.exceptions.AccessDeniedException;
+import com.sitepark.ies.sharedkernel.security.exceptions.AccessDeniedException;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 

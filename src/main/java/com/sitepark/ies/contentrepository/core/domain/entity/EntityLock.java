@@ -1,5 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
+import com.sitepark.ies.sharedkernel.base.Identifier;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.OffsetDateTime;

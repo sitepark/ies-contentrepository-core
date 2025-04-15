@@ -8,7 +8,7 @@ import com.sitepark.ies.contentrepository.core.domain.entity.EntityBackgroundExe
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityBackgroundOperation;
 import com.sitepark.ies.contentrepository.core.port.*;
 import com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter;
-import com.sitepark.ies.shared.security.exceptions.AccessDeniedException;
+import com.sitepark.ies.sharedkernel.security.exceptions.AccessDeniedException;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
 

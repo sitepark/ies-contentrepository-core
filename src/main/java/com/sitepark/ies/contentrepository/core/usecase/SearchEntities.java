@@ -2,20 +2,20 @@ package com.sitepark.ies.contentrepository.core.usecase;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
-import com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter;
+import com.sitepark.ies.contentrepository.core.usecase.query.Query;
+import com.sitepark.ies.contentrepository.core.usecase.query.Result;
 import jakarta.inject.Inject;
-import java.util.List;
 
-public final class GetAllEntities {
+public final class SearchEntities {
 
   private final ContentRepository repository;
 
   @Inject
-  GetAllEntities(ContentRepository repository) {
+  SearchEntities(ContentRepository repository) {
     this.repository = repository;
   }
 
-  public List<Entity> getAllEntities(Filter filter) {
-    return this.repository.getAll(filter);
+  public Result<Entity> search(Query query) {
+    return this.repository.search(query);
   }
 }

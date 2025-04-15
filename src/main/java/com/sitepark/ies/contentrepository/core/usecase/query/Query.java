@@ -35,8 +35,8 @@ public final class Query {
     return this.sort;
   }
 
-  public Limit getLimit() {
-    return this.limit;
+  public Optional<Limit> getLimit() {
+    return Optional.ofNullable(this.limit);
   }
 
   public QueryOptions getOptions() {

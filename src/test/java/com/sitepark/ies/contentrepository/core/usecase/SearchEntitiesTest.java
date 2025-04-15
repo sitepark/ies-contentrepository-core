@@ -7,23 +7,23 @@ import static org.mockito.Mockito.when;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
+import com.sitepark.ies.contentrepository.core.usecase.query.Result;
 import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
-class GetAllEntitiesTest {
+class SearchEntitiesTest {
 
   @Test
   void test() {
 
     ContentRepository repository = mock();
     Entity entity = mock();
-    List<Entity> entries = Collections.singletonList(entity);
+    Result<Entity> result = new Result<>(Collections.singletonList(entity), 1, 1, 1);
 
-    when(repository.getAll(any())).thenReturn(entries);
+    when(repository.search(any())).thenReturn(result);
 
-    var getAllEntities = new GetAllEntities(repository);
+    var searchEntities = new SearchEntities(repository);
 
-    assertEquals(entries, getAllEntities.getAllEntities(null), "unexpected entities");
+    assertEquals(result, searchEntities.search(null), "unexpected entities");
   }
 }

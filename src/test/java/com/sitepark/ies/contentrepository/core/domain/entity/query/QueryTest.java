@@ -10,6 +10,7 @@ import com.sitepark.ies.contentrepository.core.usecase.query.limit.Limit;
 import com.sitepark.ies.contentrepository.core.usecase.query.sort.SortCriteria;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;
+import java.util.Optional;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -72,7 +73,7 @@ class QueryTest {
   void testSetLimit() {
     Limit limit = mock(Limit.class);
     Query query = Query.builder().limit(limit).build();
-    assertEquals(limit, query.getLimit(), "unexpected options");
+    assertEquals(Optional.of(limit), query.getLimit(), "unexpected options");
   }
 
   @Test

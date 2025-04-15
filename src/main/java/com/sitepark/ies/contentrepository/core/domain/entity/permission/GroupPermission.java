@@ -3,7 +3,7 @@ package com.sitepark.ies.contentrepository.core.domain.entity.permission;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import com.sitepark.ies.shared.security.authorization.Permission;
+import com.sitepark.ies.sharedkernel.security.domain.Permission;
 import java.util.Objects;
 
 @JsonDeserialize(builder = GroupPermission.Builder.class)

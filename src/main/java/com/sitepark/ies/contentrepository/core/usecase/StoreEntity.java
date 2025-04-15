@@ -9,7 +9,7 @@ import com.sitepark.ies.contentrepository.core.domain.exception.EntityNotFoundEx
 import com.sitepark.ies.contentrepository.core.domain.exception.ParentMissingException;
 import com.sitepark.ies.contentrepository.core.domain.service.ContentDiffer;
 import com.sitepark.ies.contentrepository.core.port.*;
-import com.sitepark.ies.shared.security.exceptions.AccessDeniedException;
+import com.sitepark.ies.sharedkernel.security.exceptions.AccessDeniedException;
 import java.util.Optional;
 
 public final class StoreEntity {

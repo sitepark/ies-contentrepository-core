@@ -9,17 +9,17 @@ public class AnchorList implements Filter {
 
   @SuppressWarnings(
       "PMD.AvoidFieldNameMatchingTypeName") // so that when deserializing it has the desired format
-  private final List<com.sitepark.ies.contentrepository.core.domain.entity.Anchor> anchorList;
+  private final List<com.sitepark.ies.sharedkernel.anchor.domain.Anchor> anchorList;
 
   protected AnchorList(
       @JsonProperty("anchorList")
-          com.sitepark.ies.contentrepository.core.domain.entity.Anchor... anchorList) {
+          com.sitepark.ies.sharedkernel.anchor.domain.Anchor... anchorList) {
     Objects.requireNonNull(anchorList, "anchorList is null");
     this.anchorList = List.of(anchorList);
   }
 
   @SuppressFBWarnings("EI_EXPOSE_REP")
-  public List<com.sitepark.ies.contentrepository.core.domain.entity.Anchor> getAnchorList() {
+  public List<com.sitepark.ies.sharedkernel.anchor.domain.Anchor> getAnchorList() {
     return this.anchorList;
   }
 

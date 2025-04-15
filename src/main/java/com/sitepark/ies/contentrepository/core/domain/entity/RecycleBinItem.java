@@ -1,5 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
+import com.sitepark.ies.sharedkernel.base.Identifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

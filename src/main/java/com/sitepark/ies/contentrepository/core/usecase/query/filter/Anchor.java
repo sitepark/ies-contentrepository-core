@@ -7,15 +7,15 @@ public class Anchor implements Filter {
 
   @SuppressWarnings(
       "PMD.AvoidFieldNameMatchingTypeName") // so that when deserializing it has the desired format
-  private final com.sitepark.ies.contentrepository.core.domain.entity.Anchor anchor;
+  private final com.sitepark.ies.sharedkernel.anchor.domain.Anchor anchor;
 
   protected Anchor(
-      @JsonProperty("anchor") com.sitepark.ies.contentrepository.core.domain.entity.Anchor anchor) {
+      @JsonProperty("anchor") com.sitepark.ies.sharedkernel.anchor.domain.Anchor anchor) {
     Objects.requireNonNull(anchor, "anchor is null");
     this.anchor = anchor;
   }
 
-  public com.sitepark.ies.contentrepository.core.domain.entity.Anchor getAnchor() {
+  public com.sitepark.ies.sharedkernel.anchor.domain.Anchor getAnchor() {
     return this.anchor;
   }
 

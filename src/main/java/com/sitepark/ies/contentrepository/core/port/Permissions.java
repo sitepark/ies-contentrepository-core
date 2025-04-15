@@ -5,4 +5,6 @@ import java.util.List;
 
 public interface Permissions {
   List<GroupPermissionSource> getGroupPermissionSources(String groupId, String userId);
+
+  List<GroupPermissionSource> getGroupPermissionSources(String groupId);
 }

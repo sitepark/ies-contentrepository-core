@@ -7,16 +7,16 @@ public class ParentAnchor implements Filter {
 
   @SuppressWarnings(
       "PMD.AvoidFieldNameMatchingTypeName") // so that when deserializing it has the desired format
-  private final com.sitepark.ies.contentrepository.core.domain.entity.Anchor parentAnchor;
+  private final com.sitepark.ies.sharedkernel.anchor.domain.Anchor parentAnchor;
 
   protected ParentAnchor(
       @JsonProperty("parentAnchor")
-          com.sitepark.ies.contentrepository.core.domain.entity.Anchor parentAnchor) {
+          com.sitepark.ies.sharedkernel.anchor.domain.Anchor parentAnchor) {
     Objects.requireNonNull(parentAnchor, "parentAnchor is null");
     this.parentAnchor = parentAnchor;
   }
 
-  public com.sitepark.ies.contentrepository.core.domain.entity.Anchor getParentAnchor() {
+  public com.sitepark.ies.sharedkernel.anchor.domain.Anchor getParentAnchor() {
     return this.parentAnchor;
   }
 
