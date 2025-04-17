@@ -165,7 +165,7 @@
 			</snapshots>
 			<id>github</id>
 			<name>GitHub Maven Repository</name>
-			<url>https://maven.pkg.github.com/sitepark</url>
+			<url>https://maven.pkg.github.com/sitepark/ies-shared-kernel</url>
 			<layout>default</layout>
 		</repository>
 	</repositories>
