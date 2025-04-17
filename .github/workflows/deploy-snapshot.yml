@@ -8,11 +8,9 @@ on:
 
 jobs:
   deploy:
-    #uses: sitepark/github-project-workflow/.github/workflows/maven-deploy-snapshot.yml@release/1.x
-    uses: sitepark/github-project-workflow/.github/workflows/maven-deploy-snapshot.yml@main
+    uses: sitepark/github-project-workflow/.github/workflows/maven-deploy-snapshot.yml@release/1.x
     secrets:
-      BOT_PAT: ${{ secrets.BOT_PAT }}
-#      MVN_REPO_SNAPSHOT_SERVER_ID: 'github'
-#      MVN_REPO_SNAPSHOT_SERVER_USERNAME: 'sitepark-bot'
-#      MVN_REPO_SNAPSHOT_SERVER_PASSWORD: ${{ secrets.BOT_PAT }}
-#      MVN_REPO_SNAPSHOT_SERVER_URL: 'https://maven.pkg.github.com/${{ github.repository }}'
+      MVN_REPO_SNAPSHOT_SERVER_ID: ${{ secrets.MVN_REPO_SNAPSHOT_SERVER_ID }}
+      MVN_REPO_SNAPSHOT_SERVER_USERNAME: ${{ secrets.MVN_REPO_SNAPSHOT_SERVER_USERNAME }}
+      MVN_REPO_SNAPSHOT_SERVER_PASSWORD: ${{ secrets.MVN_REPO_SNAPSHOT_SERVER_PASSWORD }}
+      MVN_REPO_SNAPSHOT_SERVER_URL: ${{ secrets.MVN_REPO_SNAPSHOT_SERVER_URL }}
