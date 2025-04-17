@@ -56,7 +56,7 @@ class PurgeEntityTest {
     when(accessControl.isEntityRemovable(anyString())).thenReturn(true);
 
     EntityLockManager lockManager = mock(EntityLockManager.class);
-    doThrow(new EntityLockedException(EntityLock.builder().entity("10").build()))
+    doThrow(new EntityLockedException(EntityLock.builder().entityId("10").build()))
         .when(lockManager)
         .lock(anyString());
 
@@ -70,7 +70,7 @@ class PurgeEntityTest {
             EntityLockedException.class,
             () -> purgeEntity.purgeEntity("10"),
             "entity should be locked");
-    assertEquals("10", entityLockedException.getLock().getEntity(), "unexpected entity id");
+    assertEquals("10", entityLockedException.getLock().getEntityId(), "unexpected entity id");
   }
 
   @SuppressWarnings("PMD")

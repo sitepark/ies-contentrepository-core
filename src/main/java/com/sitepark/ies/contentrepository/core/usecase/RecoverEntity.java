@@ -39,12 +39,12 @@ public class RecoverEntity {
     Optional<RecycleBinItem> recycleBinItem = this.recycleBin.get(id);
     recycleBinItem.orElseThrow(() -> new EntityNotFoundException(id));
 
-    if (!this.accessControl.isGroupCreatable(recycleBinItem.get().getParent())) {
+    if (!this.accessControl.isGroupCreatable(recycleBinItem.get().getParentId())) {
       throw new AccessDeniedException(
           "Not allowed to recover entity "
               + recycleBinItem.get().getId()
               + " in group "
-              + recycleBinItem.get().getParent());
+              + recycleBinItem.get().getParentId());
     }
 
     Entity entity = recycleBinItem.get().getEntity();

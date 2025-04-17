@@ -7,9 +7,9 @@ import java.util.Optional;
 
 public final class HistoryEntry implements Serializable {
 
-  private final long entity;
+  private final String entityId;
   private final String initiator;
-  private final Long user;
+  private final String userId;
   private final long timestamp;
   private final HistoryEntryType type;
   private final String comment;
@@ -17,16 +17,16 @@ public final class HistoryEntry implements Serializable {
   @Serial private static final long serialVersionUID = 1L;
 
   private HistoryEntry(Builder builder) {
-    this.entity = builder.entity;
+    this.entityId = builder.entityId;
     this.initiator = builder.initiator;
-    this.user = builder.user;
+    this.userId = builder.userId;
     this.timestamp = builder.timestamp;
     this.type = builder.type;
     this.comment = builder.comment;
   }
 
-  public long getEntity() {
-    return entity;
+  public String getEntityId() {
+    return entityId;
   }
 
   /**
@@ -38,8 +38,8 @@ public final class HistoryEntry implements Serializable {
   }
 
   /** If the initiator is a user of the IES, this returns the ID of the user. */
-  public Optional<Long> getUser() {
-    return Optional.ofNullable(this.user);
+  public Optional<String> getUserId() {
+    return Optional.ofNullable(this.userId);
   }
 
   public long getTimestamp() {
@@ -57,7 +57,7 @@ public final class HistoryEntry implements Serializable {
   @Override
   public int hashCode() {
     return Objects.hash(
-        this.entity, this.initiator, this.user, this.timestamp, this.type, this.comment);
+        this.entityId, this.initiator, this.userId, this.timestamp, this.type, this.comment);
   }
 
   @Override
@@ -67,9 +67,9 @@ public final class HistoryEntry implements Serializable {
       return false;
     }
 
-    return Objects.equals(this.entity, that.entity)
+    return Objects.equals(this.entityId, that.entityId)
         && Objects.equals(this.initiator, that.initiator)
-        && Objects.equals(this.user, that.user)
+        && Objects.equals(this.userId, that.userId)
         && Objects.equals(this.timestamp, that.timestamp)
         && Objects.equals(this.type, that.type)
         && Objects.equals(this.comment, that.comment);
@@ -78,13 +78,13 @@ public final class HistoryEntry implements Serializable {
   @Override
   public String toString() {
     return "HistoryEntry{"
-        + "entity="
-        + entity
+        + "entityId="
+        + entityId
         + ", initiator='"
         + initiator
         + '\''
-        + ", user="
-        + user
+        + ", userId="
+        + userId
         + ", timestamp="
         + timestamp
         + ", type="
@@ -105,9 +105,9 @@ public final class HistoryEntry implements Serializable {
 
   public static final class Builder {
 
-    private long entity;
+    private String entityId;
     private String initiator;
-    private Long user;
+    private String userId;
     private long timestamp;
     private HistoryEntryType type;
     private String comment;
@@ -115,16 +115,16 @@ public final class HistoryEntry implements Serializable {
     private Builder() {}
 
     private Builder(HistoryEntry historyEntry) {
-      this.entity = historyEntry.entity;
+      this.entityId = historyEntry.entityId;
       this.initiator = historyEntry.initiator;
-      this.user = historyEntry.user;
+      this.userId = historyEntry.userId;
       this.timestamp = historyEntry.timestamp;
       this.type = historyEntry.type;
       this.comment = historyEntry.comment;
     }
 
-    public Builder entity(long entity) {
-      this.entity = entity;
+    public Builder entityId(String entityId) {
+      this.entityId = entityId;
       return this;
     }
 
@@ -134,8 +134,8 @@ public final class HistoryEntry implements Serializable {
       return this;
     }
 
-    public Builder user(Long user) {
-      this.user = user;
+    public Builder userId(String userId) {
+      this.userId = userId;
       return this;
     }
 

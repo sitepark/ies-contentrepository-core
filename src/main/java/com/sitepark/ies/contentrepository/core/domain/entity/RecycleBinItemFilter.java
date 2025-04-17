@@ -10,12 +10,12 @@ public final class RecycleBinItemFilter {
 
   private final LocalDateTime to;
 
-  private final Long user;
+  private final String userId;
 
   private RecycleBinItemFilter(Builder builder) {
     this.from = builder.from;
     this.to = builder.to;
-    this.user = builder.user;
+    this.userId = builder.userId;
   }
 
   public Optional<LocalDateTime> getFrom() {
@@ -26,13 +26,13 @@ public final class RecycleBinItemFilter {
     return Optional.ofNullable(this.to);
   }
 
-  public Optional<Long> getUser() {
-    return Optional.ofNullable(this.user);
+  public Optional<String> getUserId() {
+    return Optional.ofNullable(this.userId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.from, this.to, this.user);
+    return Objects.hash(this.from, this.to, this.userId);
   }
 
   @Override
@@ -44,7 +44,7 @@ public final class RecycleBinItemFilter {
 
     return Objects.equals(this.from, filter.from)
         && Objects.equals(this.to, filter.to)
-        && Objects.equals(this.user, filter.user);
+        && Objects.equals(this.userId, filter.userId);
   }
 
   public static Builder builder() {
@@ -61,14 +61,14 @@ public final class RecycleBinItemFilter {
 
     private LocalDateTime to;
 
-    private Long user;
+    private String userId;
 
     private Builder() {}
 
     private Builder(RecycleBinItemFilter recycleBinItemFilter) {
       this.from = recycleBinItemFilter.from;
       this.to = recycleBinItemFilter.to;
-      this.user = recycleBinItemFilter.user;
+      this.userId = recycleBinItemFilter.userId;
     }
 
     public Builder from(LocalDateTime from) {
@@ -83,11 +83,9 @@ public final class RecycleBinItemFilter {
       return this;
     }
 
-    public Builder user(long user) {
-      if (user <= 0) {
-        throw new IllegalArgumentException("user should be greater then 0");
-      }
-      this.user = user;
+    public Builder userId(String userId) {
+      Objects.requireNonNull(userId, "userId is null");
+      this.userId = userId;
       return this;
     }
 

@@ -30,9 +30,9 @@ class HistoryEntryTest {
 
   @Test
   void testSetEntity() {
-    HistoryEntry entry = HistoryEntry.builder().entity(123).build();
+    HistoryEntry entry = HistoryEntry.builder().entityId("123").build();
 
-    assertEquals(123, entry.getEntity(), "unexpected entry");
+    assertEquals("123", entry.getEntityId(), "unexpected entry");
   }
 
   @Test
@@ -52,16 +52,16 @@ class HistoryEntryTest {
 
   @Test
   void testSetUser() {
-    HistoryEntry entry = HistoryEntry.builder().user(123L).build();
+    HistoryEntry entry = HistoryEntry.builder().userId("123").build();
 
-    assertEquals(123, entry.getUser().orElse(0L), "unexpected user");
+    assertEquals("123", entry.getUserId().orElse(null), "unexpected user");
   }
 
   @Test
   void testEmptyUser() {
     HistoryEntry entry = HistoryEntry.builder().build();
 
-    assertTrue(entry.getUser().isEmpty(), "user should be empty");
+    assertTrue(entry.getUserId().isEmpty(), "user should be empty");
   }
 
   @Test
@@ -113,21 +113,21 @@ class HistoryEntryTest {
   void testToBuilder() {
     HistoryEntry entry =
         HistoryEntry.builder()
-            .entity(123)
+            .entityId("123")
             .initiator("initiator")
-            .user(345L)
+            .userId("345")
             .timestamp(123L)
             .type(HistoryEntryType.CREATED)
             .comment("comment")
             .build();
 
-    HistoryEntry copy = entry.toBuilder().entity(678).build();
+    HistoryEntry copy = entry.toBuilder().entityId("678").build();
 
     HistoryEntry expected =
         HistoryEntry.builder()
-            .entity(678)
+            .entityId("678")
             .initiator("initiator")
-            .user(345L)
+            .userId("345")
             .timestamp(123L)
             .type(HistoryEntryType.CREATED)
             .comment("comment")

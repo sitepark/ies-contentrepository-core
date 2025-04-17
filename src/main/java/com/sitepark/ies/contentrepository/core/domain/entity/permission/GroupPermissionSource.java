@@ -120,9 +120,6 @@ public final class GroupPermissionSource {
     }
 
     public GroupPermissionSource build() {
-      if (roleIds.isEmpty()) {
-        throw new IllegalStateException("roleIds cannot be empty");
-      }
       Objects.requireNonNull(privilegeId, "privilegeId cannot be null");
       Objects.requireNonNull(groupPermission, "groupPermission cannot be null");
       return new GroupPermissionSource(this);
