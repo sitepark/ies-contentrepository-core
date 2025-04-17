@@ -163,9 +163,9 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-			<id>sitepark</id>
-			<name>Sitepark Maven Repository</name>
-			<url>https://nexus.sitepark.com/nexus/content/groups/public</url>
+			<id>github</id>
+			<name>GitHub Maven Repository</name>
+			<url>https://maven.pkg.github.com/sitepark</url>
 			<layout>default</layout>
 		</repository>
 	</repositories>
