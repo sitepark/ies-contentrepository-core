@@ -163,10 +163,9 @@
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-			<id>github</id>
-			<name>GitHub Maven Repository - sitepark/ies-shared-kernel</name>
-			<url>https://maven.pkg.github.com/sitepark/ies-shared-kernel</url>
-			<layout>default</layout>
+			<id>central-portal-snapshots</id>
+			<name>Central Portal Snapshots</name>
+			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
 		</repository>
 	</repositories>
 
