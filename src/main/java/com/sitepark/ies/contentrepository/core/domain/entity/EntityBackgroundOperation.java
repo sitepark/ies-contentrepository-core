@@ -1,6 +1,5 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +24,6 @@ public class EntityBackgroundOperation {
     return this.key;
   }
 
-  @SuppressFBWarnings("EI_EXPOSE_REP")
   public List<Entity> getEntityList() {
     return this.entityList;
   }

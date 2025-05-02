@@ -1,6 +1,5 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.*;
 
 public class EntityBackgroundExecution {
@@ -17,12 +16,10 @@ public class EntityBackgroundExecution {
     this.finalizer = builder.finalizer;
   }
 
-  @SuppressFBWarnings("EI_EXPOSE_REP")
   public String[] getTopic() {
     return this.topic.clone();
   }
 
-  @SuppressFBWarnings("EI_EXPOSE_REP")
   public List<EntityBackgroundOperation> getOperations() {
     return this.operations;
   }
