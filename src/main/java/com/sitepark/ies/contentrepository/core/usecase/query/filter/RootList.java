@@ -1,7 +1,6 @@
 package com.sitepark.ies.contentrepository.core.usecase.query.filter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,7 +15,6 @@ public class RootList implements Filter {
     this.rootList = List.of(rootList);
   }
 
-  @SuppressFBWarnings("EI_EXPOSE_REP")
   public List<String> getRootList() {
     return this.rootList;
   }
