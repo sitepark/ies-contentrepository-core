@@ -3,13 +3,22 @@ package com.sitepark.ies.contentrepository.core.domain.entity;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 class EntityTreeTest {
+
+  @Test
+  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
+  void testEquals() {
+    EqualsVerifier.forClass(EntityTree.class).verify();
+  }
 
   @Test
   void testGetRoots() {
@@ -71,6 +80,12 @@ class EntityTreeTest {
   }
 
   @Test
+  void testWithoutId() {
+    EntityTree tree = new EntityTree();
+    assertThrows(IllegalArgumentException.class, () -> tree.add(Entity.builder().build()));
+  }
+
+  @Test
   void testHasChildren() {
 
     EntityTree tree = new EntityTree();
@@ -121,6 +136,25 @@ class EntityTreeTest {
         IllegalStateException.class,
         tree::getAll,
         "Entity 2 is missing. Here an IllegalStateException should be thrown");
+  }
+
+  @Test
+  void testDeepCopyConstructorWithSingleAssert() {
+
+    Entity originalEntity = Entity.builder().id("1").build();
+    EntityTree original = new EntityTree();
+    original.children.put("parent", new HashSet<>(Set.of("child1", "child2")));
+    original.parents.put("child1", "parent");
+    original.index.put("id1", originalEntity);
+
+    EntityTree expected = new EntityTree();
+    expected.children.put("parent", new HashSet<>(Set.of("child1", "child2")));
+    expected.parents.put("child1", "parent");
+    expected.index.put("id1", originalEntity.toBuilder().build());
+
+    EntityTree copy = new EntityTree(original);
+
+    assertEquals(expected, copy);
   }
 
   @Test

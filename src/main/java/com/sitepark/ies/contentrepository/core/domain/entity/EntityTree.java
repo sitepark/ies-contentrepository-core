@@ -4,13 +4,26 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("PMD.UseConcurrentHashMap")
-public class EntityTree {
+public final class EntityTree {
 
   final Map<String, Set<String>> children = new HashMap<>();
 
   final Map<String, String> parents = new HashMap<>();
 
   final Map<String, Entity> index = new HashMap<>();
+
+  public EntityTree() {}
+
+  public EntityTree(EntityTree tree) {
+    for (Map.Entry<String, Set<String>> entry : tree.children.entrySet()) {
+      this.children.put(entry.getKey(), new HashSet<>(entry.getValue()));
+    }
+    this.parents.putAll(tree.parents);
+
+    for (Map.Entry<String, Entity> entry : tree.index.entrySet()) {
+      this.index.put(entry.getKey(), entry.getValue().toBuilder().build());
+    }
+  }
 
   /**
    * Returns all roots of the tree.
@@ -113,6 +126,21 @@ public class EntityTree {
 
   public boolean hasChildren(String parent) {
     return this.children.containsKey(parent);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.children, this.parents, this.index);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof EntityTree that)) {
+      return false;
+    }
+    return Objects.equals(this.children, that.children)
+        && Objects.equals(this.parents, that.parents)
+        && Objects.equals(this.index, that.index);
   }
 
   @Override

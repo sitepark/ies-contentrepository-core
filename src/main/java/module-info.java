@@ -15,6 +15,7 @@ module com.sitepark.ies.contentrepository.core {
   requires com.fasterxml.jackson.datatype.jsr310;
   requires com.sitepark.ies.sharedkernel;
   requires org.apache.logging.log4j;
+  requires jdk.compiler;
 
   opens com.sitepark.ies.contentrepository.core.domain.entity;
   opens com.sitepark.ies.contentrepository.core.usecase.query.filter;

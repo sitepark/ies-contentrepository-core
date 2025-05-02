@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter;
 import com.sitepark.ies.contentrepository.core.usecase.query.limit.Limit;
 import com.sitepark.ies.contentrepository.core.usecase.query.sort.SortCriteria;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.*;
 
 @JsonDeserialize(builder = Query.Builder.class)
@@ -30,7 +29,6 @@ public final class Query {
     return Optional.ofNullable(this.filter);
   }
 
-  @SuppressFBWarnings("EI_EXPOSE_REP")
   public List<SortCriteria> getSort() {
     return this.sort;
   }

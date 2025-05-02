@@ -1,15 +1,13 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Set;
 
 public class EntityTreeOutputter {
 
   final EntityTree tree;
 
-  @SuppressFBWarnings("EI_EXPOSE_REP2")
   public EntityTreeOutputter(EntityTree tree) {
-    this.tree = tree;
+    this.tree = new EntityTree(tree);
   }
 
   @Override
