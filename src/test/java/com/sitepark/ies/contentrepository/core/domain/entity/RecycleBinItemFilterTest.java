@@ -44,20 +44,20 @@ class RecycleBinItemFilterTest {
 
   @Test
   void testSetUser() {
-    RecycleBinItemFilter filter = RecycleBinItemFilter.builder().user(123).build();
+    RecycleBinItemFilter filter = RecycleBinItemFilter.builder().userId("123").build();
 
-    assertEquals(123, filter.getUser().orElse(0L), "unexpected user");
+    assertEquals("123", filter.getUserId().orElse(null), "unexpected user");
   }
 
   @Test
   void testSetInvalidUser() {
-    assertThrows(IllegalArgumentException.class, () -> RecycleBinItemFilter.builder().user(0));
+    assertThrows(NullPointerException.class, () -> RecycleBinItemFilter.builder().userId(null));
   }
 
   @Test
   void testEmptyUser() {
     RecycleBinItemFilter filter = RecycleBinItemFilter.builder().build();
-    assertTrue(filter.getUser().isEmpty(), "user should be empty");
+    assertTrue(filter.getUserId().isEmpty(), "user should be empty");
   }
 
   @Test
@@ -66,12 +66,12 @@ class RecycleBinItemFilterTest {
     LocalDateTime from = LocalDateTime.of(2023, 11, 3, 9, 33);
     LocalDateTime to = LocalDateTime.of(2023, 12, 3, 9, 33);
     RecycleBinItemFilter filter =
-        RecycleBinItemFilter.builder().from(from).to(to).user(123).build();
+        RecycleBinItemFilter.builder().from(from).to(to).userId("123").build();
 
-    RecycleBinItemFilter copy = filter.toBuilder().user(345).build();
+    RecycleBinItemFilter copy = filter.toBuilder().userId("345").build();
 
     RecycleBinItemFilter expected =
-        RecycleBinItemFilter.builder().from(from).to(to).user(345).build();
+        RecycleBinItemFilter.builder().from(from).to(to).userId("345").build();
 
     assertEquals(expected, copy, "unexpected mediaReference");
   }

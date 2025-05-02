@@ -1,5 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
+import com.sitepark.ies.sharedkernel.base.Identifier;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -7,8 +8,8 @@ import java.util.Objects;
 
 public final class EntityLock implements Serializable {
 
-  private final String entity;
-  private final String user;
+  private final String entityId;
+  private final String userId;
   private final OffsetDateTime created;
   private final OffsetDateTime lastAccess;
   private final long ttl;
@@ -16,19 +17,19 @@ public final class EntityLock implements Serializable {
   @Serial private static final long serialVersionUID = 1L;
 
   private EntityLock(Builder builder) {
-    this.entity = builder.entity;
-    this.user = builder.user;
+    this.entityId = builder.entityId;
+    this.userId = builder.userId;
     this.created = builder.created;
     this.lastAccess = builder.lastAccess;
     this.ttl = builder.ttl;
   }
 
-  public String getEntity() {
-    return entity;
+  public String getEntityId() {
+    return entityId;
   }
 
-  public String getUser() {
-    return user;
+  public String getUserId() {
+    return userId;
   }
 
   public OffsetDateTime getCreated() {
@@ -45,7 +46,7 @@ public final class EntityLock implements Serializable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.entity, this.user, this.created, this.lastAccess, this.ttl);
+    return Objects.hash(this.entityId, this.userId, this.created, this.lastAccess, this.ttl);
   }
 
   @Override
@@ -55,8 +56,8 @@ public final class EntityLock implements Serializable {
       return false;
     }
 
-    return Objects.equals(this.entity, lock.entity)
-        && Objects.equals(this.user, lock.user)
+    return Objects.equals(this.entityId, lock.entityId)
+        && Objects.equals(this.userId, lock.userId)
         && Objects.equals(this.created, lock.created)
         && Objects.equals(this.lastAccess, lock.lastAccess)
         && Objects.equals(this.ttl, lock.ttl);
@@ -73,11 +74,11 @@ public final class EntityLock implements Serializable {
   @Override
   public String toString() {
     return "EntityLock{"
-        + "entity='"
-        + entity
+        + "entityId='"
+        + entityId
         + '\''
-        + ", user='"
-        + user
+        + ", userId='"
+        + userId
         + '\''
         + ", created="
         + created
@@ -90,8 +91,8 @@ public final class EntityLock implements Serializable {
 
   public static class Builder {
 
-    private String entity;
-    private String user;
+    private String entityId;
+    private String userId;
     private OffsetDateTime created;
     private OffsetDateTime lastAccess;
     private long ttl;
@@ -99,28 +100,28 @@ public final class EntityLock implements Serializable {
     protected Builder() {}
 
     protected Builder(EntityLock entityLock) {
-      this.entity = entityLock.entity;
-      this.user = entityLock.user;
+      this.entityId = entityLock.entityId;
+      this.userId = entityLock.userId;
       this.created = entityLock.created;
       this.lastAccess = entityLock.lastAccess;
       this.ttl = entityLock.ttl;
     }
 
-    public Builder entity(String entity) {
-      Objects.requireNonNull(entity, "entity is null");
-      if (!Identifier.isId(entity)) {
-        throw new IllegalArgumentException(entity + " is not an id");
+    public Builder entityId(String entityId) {
+      Objects.requireNonNull(entityId, "entityId is null");
+      if (!Identifier.isId(entityId)) {
+        throw new IllegalArgumentException(entityId + " is not an id");
       }
-      this.entity = entity;
+      this.entityId = entityId;
       return this;
     }
 
-    public Builder user(String user) {
-      Objects.requireNonNull(user, "user is null");
-      if (!Identifier.isId(user)) {
-        throw new IllegalArgumentException(user + " is not an id");
+    public Builder userId(String userId) {
+      Objects.requireNonNull(userId, "userId is null");
+      if (!Identifier.isId(userId)) {
+        throw new IllegalArgumentException(userId + " is not an id");
       }
-      this.user = user;
+      this.userId = userId;
       return this;
     }
 

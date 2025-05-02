@@ -1,11 +1,10 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.*;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.Query;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.SubTreeQuery;
-import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
+import com.sitepark.ies.contentrepository.core.domain.exception.FilterMissingException;
 import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmptyException;
 import com.sitepark.ies.contentrepository.core.port.*;
+import com.sitepark.ies.sharedkernel.security.exceptions.AccessDeniedException;
 import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -99,19 +98,7 @@ public class BackgroundPurge {
   }
 
   private List<Entity> getEntityList(BackgroundPurgeInput input) {
-    Query query = this.buildQuery(input);
-    return this.repository.getAll(query);
-  }
-
-  private Query buildQuery(BackgroundPurgeInput input) {
-    if (!input.getRootList().isEmpty()) {
-      return SubTreeQuery.builder()
-          .rootList(input.getRootList())
-          .filterBy(input.getFilter().orElse(null))
-          .build();
-    }
-
-    return Query.builder().filterBy(input.getFilter().orElse(null)).build();
+    return this.repository.getAll(input.getFilter().orElseThrow(FilterMissingException::new));
   }
 
   private void checkAccessControl(List<Entity> entityList) {
