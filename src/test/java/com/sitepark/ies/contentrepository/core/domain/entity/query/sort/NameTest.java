@@ -3,6 +3,8 @@ package com.sitepark.ies.contentrepository.core.domain.entity.query.sort;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.jparams.verifier.tostring.ToStringVerifier;
+import com.sitepark.ies.contentrepository.core.usecase.query.sort.Direction;
+import com.sitepark.ies.contentrepository.core.usecase.query.sort.Name;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 

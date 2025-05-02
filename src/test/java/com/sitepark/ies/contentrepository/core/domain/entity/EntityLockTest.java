@@ -33,16 +33,16 @@ class EntityLockTest {
 
   @Test
   void testSetEntity() {
-    EntityLock lock = EntityLock.builder().entity("123").build();
+    EntityLock lock = EntityLock.builder().entityId("123").build();
 
-    assertEquals("123", lock.getEntity(), "unexpected entity");
+    assertEquals("123", lock.getEntityId(), "unexpected entity");
   }
 
   @Test
   void testSetEntityWithNull() {
     assertThrows(
         NullPointerException.class,
-        () -> EntityLock.builder().entity(null),
+        () -> EntityLock.builder().entityId(null),
         "entity should not be null");
   }
 
@@ -50,7 +50,7 @@ class EntityLockTest {
   void testSetEntityWitZero() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> EntityLock.builder().entity("0"),
+        () -> EntityLock.builder().entityId("0"),
         "entity should not be zero");
   }
 
@@ -58,22 +58,22 @@ class EntityLockTest {
   void testSetEntityWitInvalidValue() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> EntityLock.builder().entity("1x"),
+        () -> EntityLock.builder().entityId("1x"),
         "entity should not be zero");
   }
 
   @Test
   void testSetUser() {
-    EntityLock lock = EntityLock.builder().user("123").build();
+    EntityLock lock = EntityLock.builder().userId("123").build();
 
-    assertEquals("123", lock.getUser(), "unexpected user");
+    assertEquals("123", lock.getUserId(), "unexpected user");
   }
 
   @Test
   void testSetUserWithNull() {
     assertThrows(
         NullPointerException.class,
-        () -> EntityLock.builder().user(null),
+        () -> EntityLock.builder().userId(null),
         "user should not be null");
   }
 
@@ -81,7 +81,7 @@ class EntityLockTest {
   void testSetUserWitZero() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> EntityLock.builder().user("0"),
+        () -> EntityLock.builder().userId("0"),
         "user should not be zero");
   }
 
@@ -89,7 +89,7 @@ class EntityLockTest {
   void testSetUserWitInvalidValue() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> EntityLock.builder().user("1x"),
+        () -> EntityLock.builder().userId("1x"),
         "user should not be zero");
   }
 
@@ -149,19 +149,19 @@ class EntityLockTest {
 
     EntityLock lock =
         EntityLock.builder()
-            .entity("1")
-            .user("2")
+            .entityId("1")
+            .userId("2")
             .created(created)
             .lastAccess(lastAccess)
             .ttl(5)
             .build();
 
-    EntityLock copy = lock.toBuilder().user("10").build();
+    EntityLock copy = lock.toBuilder().userId("10").build();
 
     EntityLock expected =
         EntityLock.builder()
-            .entity("1")
-            .user("10")
+            .entityId("1")
+            .userId("10")
             .created(created)
             .lastAccess(lastAccess)
             .ttl(5)

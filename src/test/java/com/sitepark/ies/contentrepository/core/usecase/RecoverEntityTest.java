@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItem;
-import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
 import com.sitepark.ies.contentrepository.core.port.*;
+import com.sitepark.ies.sharedkernel.security.exceptions.AccessDeniedException;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 

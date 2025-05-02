@@ -18,11 +18,12 @@ class GetAllEntitiesTest {
 
     ContentRepository repository = mock();
     Entity entity = mock();
-    List<Entity> list = Collections.singletonList(entity);
-    when(repository.getAll(any())).thenReturn(list);
+    List<Entity> entries = Collections.singletonList(entity);
+
+    when(repository.getAll(any())).thenReturn(entries);
 
     var getAllEntities = new GetAllEntities(repository);
 
-    assertEquals(list, getAllEntities.getAllEntities(null), "unexpected entities");
+    assertEquals(entries, getAllEntities.getAllEntities(null), "unexpected entities");
   }
 }

@@ -69,16 +69,16 @@ class RecycleBinItemTest {
 
   @Test
   void testSetParent() {
-    RecycleBinItem item = RecycleBinItem.builder().parent("123").build();
+    RecycleBinItem item = RecycleBinItem.builder().parentId("123").build();
 
-    assertEquals("123", item.getParent(), "unexpected parent");
+    assertEquals("123", item.getParentId(), "unexpected parent");
   }
 
   @Test
   void testSetParentWithNull() {
     assertThrows(
         NullPointerException.class,
-        () -> RecycleBinItem.builder().parent(null),
+        () -> RecycleBinItem.builder().parentId(null),
         "parent should not be null");
   }
 
@@ -86,7 +86,7 @@ class RecycleBinItemTest {
   void testSetParentWitZero() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> RecycleBinItem.builder().parent("0"),
+        () -> RecycleBinItem.builder().parentId("0"),
         "parent should not be zero");
   }
 
@@ -94,7 +94,7 @@ class RecycleBinItemTest {
   void testSetParentWitInvalidValue() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> RecycleBinItem.builder().parent("1x"),
+        () -> RecycleBinItem.builder().parentId("1x"),
         "parent should not be zero");
   }
 
@@ -142,12 +142,22 @@ class RecycleBinItemTest {
     Entity entity = mock();
     List<RecycleBinItem> children = Collections.singletonList(mock(RecycleBinItem.class));
     RecycleBinItem item =
-        RecycleBinItem.builder().id("123").parent("345").entity(entity).children(children).build();
+        RecycleBinItem.builder()
+            .id("123")
+            .parentId("345")
+            .entity(entity)
+            .children(children)
+            .build();
 
-    RecycleBinItem copy = item.toBuilder().parent("678").build();
+    RecycleBinItem copy = item.toBuilder().parentId("678").build();
 
     RecycleBinItem expected =
-        RecycleBinItem.builder().id("123").parent("678").entity(entity).children(children).build();
+        RecycleBinItem.builder()
+            .id("123")
+            .parentId("678")
+            .entity(entity)
+            .children(children)
+            .build();
 
     assertEquals(expected, copy, "unexpected copy");
   }

@@ -3,11 +3,14 @@ package com.sitepark.ies.contentrepository.core.domain.entity.query;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.limit.Limit;
-import com.sitepark.ies.contentrepository.core.domain.entity.query.sort.SortCriteria;
+import com.sitepark.ies.contentrepository.core.usecase.query.Query;
+import com.sitepark.ies.contentrepository.core.usecase.query.QueryOptions;
+import com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter;
+import com.sitepark.ies.contentrepository.core.usecase.query.limit.Limit;
+import com.sitepark.ies.contentrepository.core.usecase.query.sort.SortCriteria;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;
+import java.util.Optional;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -21,23 +24,20 @@ class QueryTest {
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEqualsWithRedefinedSubTreeQuery() {
-    EqualsVerifier.forClass(Query.class)
-        // see https://jqno.nl/equalsverifier/manual/inheritance/
-        .withRedefinedSubclass(SubTreeQuery.class)
-        .verify();
+    EqualsVerifier.forClass(Query.class).verify();
   }
 
   @Test
   void testSetFilter() {
     Filter filter = mock(Filter.class);
-    Query query = Query.builder().filterBy(filter).build();
-    assertEquals(filter, query.getFilterBy().orElse(null), "unexpected filter");
+    Query query = Query.builder().filter(filter).build();
+    assertEquals(filter, query.getFilter().orElse(null), "unexpected filter");
   }
 
   @Test
   void testWithNullFilter() {
-    Query query = Query.builder().filterBy(null).build();
-    assertTrue(query.getFilterBy().isEmpty(), "empty filter expected");
+    Query query = Query.builder().filter(null).build();
+    assertTrue(query.getFilter().isEmpty(), "empty filter expected");
   }
 
   @Test
@@ -73,7 +73,7 @@ class QueryTest {
   void testSetLimit() {
     Limit limit = mock(Limit.class);
     Query query = Query.builder().limit(limit).build();
-    assertEquals(limit, query.getLimit(), "unexpected options");
+    assertEquals(Optional.of(limit), query.getLimit(), "unexpected options");
   }
 
   @Test
@@ -98,13 +98,13 @@ class QueryTest {
     SortCriteria sortCriteria = mock(SortCriteria.class);
     QueryOptions options = mock(QueryOptions.class);
 
-    Query query = Query.builder().filterBy(filter).sort(sortCriteria).options(options).build();
+    Query query = Query.builder().filter(filter).sort(sortCriteria).options(options).build();
 
     Filter filter2 = mock(Filter.class);
 
-    Query copy = query.toBuilder().filterBy(filter2).build();
+    Query copy = query.toBuilder().filter(filter2).build();
 
-    Query expected = Query.builder().filterBy(filter2).sort(sortCriteria).options(options).build();
+    Query expected = Query.builder().filter(filter2).sort(sortCriteria).options(options).build();
 
     assertEquals(expected, copy, "unexpected copy");
   }

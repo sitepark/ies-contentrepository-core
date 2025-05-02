@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 class EntityUnlockExceptionTest {
   @Test
   void testGetLock() {
-    EntityLock lock = EntityLock.builder().entity("1").build();
+    EntityLock lock = EntityLock.builder().entityId("1").build();
     EntityUnlockException exception = new EntityUnlockException(lock, new Exception());
     assertEquals(lock, exception.getLock(), "lock id expected");
   }
