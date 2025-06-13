@@ -1,9 +1,7 @@
-package com.sitepark.ies.contentrepository.core.domain.entity.query.limit;
+package com.sitepark.ies.contentrepository.core.usecase.query.limit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.sitepark.ies.contentrepository.core.usecase.query.limit.Limit;
-import com.sitepark.ies.contentrepository.core.usecase.query.limit.OffsetLimit;
 import org.junit.jupiter.api.Test;
 
 class LimitTest {

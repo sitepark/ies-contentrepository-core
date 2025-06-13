@@ -4,7 +4,7 @@ import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.usecase.query.Query;
 import com.sitepark.ies.contentrepository.core.usecase.query.Result;
 import com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter;
-import com.sitepark.ies.sharedkernel.anchor.domain.Anchor;
+import com.sitepark.ies.sharedkernel.anchor.Anchor;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

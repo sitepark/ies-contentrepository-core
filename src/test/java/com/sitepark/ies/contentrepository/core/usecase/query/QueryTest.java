@@ -1,10 +1,8 @@
-package com.sitepark.ies.contentrepository.core.domain.entity.query;
+package com.sitepark.ies.contentrepository.core.usecase.query;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-import com.sitepark.ies.contentrepository.core.usecase.query.Query;
-import com.sitepark.ies.contentrepository.core.usecase.query.QueryOptions;
 import com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter;
 import com.sitepark.ies.contentrepository.core.usecase.query.limit.Limit;
 import com.sitepark.ies.contentrepository.core.usecase.query.sort.SortCriteria;

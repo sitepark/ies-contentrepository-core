@@ -4,7 +4,7 @@ import com.sitepark.ies.contentrepository.core.domain.entity.*;
 import com.sitepark.ies.contentrepository.core.domain.exception.FilterMissingException;
 import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmptyException;
 import com.sitepark.ies.contentrepository.core.port.*;
-import com.sitepark.ies.sharedkernel.security.exceptions.AccessDeniedException;
+import com.sitepark.ies.sharedkernel.security.AccessDeniedException;
 import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;

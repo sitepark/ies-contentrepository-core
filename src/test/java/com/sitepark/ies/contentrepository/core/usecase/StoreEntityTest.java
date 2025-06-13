@@ -12,7 +12,7 @@ import com.sitepark.ies.contentrepository.core.domain.exception.EntityNotFoundEx
 import com.sitepark.ies.contentrepository.core.domain.exception.ParentMissingException;
 import com.sitepark.ies.contentrepository.core.domain.service.ContentDiffer;
 import com.sitepark.ies.contentrepository.core.port.*;
-import com.sitepark.ies.sharedkernel.security.exceptions.AccessDeniedException;
+import com.sitepark.ies.sharedkernel.security.AccessDeniedException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Optional;

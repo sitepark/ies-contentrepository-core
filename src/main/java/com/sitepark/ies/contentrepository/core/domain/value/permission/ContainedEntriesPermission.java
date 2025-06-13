@@ -1,4 +1,4 @@
-package com.sitepark.ies.contentrepository.core.domain.entity.permission;
+package com.sitepark.ies.contentrepository.core.domain.value.permission;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -12,15 +12,15 @@ public final class ContainedEntriesPermission {
   private final boolean read;
   private final boolean write;
   private final boolean delete;
-  private final Set<String> sectionTypes;
-  private final Set<Integer> channels;
+  private final Set<String> sectionGrants;
+  private final Set<String> channels;
 
   private ContainedEntriesPermission(Builder builder) {
     this.create = builder.create;
     this.read = builder.read;
     this.write = builder.write;
     this.delete = builder.delete;
-    this.sectionTypes = Collections.unmodifiableSet(builder.sectionTypes);
+    this.sectionGrants = Collections.unmodifiableSet(builder.sectionGrants);
     this.channels = Collections.unmodifiableSet(builder.channels);
   }
 
@@ -40,11 +40,11 @@ public final class ContainedEntriesPermission {
     return delete;
   }
 
-  public Set<String> getSectionTypes() {
-    return sectionTypes;
+  public Set<String> getSectionGrants() {
+    return sectionGrants;
   }
 
-  public Set<Integer> getChannels() {
+  public Set<String> getChannels() {
     return channels;
   }
 
@@ -65,13 +65,13 @@ public final class ContainedEntriesPermission {
         && read == that.read
         && write == that.write
         && delete == that.delete
-        && Objects.equals(sectionTypes, that.sectionTypes)
+        && Objects.equals(sectionGrants, that.sectionGrants)
         && Objects.equals(channels, that.channels);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(create, read, write, delete, sectionTypes, channels);
+    return Objects.hash(create, read, write, delete, sectionGrants, channels);
   }
 
   @Override
@@ -85,8 +85,8 @@ public final class ContainedEntriesPermission {
         + write
         + ", delete="
         + delete
-        + ", sectionTypes="
-        + sectionTypes
+        + ", sectionGrants="
+        + sectionGrants
         + ", channels="
         + channels
         + '}';
@@ -100,8 +100,8 @@ public final class ContainedEntriesPermission {
     private boolean read;
     private boolean write;
     private boolean delete;
-    private final Set<String> sectionTypes = new HashSet<>();
-    private final Set<Integer> channels = new HashSet<>();
+    private final Set<String> sectionGrants = new HashSet<>();
+    private final Set<String> channels = new HashSet<>();
 
     private Builder() {}
 
@@ -110,7 +110,7 @@ public final class ContainedEntriesPermission {
       this.read = entity.read;
       this.write = entity.write;
       this.delete = entity.delete;
-      this.sectionTypes.addAll(entity.sectionTypes);
+      this.sectionGrants.addAll(entity.sectionGrants);
       this.channels.addAll(entity.channels);
     }
 
@@ -139,50 +139,50 @@ public final class ContainedEntriesPermission {
     }
 
     @JsonSetter
-    public Builder sectionTypes(Set<String> sectionTypes) {
-      Objects.requireNonNull(sectionTypes, "sectionTypes is null");
-      this.sectionTypes.clear();
-      for (String sectionType : sectionTypes) {
-        this.sectionType(sectionType);
+    public Builder sectionGrants(Collection<String> sectionGrants) {
+      Objects.requireNonNull(sectionGrants, "sectionGrants is null");
+      this.sectionGrants.clear();
+      for (String sectionGrant : sectionGrants) {
+        this.sectionGrant(sectionGrant);
       }
       return this;
     }
 
-    public Builder sectionTypes(String... sectionTypes) {
-      Objects.requireNonNull(sectionTypes, "sectionTypes is null");
-      this.sectionTypes.clear();
-      for (String sectionType : sectionTypes) {
-        this.sectionType(sectionType);
+    public Builder sectionGrants(String... sectionGrants) {
+      Objects.requireNonNull(sectionGrants, "sectionGrants is null");
+      this.sectionGrants.clear();
+      for (String sectionGrant : sectionGrants) {
+        this.sectionGrant(sectionGrant);
       }
       return this;
     }
 
-    public Builder sectionType(String sectionType) {
-      Objects.requireNonNull(sectionType, "sectionType is null");
-      this.sectionTypes.add(sectionType);
+    public Builder sectionGrant(String sectionGrant) {
+      Objects.requireNonNull(sectionGrant, "sectionGrant is null");
+      this.sectionGrants.add(sectionGrant);
       return this;
     }
 
     @JsonSetter
-    public Builder channels(Set<Integer> channels) {
+    public Builder channels(Collection<String> channels) {
       Objects.requireNonNull(channels, "channels is null");
       this.channels.clear();
-      for (Integer channel : channels) {
+      for (String channel : channels) {
         this.channel(channel);
       }
       return this;
     }
 
-    public Builder channels(Integer... channels) {
+    public Builder channels(String... channels) {
       Objects.requireNonNull(channels, "channels is null");
       this.channels.clear();
-      for (Integer channel : channels) {
+      for (String channel : channels) {
         this.channel(channel);
       }
       return this;
     }
 
-    public Builder channel(Integer channel) {
+    public Builder channel(String channel) {
       Objects.requireNonNull(channel, "channel is null");
       this.channels.add(channel);
       return this;
@@ -193,7 +193,7 @@ public final class ContainedEntriesPermission {
       this.read = this.read || permission.read;
       this.write = this.write || permission.write;
       this.delete = this.delete || permission.delete;
-      this.sectionTypes.addAll(permission.sectionTypes);
+      this.sectionGrants.addAll(permission.sectionGrants);
       this.channels.addAll(permission.channels);
       return this;
     }

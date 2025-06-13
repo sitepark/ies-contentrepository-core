@@ -1,4 +1,4 @@
-package com.sitepark.ies.contentrepository.core.domain.entity.permission;
+package com.sitepark.ies.contentrepository.core.domain.value.permission;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
@@ -83,7 +83,6 @@ public final class GroupPermissionTrace {
 
     public GroupPermissionTrace build() {
       Objects.requireNonNull(this.resolvedPermission, "Resolved permission must not be null");
-      Objects.requireNonNull(this.sourcePermissions, "Source permissions must not be null");
       return new GroupPermissionTrace(this);
     }
   }

@@ -1,10 +1,9 @@
-package com.sitepark.ies.contentrepository.core.domain.entity.query.limit;
+package com.sitepark.ies.contentrepository.core.usecase.query.limit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.jparams.verifier.tostring.ToStringVerifier;
-import com.sitepark.ies.contentrepository.core.usecase.query.limit.OffsetLimit;
 import java.util.Optional;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.sitepark.ies.contentrepository.core.domain.entity.query.filter;
+package com.sitepark.ies.contentrepository.core.usecase.query.filter;
 
 import static com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sitepark.ies.contentrepository.core.domain.databind.DatabindModule;
-import com.sitepark.ies.contentrepository.core.usecase.query.filter.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -19,6 +18,12 @@ class FilterTest {
   void testIsGroup() {
     IsGroup filter = Filter.isGroup(true);
     assertTrue(filter.isGroup(), "unexpected isGroup");
+  }
+
+  @Test
+  void testName() {
+    Name filter = Filter.name("test");
+    assertEquals("test", filter.getName(), "unexpected name");
   }
 
   @Test
@@ -35,16 +40,16 @@ class FilterTest {
 
   @Test
   void testAnchor() {
-    com.sitepark.ies.sharedkernel.anchor.domain.Anchor anchor =
-        com.sitepark.ies.sharedkernel.anchor.domain.Anchor.ofString("abc");
+    com.sitepark.ies.sharedkernel.anchor.Anchor anchor =
+        com.sitepark.ies.sharedkernel.anchor.Anchor.ofString("abc");
     Anchor filter = Filter.anchor(anchor);
     assertEquals(anchor, filter.getAnchor(), "unexpected anchorList");
   }
 
   @Test
   void testAnchorList() {
-    com.sitepark.ies.sharedkernel.anchor.domain.Anchor anchor =
-        com.sitepark.ies.sharedkernel.anchor.domain.Anchor.ofString("abc");
+    com.sitepark.ies.sharedkernel.anchor.Anchor anchor =
+        com.sitepark.ies.sharedkernel.anchor.Anchor.ofString("abc");
     AnchorList filter = Filter.anchorList(anchor);
     assertEquals(
         Collections.singletonList(anchor), filter.getAnchorList(), "unexpected anchorList");
@@ -64,16 +69,16 @@ class FilterTest {
 
   @Test
   void testParentAnchor() {
-    com.sitepark.ies.sharedkernel.anchor.domain.Anchor anchor =
-        com.sitepark.ies.sharedkernel.anchor.domain.Anchor.ofString("abc");
+    com.sitepark.ies.sharedkernel.anchor.Anchor anchor =
+        com.sitepark.ies.sharedkernel.anchor.Anchor.ofString("abc");
     ParentAnchor filter = Filter.parentAnchor(anchor);
     assertEquals(anchor, filter.getParentAnchor(), "unexpected parentAnchor");
   }
 
   @Test
   void testParentAnchorList() {
-    com.sitepark.ies.sharedkernel.anchor.domain.Anchor anchor =
-        com.sitepark.ies.sharedkernel.anchor.domain.Anchor.ofString("abc");
+    com.sitepark.ies.sharedkernel.anchor.Anchor anchor =
+        com.sitepark.ies.sharedkernel.anchor.Anchor.ofString("abc");
     ParentAnchorList filter = Filter.parentAnchorList(anchor);
     assertEquals(
         Collections.singletonList(anchor),
@@ -122,7 +127,7 @@ class FilterTest {
     Filter filter =
         or(
             idList("6"),
-            anchor(com.sitepark.ies.sharedkernel.anchor.domain.Anchor.ofString("abc")),
+            anchor(com.sitepark.ies.sharedkernel.anchor.Anchor.ofString("abc")),
             and(root("5"), parent("7"), not(parent("9"))));
 
     ObjectMapper objectMapper = new ObjectMapper();

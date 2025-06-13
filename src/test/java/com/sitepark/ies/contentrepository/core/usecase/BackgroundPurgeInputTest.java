@@ -57,4 +57,21 @@ class BackgroundPurgeInputTest {
   void testRootAndFilterNotSet() {
     assertThrows(IllegalStateException.class, () -> BackgroundPurgeInput.builder().build());
   }
+
+  @Test
+  void testToBuilder() {
+    BackgroundPurgeInput input =
+        BackgroundPurgeInput.builder()
+            .filter(Filter.root("123"))
+            .forceLock(true)
+            .build()
+            .toBuilder()
+            .filter(Filter.root("567"))
+            .build();
+
+    BackgroundPurgeInput expected =
+        BackgroundPurgeInput.builder().filter(Filter.root("567")).forceLock(true).build();
+
+    assertEquals(expected, input, "unexpected input after toBuilder() call");
+  }
 }

@@ -8,7 +8,7 @@ import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityLockedException;
 import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmptyException;
 import com.sitepark.ies.contentrepository.core.port.*;
-import com.sitepark.ies.sharedkernel.security.exceptions.AccessDeniedException;
+import com.sitepark.ies.sharedkernel.security.AccessDeniedException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 

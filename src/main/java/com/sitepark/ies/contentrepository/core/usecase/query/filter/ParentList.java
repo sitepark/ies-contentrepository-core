@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Objects;
 
-public class ParentList implements Filter {
+public final class ParentList implements Filter {
 
   @SuppressWarnings(
       "PMD.AvoidFieldNameMatchingTypeName") // so that when deserializing it has the desired format
   private final List<String> parentList;
 
-  protected ParentList(@JsonProperty("parentList") String... parentList) {
+  ParentList(@JsonProperty("parentList") String... parentList) {
     Objects.requireNonNull(parentList, "parentList is null");
     this.parentList = List.of(parentList);
   }

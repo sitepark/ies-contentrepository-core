@@ -3,13 +3,13 @@ package com.sitepark.ies.contentrepository.core.usecase.query.filter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
-public class IsGroup implements Filter {
+public final class IsGroup implements Filter {
 
   @SuppressWarnings(
       "PMD.AvoidFieldNameMatchingTypeName") // so that when deserializing it has the desired format
   private final boolean group;
 
-  protected IsGroup(@JsonProperty("isGroup") boolean isGroup) {
+  IsGroup(@JsonProperty("isGroup") boolean isGroup) {
     this.group = isGroup;
   }
 
@@ -29,6 +29,6 @@ public class IsGroup implements Filter {
 
   @Override
   public String toString() {
-    return "IsGroup{" + "isGroup=" + group + '}';
+    return "IsGroup{group=" + group + '}';
   }
 }

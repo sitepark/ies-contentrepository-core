@@ -1,6 +1,6 @@
 module com.sitepark.ies.contentrepository.core {
   exports com.sitepark.ies.contentrepository.core.domain.entity;
-  exports com.sitepark.ies.contentrepository.core.domain.entity.permission;
+  exports com.sitepark.ies.contentrepository.core.domain.value.permission;
   exports com.sitepark.ies.contentrepository.core.usecase.query.filter;
   exports com.sitepark.ies.contentrepository.core.usecase.query.sort;
   exports com.sitepark.ies.contentrepository.core.usecase.query.limit;
@@ -16,11 +16,12 @@ module com.sitepark.ies.contentrepository.core {
   requires com.sitepark.ies.sharedkernel;
   requires org.apache.logging.log4j;
   requires jdk.compiler;
+  requires com.fasterxml.jackson.databind;
 
   opens com.sitepark.ies.contentrepository.core.domain.entity;
   opens com.sitepark.ies.contentrepository.core.usecase.query.filter;
   opens com.sitepark.ies.contentrepository.core.usecase.query.sort;
   opens com.sitepark.ies.contentrepository.core.usecase.query.limit;
   opens com.sitepark.ies.contentrepository.core.usecase.query;
-  opens com.sitepark.ies.contentrepository.core.domain.entity.permission;
+  opens com.sitepark.ies.contentrepository.core.domain.value.permission;
 }

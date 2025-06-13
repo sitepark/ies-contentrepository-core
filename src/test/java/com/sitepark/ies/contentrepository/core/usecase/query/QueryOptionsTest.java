@@ -1,9 +1,8 @@
-package com.sitepark.ies.contentrepository.core.domain.entity.query;
+package com.sitepark.ies.contentrepository.core.usecase.query;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.sitepark.ies.contentrepository.core.usecase.query.QueryOptions;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 

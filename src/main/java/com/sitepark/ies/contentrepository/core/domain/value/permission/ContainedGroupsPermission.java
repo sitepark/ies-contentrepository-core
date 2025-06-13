@@ -1,4 +1,4 @@
-package com.sitepark.ies.contentrepository.core.domain.entity.permission;
+package com.sitepark.ies.contentrepository.core.domain.value.permission;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

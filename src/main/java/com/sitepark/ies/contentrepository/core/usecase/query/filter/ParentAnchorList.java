@@ -1,23 +1,22 @@
 package com.sitepark.ies.contentrepository.core.usecase.query.filter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sitepark.ies.sharedkernel.anchor.Anchor;
 import java.util.List;
 import java.util.Objects;
 
-public class ParentAnchorList implements Filter {
+public final class ParentAnchorList implements Filter {
 
   @SuppressWarnings(
       "PMD.AvoidFieldNameMatchingTypeName") // so that when deserializing it has the desired format
-  private final List<com.sitepark.ies.sharedkernel.anchor.domain.Anchor> parentAnchorList;
+  private final List<Anchor> parentAnchorList;
 
-  protected ParentAnchorList(
-      @JsonProperty("parentAnchorList")
-          com.sitepark.ies.sharedkernel.anchor.domain.Anchor... parentAnchorList) {
+  ParentAnchorList(@JsonProperty("parentAnchorList") Anchor... parentAnchorList) {
     Objects.requireNonNull(parentAnchorList, "parentAnchorList is null");
     this.parentAnchorList = List.of(parentAnchorList);
   }
 
-  public List<com.sitepark.ies.sharedkernel.anchor.domain.Anchor> getParentAnchorList() {
+  public List<Anchor> getParentAnchorList() {
     return this.parentAnchorList;
   }
 

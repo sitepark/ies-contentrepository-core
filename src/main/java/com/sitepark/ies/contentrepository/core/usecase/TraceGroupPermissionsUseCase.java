@@ -1,6 +1,10 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
-import com.sitepark.ies.contentrepository.core.domain.entity.permission.*;
+import com.sitepark.ies.contentrepository.core.domain.value.permission.ContainedEntriesPermission;
+import com.sitepark.ies.contentrepository.core.domain.value.permission.ContainedGroupsPermission;
+import com.sitepark.ies.contentrepository.core.domain.value.permission.GroupPermission;
+import com.sitepark.ies.contentrepository.core.domain.value.permission.GroupPermissionSource;
+import com.sitepark.ies.contentrepository.core.domain.value.permission.GroupPermissionTrace;
 import com.sitepark.ies.contentrepository.core.port.Permissions;
 import jakarta.inject.Inject;
 import java.util.List;

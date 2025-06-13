@@ -3,13 +3,13 @@ package com.sitepark.ies.contentrepository.core.usecase.query.filter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
-public class Id implements Filter {
+public final class Id implements Filter {
 
   @SuppressWarnings(
       "PMD.AvoidFieldNameMatchingTypeName") // so that when deserializing it has the desired format
   private final String id;
 
-  protected Id(@JsonProperty("id") String id) {
+  Id(@JsonProperty("id") String id) {
     Objects.requireNonNull(id, "id is null");
     this.id = id;
   }
