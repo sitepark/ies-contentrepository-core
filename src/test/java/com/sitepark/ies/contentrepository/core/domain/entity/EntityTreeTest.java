@@ -154,7 +154,7 @@ class EntityTreeTest {
 
     EntityTree copy = new EntityTree(original);
 
-    assertEquals(expected, copy);
+    assertEquals(expected, copy, "The deep copy constructor should create an identical tree");
   }
 
   @Test

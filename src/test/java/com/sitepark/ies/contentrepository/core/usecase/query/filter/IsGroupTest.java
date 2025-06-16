@@ -15,7 +15,6 @@ class IsGroupTest {
   @Test
   @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testToString() {
-    System.out.println(new IsGroup(false));
     ToStringVerifier.forClass(IsGroup.class).withClassName(NameStyle.SIMPLE_NAME).verify();
   }
 }

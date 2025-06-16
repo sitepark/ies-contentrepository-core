@@ -7,6 +7,7 @@ import com.sitepark.ies.sharedkernel.security.Permission;
 import java.util.Objects;
 
 @JsonDeserialize(builder = GroupPermission.Builder.class)
+@SuppressWarnings("PMD.LawOfDemeter")
 public final class GroupPermission implements Permission {
 
   public static final String TYPE = "CONTENT_GROUP";
@@ -29,6 +30,7 @@ public final class GroupPermission implements Permission {
     this.entries = builder.entries;
   }
 
+  @Override
   public String getType() {
     return TYPE;
   }

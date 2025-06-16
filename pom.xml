@@ -424,7 +424,7 @@
 					</rulesets>
 					<includeTests>true</includeTests>
 					<failOnViolation>true</failOnViolation>
-					<failurePriority>1</failurePriority>
+					<failurePriority>5</failurePriority>
 					<printFailingErrors>true</printFailingErrors>
 					<linkXRef>false</linkXRef>
 				</configuration>

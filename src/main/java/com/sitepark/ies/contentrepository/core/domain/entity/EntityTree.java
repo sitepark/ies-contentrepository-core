@@ -14,6 +14,7 @@ public final class EntityTree {
 
   public EntityTree() {}
 
+  @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
   public EntityTree(EntityTree tree) {
     for (Map.Entry<String, Set<String>> entry : tree.children.entrySet()) {
       this.children.put(entry.getKey(), new HashSet<>(entry.getValue()));

@@ -77,7 +77,10 @@ class GroupPermissionSourceTest {
             .privilegeId("123")
             .groupPermission(GroupPermission.builder().read(true).build())
             .build();
-    assertTrue(groupPermissionSource.getGroupPermission().isRead(), "unexpected read permission");
+    assertEquals(
+        GroupPermission.builder().read(true).build(),
+        groupPermissionSource.getGroupPermission(),
+        "unexpected read permission");
   }
 
   @Test

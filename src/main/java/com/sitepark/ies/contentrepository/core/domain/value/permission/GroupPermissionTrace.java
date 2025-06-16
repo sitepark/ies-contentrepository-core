@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonDeserialize(builder = GroupPermissionTrace.Builder.class)
+@SuppressWarnings("PMD.LawOfDemeter")
 public final class GroupPermissionTrace {
 
   private final GroupPermission resolvedPermission;

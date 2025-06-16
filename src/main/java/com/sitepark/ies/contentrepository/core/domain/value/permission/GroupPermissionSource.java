@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @JsonDeserialize(builder = GroupPermissionSource.Builder.class)
+@SuppressWarnings("PMD.LawOfDemeter")
 public final class GroupPermissionSource {
 
   private final Set<String> roleIds;
