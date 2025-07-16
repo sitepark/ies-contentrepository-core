@@ -5,8 +5,6 @@ import java.util.Objects;
 
 public final class IsGroup implements Filter {
 
-  @SuppressWarnings(
-      "PMD.AvoidFieldNameMatchingTypeName") // so that when deserializing it has the desired format
   private final boolean group;
 
   IsGroup(@JsonProperty("isGroup") boolean isGroup) {

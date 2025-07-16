@@ -11,13 +11,11 @@ import org.junit.jupiter.api.Test;
 class OffsetLimitTest {
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEqualsWithRedefinedSubTreeQuery() {
     EqualsVerifier.forClass(OffsetLimit.class).verify();
   }
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testToString() {
     ToStringVerifier.forClass(OffsetLimit.class).verify();
   }

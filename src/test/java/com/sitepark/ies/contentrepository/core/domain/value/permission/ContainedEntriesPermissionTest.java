@@ -12,13 +12,11 @@ import org.junit.jupiter.api.Test;
 class ContainedEntriesPermissionTest {
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEquals() {
     EqualsVerifier.forClass(ContainedEntriesPermission.class).verify();
   }
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testToString() {
     ToStringVerifier.forClass(ContainedEntriesPermission.class)
         .withClassName(NameStyle.SIMPLE_NAME)

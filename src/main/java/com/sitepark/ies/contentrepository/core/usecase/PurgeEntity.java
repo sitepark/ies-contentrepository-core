@@ -32,7 +32,6 @@ public final class PurgeEntity {
   private static final Logger LOGGER = LogManager.getLogger();
 
   @Inject
-  @SuppressWarnings("PMD.ExcessiveParameterList")
   PurgeEntity(
       ContentRepository repository,
       EntityLockManager lockManager,

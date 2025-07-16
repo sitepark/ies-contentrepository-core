@@ -7,13 +7,11 @@ import org.junit.jupiter.api.Test;
 
 class ParentAnchorListTest {
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEquals() {
     EqualsVerifier.forClass(ParentAnchorList.class).verify();
   }
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testToString() {
     ToStringVerifier.forClass(ParentAnchorList.class).withClassName(NameStyle.SIMPLE_NAME).verify();
   }

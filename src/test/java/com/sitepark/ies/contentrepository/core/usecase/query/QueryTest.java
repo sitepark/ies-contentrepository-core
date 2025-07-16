@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 class QueryTest {
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEqualsWithRedefinedSubTreeQuery() {
     EqualsVerifier.forClass(Query.class).verify();
   }

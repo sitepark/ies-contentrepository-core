@@ -20,13 +20,11 @@ import org.junit.jupiter.api.Test;
 class EntityLockTest {
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEquals() {
     EqualsVerifier.forClass(EntityLock.class).verify();
   }
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testToString() {
     ToStringVerifier.forClass(EntityLock.class).withClassName(NameStyle.SIMPLE_NAME).verify();
   }

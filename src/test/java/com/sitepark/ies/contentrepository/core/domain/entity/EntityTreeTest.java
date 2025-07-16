@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 class EntityTreeTest {
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEquals() {
     EqualsVerifier.forClass(EntityTree.class).verify();
   }

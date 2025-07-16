@@ -7,13 +7,11 @@ import org.junit.jupiter.api.Test;
 
 class IsGroupTest {
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEquals() {
     EqualsVerifier.forClass(IsGroup.class).verify();
   }
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testToString() {
     ToStringVerifier.forClass(IsGroup.class).withClassName(NameStyle.SIMPLE_NAME).verify();
   }

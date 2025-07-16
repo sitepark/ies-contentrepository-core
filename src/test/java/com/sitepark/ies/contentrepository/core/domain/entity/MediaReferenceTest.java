@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 class MediaReferenceTest {
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEquals() {
     EqualsVerifier.forClass(MediaReference.class).verify();
   }
