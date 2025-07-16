@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 class QueryOptionsTest {
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEquals() {
     EqualsVerifier.forClass(QueryOptions.class).verify();
   }

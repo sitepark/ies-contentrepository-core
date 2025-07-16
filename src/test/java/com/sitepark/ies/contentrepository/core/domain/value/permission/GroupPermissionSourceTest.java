@@ -14,13 +14,11 @@ import org.junit.jupiter.api.Test;
 class GroupPermissionSourceTest {
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEquals() {
     EqualsVerifier.forClass(GroupPermissionSource.class).verify();
   }
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testToString() {
     ToStringVerifier.forClass(GroupPermissionSource.class)
         .withClassName(NameStyle.SIMPLE_NAME)

@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 class BackgroundPurgeInputTest {
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEquals() {
     EqualsVerifier.forClass(BackgroundPurgeInput.class).verify();
   }

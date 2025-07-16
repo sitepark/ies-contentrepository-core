@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 class RecycleBinItemFilterTest {
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEquals() {
     EqualsVerifier.forClass(RecycleBinItemFilter.class).verify();
   }

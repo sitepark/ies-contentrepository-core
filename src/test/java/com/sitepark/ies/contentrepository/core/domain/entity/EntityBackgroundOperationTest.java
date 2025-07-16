@@ -20,13 +20,11 @@ import org.junit.jupiter.api.Test;
 class EntityBackgroundOperationTest {
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEquals() {
     EqualsVerifier.forClass(EntityBackgroundOperation.class).verify();
   }
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testToString() {
     ToStringVerifier.forClass(EntityBackgroundOperation.class)
         .withClassName(NameStyle.SIMPLE_NAME)
