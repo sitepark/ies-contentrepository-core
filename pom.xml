@@ -147,7 +147,7 @@
 		<dependency>
 			<groupId>nl.jqno.equalsverifier</groupId>
 			<artifactId>equalsverifier</artifactId>
-			<version>4.0.7</version>
+			<version>4.0.9</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -225,7 +225,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.11.2</version>
+				<version>3.11.3</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
