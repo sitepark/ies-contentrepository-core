@@ -1,8 +1,9 @@
 package com.sitepark.ies.contentrepository.core.domain.exception;
 
+import com.sitepark.ies.sharedkernel.domain.DomainException;
 import java.io.Serial;
 
-public class GroupNotEmptyException extends ContentRepositoryException {
+public class GroupNotEmptyException extends DomainException {
   @Serial private static final long serialVersionUID = 1L;
 
   private final String id;
