@@ -2,8 +2,10 @@ package com.sitepark.ies.contentrepository.core.usecase.query.filter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sitepark.ies.sharedkernel.anchor.Anchor;
+import com.sitepark.ies.sharedkernel.json.UniquePropertyType;
 import java.util.Objects;
 
+@UniquePropertyType(uniqueProperty = "parentanchor")
 public final class ParentAnchor implements Filter {
 
   @SuppressWarnings(
