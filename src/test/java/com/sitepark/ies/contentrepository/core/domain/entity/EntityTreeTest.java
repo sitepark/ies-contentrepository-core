@@ -1,6 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashSet;
@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import nl.jqno.equalsverifier.EqualsVerifier;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 class EntityTreeTest {
@@ -34,7 +32,7 @@ class EntityTreeTest {
             .map(entity -> entity.getId().orElse(""))
             .collect(Collectors.toList());
 
-    assertThat("Unexpected entries", all, Matchers.contains("1", "2"));
+    assertThat(all).withFailMessage("Unexpected entries").containsExactlyInAnyOrder("1", "2");
   }
 
   @Test
@@ -66,7 +64,7 @@ class EntityTreeTest {
             .map(entity -> entity.getId().orElse(""))
             .collect(Collectors.toList());
 
-    assertThat("Unexpected children", all, Matchers.contains("11", "10"));
+    assertThat(all).withFailMessage("Unexpected entries").containsExactlyInAnyOrder("11", "10");
   }
 
   @Test
@@ -121,7 +119,9 @@ class EntityTreeTest {
             .map(entity -> entity.getId().orElse(""))
             .collect(Collectors.toList());
 
-    assertThat("Unexpected entries", all, Matchers.containsInAnyOrder("1", "10", "11", "2", "20"));
+    assertThat(all)
+        .withFailMessage("Unexpected entries")
+        .containsExactlyInAnyOrder("1", "10", "11", "2", "20");
   }
 
   @Test
@@ -162,6 +162,6 @@ class EntityTreeTest {
     tree.add(Entity.builder().id("1").build());
 
     String s = tree.toString();
-    assertThat("missing id", s, CoreMatchers.containsString("id='1',"));
+    assertThat(s).withFailMessage("missing id").contains("id='1',");
   }
 }
