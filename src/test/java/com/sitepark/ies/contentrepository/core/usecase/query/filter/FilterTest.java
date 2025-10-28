@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sitepark.ies.contentrepository.core.domain.databind.DatabindModule;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -147,46 +146,6 @@ class FilterTest {
         "unexpected json-data");
   }
 
-  @Test
-  @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
-  void testDeserialize() throws Exception {
-
-    ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.registerModule(new DatabindModule());
-
-    String json =
-        "{\"or\":["
-            + "{\"idList\":[\"6\"]},"
-            + "{\"anchor\":\"abc\"},"
-            + "{\"and\":["
-            + "{\"root\":\"5\"},"
-            + "{\"parent\":\"7\"},"
-            + "{\"not\":{\"parent\":\"9\"}}"
-            + "]"
-            + "}]}";
-
-    Filter filter = objectMapper.readValue(json, Filter.class);
-
-    assertInstanceOf(Or.class, filter);
-
-    Or or = (Or) filter;
-
-    assertInstanceOf(IdList.class, or.getOr().get(0));
-    assertInstanceOf(Anchor.class, or.getOr().get(1));
-    assertEquals("abc", ((Anchor) (or.getOr().get(1))).getAnchor().getName(), "wrong root");
-    assertInstanceOf(And.class, or.getOr().get(2));
-
-    And and = (And) or.getOr().get(2);
-
-    assertInstanceOf(Root.class, and.getAnd().get(0));
-    assertEquals("5", ((Root) and.getAnd().get(0)).getRoot(), "wrong root");
-    assertInstanceOf(Parent.class, and.getAnd().get(1));
-    assertEquals("7", ((Parent) and.getAnd().get(1)).getParent(), "wrong parent");
-    assertInstanceOf(Not.class, and.getAnd().get(2));
-
-    Not not = (Not) and.getAnd().get(2);
-
-    assertInstanceOf(Parent.class, not.getNot());
-    assertEquals("9", ((Parent) not.getNot()).getParent(), "wrong parent (in not)");
-  }
+  // Deserialization tests are in infrastructure module
+  // since that's where the actual deserializer implementation lives
 }

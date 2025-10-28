@@ -1,5 +1,25 @@
 package com.sitepark.ies.contentrepository.core.usecase.query.filter;
 
+import com.sitepark.ies.sharedkernel.json.UseUniquePropertyDeserializer;
+
+@UseUniquePropertyDeserializer(
+    types = {
+      Anchor.class,
+      AnchorList.class,
+      And.class,
+      Id.class,
+      IdList.class,
+      IsGroup.class,
+      Name.class,
+      Not.class,
+      Or.class,
+      Parent.class,
+      ParentAnchor.class,
+      ParentAnchorList.class,
+      ParentList.class,
+      Root.class,
+      RootList.class
+    })
 @SuppressWarnings("PMD.TooManyMethods")
 public interface Filter {
 
