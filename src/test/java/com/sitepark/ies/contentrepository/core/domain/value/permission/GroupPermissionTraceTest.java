@@ -99,7 +99,8 @@ class GroupPermissionTraceTest {
 
     String json =
         """
-        {"resolvedPermission":{"groupId":"789","recursive":false,"read":false,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]},"type":"CONTENT_GROUP"},"sourcePermissions":[{"roleIds":[],"privilegeId":"123","groupPermission":{"groupId":"123","recursive":false,"read":false,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]},"type":"CONTENT_GROUP"}}]}""";
+        {"resolvedPermission":{"groupId":"789","recursive":false,"read":false,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]},"type":"CONTENT_GROUP"},"sourcePermissions":[{"roleIds":[],"privilegeId":"123","groupPermission":{"groupId":"123","recursive":false,"read":false,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]},"type":"CONTENT_GROUP"}}]}\
+        """;
 
     ObjectMapper mapper = new ObjectMapper();
     GroupPermissionTrace groupPermissionTrace = mapper.readValue(json, GroupPermissionTrace.class);
@@ -142,7 +143,8 @@ class GroupPermissionTraceTest {
 
     String expected =
         """
-        {"resolvedPermission":{"groupId":"789","recursive":false,"read":false,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]},"type":"CONTENT_GROUP"},"sourcePermissions":[{"roleIds":[],"privilegeId":"123","groupPermission":{"groupId":"123","recursive":false,"read":false,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]},"type":"CONTENT_GROUP"}}]}""";
+        {"resolvedPermission":{"groupId":"789","recursive":false,"read":false,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]},"type":"CONTENT_GROUP"},"sourcePermissions":[{"roleIds":[],"privilegeId":"123","groupPermission":{"groupId":"123","recursive":false,"read":false,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]},"type":"CONTENT_GROUP"}}]}\
+        """;
     assertEquals(expected, json, "unexpected json");
   }
 }

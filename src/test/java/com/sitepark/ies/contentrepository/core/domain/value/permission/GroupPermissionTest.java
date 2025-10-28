@@ -63,7 +63,8 @@ class GroupPermissionTest {
 
     String json =
         """
-        {"groupId":"groupId","recursive":true,"read":true,"write":true,"hidden":true,"groups":{"create":true,"delete":true},"entries":{"create":true,"read":true,"write":true,"delete":true,"sectionGrants":["test"],"channels":[1]},"type":"CONTENT_GROUP"}""";
+        {"groupId":"groupId","recursive":true,"read":true,"write":true,"hidden":true,"groups":{"create":true,"delete":true},"entries":{"create":true,"read":true,"write":true,"delete":true,"sectionGrants":["test"],"channels":[1]},"type":"CONTENT_GROUP"}\
+        """;
 
     ObjectMapper mapper = new ObjectMapper();
     GroupPermission groupPermission = mapper.readValue(json, GroupPermission.class);
@@ -115,7 +116,8 @@ class GroupPermissionTest {
 
     String expected =
         """
-        {"groupId":"groupId","recursive":true,"read":true,"write":true,"hidden":true,"groups":{"create":true,"delete":true},"entries":{"create":true,"read":true,"write":true,"delete":true,"sectionGrants":["test"],"channels":["1"]},"type":"CONTENT_GROUP"}""";
+        {"groupId":"groupId","recursive":true,"read":true,"write":true,"hidden":true,"groups":{"create":true,"delete":true},"entries":{"create":true,"read":true,"write":true,"delete":true,"sectionGrants":["test"],"channels":["1"]},"type":"CONTENT_GROUP"}\
+        """;
     assertEquals(expected, json, "unexpected json");
   }
 }
