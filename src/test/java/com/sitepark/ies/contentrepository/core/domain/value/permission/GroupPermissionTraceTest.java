@@ -143,7 +143,7 @@ class GroupPermissionTraceTest {
 
     String expected =
         """
-        {"resolvedPermission":{"groupId":"789","recursive":false,"read":false,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]},"type":"CONTENT_GROUP"},"sourcePermissions":[{"roleIds":[],"privilegeId":"123","groupPermission":{"groupId":"123","recursive":false,"read":false,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]},"type":"CONTENT_GROUP"}}]}\
+        {"resolvedPermission":{"type":"CONTENT_GROUP","groupId":"789","recursive":false,"read":false,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]}},"sourcePermissions":[{"roleIds":[],"privilegeId":"123","groupPermission":{"type":"CONTENT_GROUP","groupId":"123","recursive":false,"read":false,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]}}}]}\
         """;
     assertEquals(expected, json, "unexpected json");
   }

@@ -138,8 +138,7 @@ class GroupPermissionSourceTest {
 
     String expected =
         """
-        {"roleIds":["123"],"privilegeId":"345","groupPermission":{"groupId":"456","recursive":false,"read":true,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]},"type":"CONTENT_GROUP"}}\
-        """;
+        {"roleIds":["123"],"privilegeId":"345","groupPermission":{"type":"CONTENT_GROUP","groupId":"456","recursive":false,"read":true,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]}}}""";
     assertEquals(expected, json, "unexpected json");
   }
 }
