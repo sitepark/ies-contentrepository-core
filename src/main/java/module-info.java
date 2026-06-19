@@ -4,6 +4,7 @@ module com.sitepark.ies.contentrepository.core {
   exports com.sitepark.ies.contentrepository.core.domain.entity.query.sort;
   exports com.sitepark.ies.contentrepository.core.domain.entity.query.limit;
   exports com.sitepark.ies.contentrepository.core.domain.entity.query;
+  exports com.sitepark.ies.contentrepository.core.domain.value;
   exports com.sitepark.ies.contentrepository.core.domain.exception;
   exports com.sitepark.ies.contentrepository.core.port;
   exports com.sitepark.ies.contentrepository.core.usecase;
