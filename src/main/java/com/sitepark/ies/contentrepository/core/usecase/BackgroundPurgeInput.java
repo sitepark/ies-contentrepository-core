@@ -1,7 +1,6 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.query.filter.Filter;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +21,6 @@ public final class BackgroundPurgeInput {
     this.forceLock = builder.forceLock;
   }
 
-  @SuppressFBWarnings("EI_EXPOSE_REP")
   public List<Long> getRootList() {
     return this.rootList;
   }

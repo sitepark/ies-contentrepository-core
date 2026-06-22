@@ -1,7 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.query;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +15,6 @@ public class SubTreeQuery extends Query {
     this.rootList = Collections.unmodifiableList(builder.rootList);
   }
 
-  @SuppressFBWarnings("EI_EXPOSE_REP")
   public List<Long> getRootList() {
     return this.rootList;
   }

@@ -19,7 +19,7 @@
 	<rule ref="category/java/bestpractices.xml/AvoidUsingHardCodedIP"/>
 	<rule ref="category/java/bestpractices.xml/CheckResultSet"/>
 	<rule ref="category/java/bestpractices.xml/ConstantsInInterface"/>
-	<rule ref="category/java/bestpractices.xml/DefaultLabelNotLastInSwitchStmt"/>
+	<rule ref="category/java/bestpractices.xml/DefaultLabelNotLastInSwitch"/>
 	<rule ref="category/java/bestpractices.xml/DoubleBraceInitialization"/>
 	<rule ref="category/java/bestpractices.xml/ForLoopCanBeForeach"/>
 	<rule ref="category/java/bestpractices.xml/ForLoopVariableCount"/>
@@ -35,15 +35,15 @@
 	<rule ref="category/java/bestpractices.xml/JUnit4TestShouldUseBeforeAnnotation"/>
 	<rule ref="category/java/bestpractices.xml/JUnit4TestShouldUseTestAnnotation"/>
 	-->
-	<rule ref="category/java/bestpractices.xml/JUnitAssertionsShouldIncludeMessage"/>
+	<rule ref="category/java/bestpractices.xml/UnitTestAssertionsShouldIncludeMessage"/>
 	<!--  See https://github.com/pmd/pmd/discussions/3015 -->
 	<rule
-		ref="category/java/bestpractices.xml/JUnitTestContainsTooManyAsserts">
+		ref="category/java/bestpractices.xml/UnitTestContainsTooManyAsserts">
 		<properties>
 			<property name="maximumAsserts" value="2" />
 		</properties>
 	</rule>
-	<rule ref="category/java/bestpractices.xml/JUnitTestsShouldIncludeAssert"/>
+	<rule ref="category/java/bestpractices.xml/UnitTestShouldIncludeAssert"/>
 	<rule ref="category/java/bestpractices.xml/JUnitUseExpected"/>
 	<rule ref="category/java/bestpractices.xml/LooseCoupling"/>
 	<rule ref="category/java/bestpractices.xml/MethodReturnsInternalArray"/>
@@ -54,7 +54,7 @@
 	<rule ref="category/java/bestpractices.xml/ReplaceEnumerationWithIterator"/>
 	<rule ref="category/java/bestpractices.xml/ReplaceHashtableWithMap"/>
 	<rule ref="category/java/bestpractices.xml/ReplaceVectorWithList"/>
-	<rule ref="category/java/bestpractices.xml/SwitchStmtsShouldHaveDefault"/>
+	<rule ref="category/java/bestpractices.xml/NonExhaustiveSwitch"/>
 	<rule ref="category/java/bestpractices.xml/SystemPrintln"/>
 	<rule ref="category/java/bestpractices.xml/UnusedAssignment"/>
 	<rule ref="category/java/bestpractices.xml/UnusedFormalParameter"/>
@@ -140,9 +140,7 @@
 	-->
 	<rule ref="category/java/design.xml/DoNotExtendJavaLangError"/>
 	<rule ref="category/java/design.xml/ExceptionAsFlowControl"/>
-	<rule ref="category/java/design.xml/ExcessiveClassLength"/>
 	<rule ref="category/java/design.xml/ExcessiveImports"/>
-	<rule ref="category/java/design.xml/ExcessiveMethodLength"/>
 	<rule ref="category/java/design.xml/ExcessiveParameterList"/>
 	<rule ref="category/java/design.xml/ExcessivePublicCount"/>
 	<rule ref="category/java/design.xml/FinalFieldCouldBeStatic"/>
@@ -243,7 +241,6 @@
 	<rule ref="category/java/errorprone.xml/AvoidFieldNameMatchingTypeName"/>
 	<rule ref="category/java/errorprone.xml/AvoidInstanceofChecksInCatchClause"/>
 	<rule ref="category/java/errorprone.xml/AvoidLiteralsInIfCondition"/>
-	<rule ref="category/java/errorprone.xml/AvoidLosingExceptionInformation"/>
 	<rule ref="category/java/errorprone.xml/AvoidMultipleUnaryOperators"/>
 	<rule ref="category/java/errorprone.xml/AvoidUsingOctalValues"/>
 	<rule ref="category/java/errorprone.xml/ComparisonWithNaN"/>
@@ -272,15 +269,7 @@
 	<rule ref="category/java/errorprone.xml/DontUseFloatTypeForLoopIndices"/>
 	<rule ref="category/java/errorprone.xml/EmptyCatchBlock"/>
 	<rule ref="category/java/errorprone.xml/EmptyFinalizer"/>
-	<rule ref="category/java/errorprone.xml/EmptyFinallyBlock"/>
-	<rule ref="category/java/errorprone.xml/EmptyIfStmt"/>
-	<rule ref="category/java/errorprone.xml/EmptyInitializer"/>
-	<rule ref="category/java/errorprone.xml/EmptyStatementBlock"/>
-	<rule ref="category/java/errorprone.xml/EmptyStatementNotInLoop"/>
-	<rule ref="category/java/errorprone.xml/EmptySwitchStatements"/>
-	<rule ref="category/java/errorprone.xml/EmptySynchronizedBlock"/>
-	<rule ref="category/java/errorprone.xml/EmptyTryBlock"/>
-	<rule ref="category/java/errorprone.xml/EmptyWhileStmt"/>
+	<rule ref="category/java/codestyle.xml/EmptyControlStatement"/>
 	<rule ref="category/java/errorprone.xml/EqualsNull"/>
 	<rule ref="category/java/errorprone.xml/FinalizeDoesNotCallSuperFinalize"/>
 	<rule ref="category/java/errorprone.xml/FinalizeOnlyCallsSuperFinalize"/>
@@ -297,7 +286,7 @@
 	<rule ref="category/java/errorprone.xml/MissingSerialVersionUID"/>
 	<rule ref="category/java/errorprone.xml/MissingStaticMethodInNonInstantiatableClass"/>
 	<rule ref="category/java/errorprone.xml/MoreThanOneLogger"/>
-	<rule ref="category/java/errorprone.xml/NonCaseLabelInSwitchStatement"/>
+	<rule ref="category/java/errorprone.xml/NonCaseLabelInSwitch"/>
 	<rule ref="category/java/errorprone.xml/NonStaticInitializer"/>
 	<rule ref="category/java/errorprone.xml/NullAssignment"/>
 	<rule ref="category/java/errorprone.xml/OverrideBothEqualsAndHashcode"/>
@@ -321,7 +310,6 @@
 	<rule ref="category/java/errorprone.xml/UnusedNullCheckInEquals"/>
 	<rule ref="category/java/errorprone.xml/UseCorrectExceptionLogging"/>
 	<rule ref="category/java/errorprone.xml/UseEqualsToCompareStrings"/>
-	<rule ref="category/java/errorprone.xml/UselessOperationOnImmutable"/>
 	<rule ref="category/java/errorprone.xml/UseLocaleWithCaseConversions"/>
 	<rule ref="category/java/errorprone.xml/UseProperClassLoader"/>
 	<rule ref="category/java/multithreading.xml/AvoidSynchronizedAtMethodLevel"/>
@@ -355,7 +343,7 @@
 	<rule ref="category/java/performance.xml/RedundantFieldInitializer"/>
 	<rule ref="category/java/performance.xml/StringInstantiation"/>
 	<rule ref="category/java/performance.xml/StringToString"/>
-	<rule ref="category/java/performance.xml/TooFewBranchesForASwitchStatement"/>
+	<rule ref="category/java/performance.xml/TooFewBranchesForSwitch"/>
 	<rule ref="category/java/performance.xml/UseArrayListInsteadOfVector"/>
 	<rule ref="category/java/performance.xml/UseArraysAsList"/>
 	<rule ref="category/java/performance.xml/UseIndexOfChar"/>

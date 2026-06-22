@@ -44,10 +44,11 @@
 	</scm>
 
 	<properties>
-		<junit.version>5.10.2</junit.version>
-		<spotbugs.version>4.8.3</spotbugs.version>
+		<junit.version>6.1.0</junit.version>
+		<spotbugs.version>4.9.8</spotbugs.version>
+		<log4j.version>2.24.2</log4j.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.release>21</maven.compiler.release>
+		<maven.compiler.release>25</maven.compiler.release>
 		<gpg.skip>true</gpg.skip>
 	</properties>
 
@@ -66,6 +67,12 @@
 	<dependencies>
 
 		<dependency>
+			<groupId>com.sitepark.ies</groupId>
+			<artifactId>ies-shared-kernel</artifactId>
+			<version>1.1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
 			<groupId>jakarta.inject</groupId>
 			<artifactId>jakarta.inject-api</artifactId>
 			<version>2.0.1</version>
@@ -74,7 +81,7 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
-			<version>2.24.2</version>
+			<version>${log4j.version}</version>
 		</dependency>
 
 		<dependency>
@@ -98,11 +105,11 @@
 		</dependency>
 
 		<!--
-			hard decision, see:
-			https://stackoverflow.com/questions/4963300/which-notnull-java-annotation-should-i-use
-			https://www.beyondjava.net/getting-rid-of-the-nullpointerexception-in-2020#what_about_jsr305
-			https://github.com/spotbugs/spotbugs/issues/471#issuecomment-338806092
-		-->
+            hard decision, see:
+            https://stackoverflow.com/questions/4963300/which-notnull-java-annotation-should-i-use
+            https://www.beyondjava.net/getting-rid-of-the-nullpointerexception-in-2020#what_about_jsr305
+            https://github.com/spotbugs/spotbugs/issues/471#issuecomment-338806092
+        -->
 		<dependency>
 			<groupId>org.eclipse.jdt</groupId>
 			<artifactId>org.eclipse.jdt.annotation</artifactId>
@@ -112,21 +119,28 @@
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
-			<version>4.8.6</version>
+			<version>${spotbugs.version}</version>
 			<optional>true</optional>
+			<exclusions>
+				<!-- jsr305 is an unused, filename-based automodule; exclude it. -->
+				<exclusion>
+					<groupId>com.google.code.findbugs</groupId>
+					<artifactId>jsr305</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!--
-			Wirklich dependencies zu thirdparty im core?
-			Oder lieber "Java Util Logging" mit "Log4j JDK Logging Adapter"
-			https://logging.apache.org/log4j/2.x/log4j-jul/index.html
+            Wirklich dependencies zu thirdparty im core?
+            Oder lieber "Java Util Logging" mit "Log4j JDK Logging Adapter"
+            https://logging.apache.org/log4j/2.x/log4j-jul/index.html
 
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>2.14.0</version>
-		</dependency>
-		-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.14.0</version>
+        </dependency>
+        -->
 
 		<!-- Test-Dependencies -->
 		<dependency>
@@ -148,10 +162,9 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>5.12.0</version>
+			<version>5.23.0</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>nl.jqno.equalsverifier</groupId>
 			<artifactId>equalsverifier</artifactId>
@@ -162,6 +175,12 @@
 			<groupId>com.jparams</groupId>
 			<artifactId>to-string-verifier</artifactId>
 			<version>1.4.8</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -178,16 +197,31 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.8.1</version>
+				<executions>
+					<execution>
+						<id>get-agent-paths</id>
+						<goals>
+							<goal>properties</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.2.5</version>
+				<configuration>
+					<!-- Load Mockito as a java agent instead of self-attaching at
+					     runtime; -Xshare:off avoids the related CDS warning. -->
+					<argLine>-javaagent:${org.mockito:mockito-core:jar} -Xshare:off</argLine>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<version>3.3.0</version>
-				<configuration>
-					<doclint>all,-missing</doclint>
-				</configuration>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -201,6 +235,9 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>3.6.3</version>
+				<configuration>
+					<doclint>all,-missing</doclint>
+				</configuration>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -226,7 +263,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>3.3.1</version>
 				<configuration>
 					<scmCommentPrefix>ci(release):</scmCommentPrefix>
 					<tagNameFormat>@{project.version}</tagNameFormat>
@@ -235,7 +272,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.4.1</version>
+				<version>3.6.3</version>
 				<dependencies>
 					<dependency>
 						<groupId>io.github.thefolle</groupId>
@@ -251,12 +288,12 @@
 						</goals>
 						<configuration>
 							<rules>
-								<banDuplicatePomDependencyVersions></banDuplicatePomDependencyVersions>
+								<banDuplicatePomDependencyVersions/>
 								<requireMavenVersion>
 									<version>3.8</version>
 								</requireMavenVersion>
 								<requireJavaVersion>
-									<version>21</version>
+									<version>25</version>
 								</requireJavaVersion>
 							</rules>
 						</configuration>
@@ -273,7 +310,7 @@
 									<failWhenParentIsSnapshot>false</failWhenParentIsSnapshot>
 									<message>No Snapshots Allowed!</message>
 								</requireReleaseDeps>
-								<requireReleaseDepsInPlugins implementation="org.apache.maven.enforcer.rule.requireReleaseDepsInPlugins"></requireReleaseDepsInPlugins>
+								<requireReleaseDepsInPlugins implementation="org.apache.maven.enforcer.rule.requireReleaseDepsInPlugins"/>
 							</rules>
 							<fail>true</fail>
 						</configuration>
@@ -283,7 +320,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.12</version>
+				<version>0.8.14</version>
 				<executions>
 					<execution>
 						<goals>
@@ -303,7 +340,7 @@
 										<limit>
 											<counter>LINE</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.0</minimum>
+											<minimum>0.8</minimum>
 										</limit>
 									</limits>
 								</rule>
@@ -322,7 +359,7 @@
 			<plugin>
 				<groupId>com.diffplug.spotless</groupId>
 				<artifactId>spotless-maven-plugin</artifactId>
-				<version>2.43.0</version>
+				<version>3.6.0</version>
 				<configuration>
 					<!-- define a language-specific format -->
 					<java>
@@ -332,12 +369,11 @@
 
 						<!-- apply a specific flavor of google-java-format and reflow long strings -->
 						<googleJavaFormat>
-							<version>1.25.2</version>
+							<version>1.31.0</version>
 							<style>GOOGLE</style>
 							<reflowLongStrings>true</reflowLongStrings>
 							<formatJavadoc>false</formatJavadoc>
 						</googleJavaFormat>
-						<formatAnnotations></formatAnnotations>
 					</java>
 					<pom>
 						<!-- These are the defaults, you can override if you want -->
@@ -364,7 +400,7 @@
 			<plugin>
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
-				<version>4.8.4.0</version>
+				<version>4.9.8.3</version>
 				<configuration>
 					<effort>Max</effort>
 					<threshold>Low</threshold>
@@ -374,11 +410,11 @@
 				<!-- https://spotbugs.readthedocs.io/en/latest/maven.html -->
 				<dependencies>
 					<!-- overwrite dependency on spotbugs if you want to specify the version of
-					spotbugs -->
+                    spotbugs -->
 					<dependency>
 						<groupId>com.github.spotbugs</groupId>
 						<artifactId>spotbugs</artifactId>
-						<version>4.8.5</version>
+						<version>4.9.8</version>
 					</dependency>
 				</dependencies>
 				<executions>
@@ -393,14 +429,14 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
-				<version>3.21.2</version>
+				<version>3.28.0</version>
 				<configuration>
 					<rulesets>
 						<ruleset>pmd-ruleset.xml</ruleset>
 					</rulesets>
 					<includeTests>true</includeTests>
 					<failOnViolation>true</failOnViolation>
-					<failurePriority>5</failurePriority>
+					<failurePriority>1</failurePriority>
 					<printFailingErrors>true</printFailingErrors>
 					<linkXRef>false</linkXRef>
 				</configuration>

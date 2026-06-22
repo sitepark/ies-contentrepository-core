@@ -1,7 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity.query.filter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,7 +17,6 @@ public class AnchorList implements Filter {
     this.anchorList = List.of(anchorList);
   }
 
-  @SuppressFBWarnings("EI_EXPOSE_REP")
   public List<com.sitepark.ies.contentrepository.core.domain.entity.Anchor> getAnchorList() {
     return this.anchorList;
   }
