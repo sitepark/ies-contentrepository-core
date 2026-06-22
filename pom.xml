@@ -47,7 +47,7 @@
 		<junit.version>6.1.0</junit.version>
 		<spotbugs.version>4.8.3</spotbugs.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.release>21</maven.compiler.release>
+		<maven.compiler.release>25</maven.compiler.release>
 		<gpg.skip>true</gpg.skip>
 	</properties>
 
@@ -288,7 +288,7 @@
 									<version>3.8</version>
 								</requireMavenVersion>
 								<requireJavaVersion>
-									<version>21</version>
+									<version>25</version>
 								</requireJavaVersion>
 							</rules>
 						</configuration>
