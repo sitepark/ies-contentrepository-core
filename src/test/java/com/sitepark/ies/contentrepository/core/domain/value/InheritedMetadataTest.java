@@ -18,14 +18,21 @@ class InheritedMetadataTest {
 
   @Test
   void testSiteId() {
-    InheritedMetadata metadata = new InheritedMetadata("123", Locale.GERMAN);
+    InheritedMetadata metadata = new InheritedMetadata("123", null, Locale.GERMAN);
 
     assertEquals("123", metadata.siteId(), "unexpected siteId");
   }
 
   @Test
+  void testMicrositeId() {
+    InheritedMetadata metadata = new InheritedMetadata("123", "345", Locale.GERMAN);
+
+    assertEquals("345", metadata.micrositeId(), "unexpected siteId");
+  }
+
+  @Test
   void testLocale() {
-    InheritedMetadata metadata = new InheritedMetadata("123", Locale.GERMAN);
+    InheritedMetadata metadata = new InheritedMetadata("123", null, Locale.GERMAN);
 
     assertEquals(Locale.GERMAN, metadata.locale(), "unexpected locale");
   }
