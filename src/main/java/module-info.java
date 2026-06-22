@@ -1,5 +1,7 @@
 module com.sitepark.ies.contentrepository.core {
   exports com.sitepark.ies.contentrepository.core.domain.entity;
+  exports com.sitepark.ies.contentrepository.core.domain.value;
+  exports com.sitepark.ies.contentrepository.core.domain.service;
   exports com.sitepark.ies.contentrepository.core.domain.value.permission;
   exports com.sitepark.ies.contentrepository.core.usecase.query.filter;
   exports com.sitepark.ies.contentrepository.core.usecase.query.sort;
