@@ -17,10 +17,13 @@ module com.sitepark.ies.contentrepository.core {
   requires com.fasterxml.jackson.datatype.jdk8;
   requires org.apache.logging.log4j;
   requires com.fasterxml.jackson.datatype.jsr310;
+  requires com.sitepark.ies.sharedkernel;
 
   opens com.sitepark.ies.contentrepository.core.domain.entity;
   opens com.sitepark.ies.contentrepository.core.domain.entity.query.filter;
   opens com.sitepark.ies.contentrepository.core.domain.entity.query.sort;
   opens com.sitepark.ies.contentrepository.core.domain.entity.query.limit;
   opens com.sitepark.ies.contentrepository.core.domain.entity.query;
+
+  exports com.sitepark.ies.contentrepository.core.domain.service;
 }

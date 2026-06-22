@@ -1,9 +1,9 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
 import com.sitepark.ies.contentrepository.core.domain.exception.AccessDeniedException;
+import com.sitepark.ies.contentrepository.core.domain.service.InheritedMetadataResolver;
 import com.sitepark.ies.contentrepository.core.domain.value.InheritedMetadata;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
-import com.sitepark.ies.contentrepository.core.port.InheritedMetadataResolver;
 import jakarta.inject.Inject;
 import java.util.Objects;
 

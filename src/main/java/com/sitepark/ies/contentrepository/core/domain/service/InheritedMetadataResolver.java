@@ -1,4 +1,4 @@
-package com.sitepark.ies.contentrepository.core.port;
+package com.sitepark.ies.contentrepository.core.domain.service;
 
 import com.sitepark.ies.contentrepository.core.domain.value.InheritedMetadata;
 
