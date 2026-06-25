@@ -3,7 +3,8 @@ name: (📡) Verify
 on:
   push:
     branches-ignore:
-    - 'main'
+      - 'main'
+      - "support/*"
   workflow_dispatch:
 
 jobs:
