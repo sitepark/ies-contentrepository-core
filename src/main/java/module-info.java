@@ -26,4 +26,5 @@ module com.sitepark.ies.contentrepository.core {
   opens com.sitepark.ies.contentrepository.core.domain.entity.query;
 
   exports com.sitepark.ies.contentrepository.core.domain.service;
+  exports com.sitepark.ies.contentrepository.core.api;
 }
