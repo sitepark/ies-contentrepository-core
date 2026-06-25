@@ -1,7 +1,6 @@
 module com.sitepark.ies.contentrepository.core {
   exports com.sitepark.ies.contentrepository.core.domain.entity;
   exports com.sitepark.ies.contentrepository.core.domain.value;
-  exports com.sitepark.ies.contentrepository.core.domain.service;
   exports com.sitepark.ies.contentrepository.core.domain.value.permission;
   exports com.sitepark.ies.contentrepository.core.usecase.query.filter;
   exports com.sitepark.ies.contentrepository.core.usecase.query.sort;
@@ -10,6 +9,7 @@ module com.sitepark.ies.contentrepository.core {
   exports com.sitepark.ies.contentrepository.core.domain.exception;
   exports com.sitepark.ies.contentrepository.core.port;
   exports com.sitepark.ies.contentrepository.core.usecase;
+  exports com.sitepark.ies.contentrepository.core.api;
 
   requires jakarta.inject;
   requires com.github.spotbugs.annotations;
