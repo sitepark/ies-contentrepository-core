@@ -64,6 +64,7 @@ public record UrlMapping(
   }
 
   @JsonPOJOBuilder(withPrefix = "")
+  @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static class Builder {
     private String id;
     private String siteId;

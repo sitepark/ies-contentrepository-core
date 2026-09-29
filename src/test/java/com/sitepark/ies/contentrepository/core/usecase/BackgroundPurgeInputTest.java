@@ -1,18 +1,14 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
-@SuppressFBWarnings({
-  "PI_DO_NOT_REUSE_PUBLIC_IDENTIFIERS_CLASS_NAMES",
-  "NP_NULL_PARAM_DEREF_NONVIRTUAL",
-  "NP_NULL_PARAM_DEREF_ALL_TARGETS_DANGEROUS"
-})
 class BackgroundPurgeInputTest {
 
   @Test

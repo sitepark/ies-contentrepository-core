@@ -2,7 +2,11 @@ package com.sitepark.ies.contentrepository.core.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.ChangeSet;
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
@@ -11,7 +15,13 @@ import com.sitepark.ies.contentrepository.core.domain.exception.EntityLockedExce
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityNotFoundException;
 import com.sitepark.ies.contentrepository.core.domain.exception.ParentMissingException;
 import com.sitepark.ies.contentrepository.core.domain.service.ContentDiffer;
-import com.sitepark.ies.contentrepository.core.port.*;
+import com.sitepark.ies.contentrepository.core.port.AccessControl;
+import com.sitepark.ies.contentrepository.core.port.ContentRepository;
+import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
+import com.sitepark.ies.contentrepository.core.port.HistoryManager;
+import com.sitepark.ies.contentrepository.core.port.IdGenerator;
+import com.sitepark.ies.contentrepository.core.port.SearchIndex;
+import com.sitepark.ies.contentrepository.core.port.VersioningManager;
 import com.sitepark.ies.sharedkernel.security.AccessDeniedException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;

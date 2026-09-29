@@ -55,6 +55,7 @@ public final class RecycleBinItemFilter {
     return new Builder(this);
   }
 
+  @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static final class Builder {
 
     private LocalDateTime from;

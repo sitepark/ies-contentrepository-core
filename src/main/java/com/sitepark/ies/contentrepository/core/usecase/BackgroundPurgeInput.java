@@ -1,7 +1,8 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
 import com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter;
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
 
 public final class BackgroundPurgeInput {
 
@@ -34,8 +35,7 @@ public final class BackgroundPurgeInput {
       return false;
     }
 
-    return Objects.equals(this.filter, that.filter)
-        && Objects.equals(this.forceLock, that.forceLock);
+    return Objects.equals(this.filter, that.filter) && this.forceLock == that.forceLock;
   }
 
   public static Builder builder() {
@@ -46,6 +46,7 @@ public final class BackgroundPurgeInput {
     return new Builder(this);
   }
 
+  @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static final class Builder {
 
     private Filter filter;

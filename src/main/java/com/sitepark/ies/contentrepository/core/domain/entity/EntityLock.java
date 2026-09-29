@@ -60,7 +60,7 @@ public final class EntityLock implements Serializable {
         && Objects.equals(this.userId, lock.userId)
         && Objects.equals(this.created, lock.created)
         && Objects.equals(this.lastAccess, lock.lastAccess)
-        && Objects.equals(this.ttl, lock.ttl);
+        && this.ttl == lock.ttl;
   }
 
   public static Builder builder() {
@@ -89,6 +89,7 @@ public final class EntityLock implements Serializable {
         + '}';
   }
 
+  @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static class Builder {
 
     private String entityId;

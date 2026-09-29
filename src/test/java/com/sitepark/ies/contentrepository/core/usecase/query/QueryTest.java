@@ -1,22 +1,18 @@
 package com.sitepark.ies.contentrepository.core.usecase.query;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter;
 import com.sitepark.ies.contentrepository.core.usecase.query.limit.Limit;
 import com.sitepark.ies.contentrepository.core.usecase.query.sort.SortCriteria;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;
 import java.util.Optional;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
-@SuppressFBWarnings({
-  "PI_DO_NOT_REUSE_PUBLIC_IDENTIFIERS_CLASS_NAMES",
-  "NP_NULL_PARAM_DEREF_NONVIRTUAL",
-  "NP_NULL_PARAM_DEREF_ALL_TARGETS_DANGEROUS"
-})
 class QueryTest {
 
   @Test

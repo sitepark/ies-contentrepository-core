@@ -1,7 +1,14 @@
 package com.sitepark.ies.contentrepository.core.usecase.query.filter;
 
-import static com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter.anchor;
+import static com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter.and;
+import static com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter.idList;
+import static com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter.not;
+import static com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter.or;
+import static com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter.parent;
+import static com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter.root;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

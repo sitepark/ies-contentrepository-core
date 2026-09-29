@@ -1,6 +1,8 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
+import java.util.Objects;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
 public class EntityTreeOutputter {
 
@@ -19,14 +21,17 @@ public class EntityTreeOutputter {
     return this.toString(indent, null);
   }
 
-  public String toString(int indent, String parent) {
+  public String toString(int indent, @Nullable String parent) {
     java.lang.StringBuilder b = new java.lang.StringBuilder();
     this.toString(indent, parent, new java.lang.StringBuilder(), b);
     return b.toString();
   }
 
   private void toString(
-      int indent, String parent, java.lang.StringBuilder indentPrefix, java.lang.StringBuilder b) {
+      int indent,
+      @Nullable String parent,
+      java.lang.StringBuilder indentPrefix,
+      java.lang.StringBuilder b) {
 
     if (parent == null) {
       Set<String> roots = this.tree.getRootIdList();
@@ -38,7 +43,8 @@ public class EntityTreeOutputter {
 
       if (this.tree.hasChildren(parent)) {
         indentPrefix.append(" ".repeat(Math.max(0, indent)));
-        for (String child : this.tree.children.get(parent)) {
+        for (String child :
+            Objects.requireNonNull(this.tree.children.get(parent), "no children for parent")) {
           this.toString(indent, child, indentPrefix, b);
         }
         indentPrefix.delete(indentPrefix.length() - indent, indentPrefix.length());

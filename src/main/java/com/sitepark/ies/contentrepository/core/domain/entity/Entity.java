@@ -7,15 +7,16 @@ import com.sitepark.ies.sharedkernel.base.Identifier;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.Optional;
+import org.jspecify.annotations.Nullable;
 
 @JsonDeserialize(builder = Entity.EntityBuilder.class)
 public class Entity {
 
-  private final String id;
-  private final Anchor anchor;
-  private final String name;
-  private final String parent;
-  private final OffsetDateTime version;
+  private final @Nullable String id;
+  private final @Nullable Anchor anchor;
+  private final @Nullable String name;
+  private final @Nullable String parent;
+  private final @Nullable OffsetDateTime version;
   private final boolean group;
 
   protected Entity(Builder<?> builder) {
@@ -89,7 +90,7 @@ public class Entity {
         && Objects.equals(this.name, that.name)
         && Objects.equals(this.parent, that.parent)
         && Objects.equals(this.version, that.version)
-        && Objects.equals(this.group, that.group);
+        && this.group == that.group;
   }
 
   @Override
@@ -115,11 +116,11 @@ public class Entity {
 
   public abstract static class Builder<B extends Builder<B>> {
 
-    private String id;
-    private Anchor anchor;
-    private String name;
-    private String parent;
-    private OffsetDateTime version;
+    private @Nullable String id;
+    private @Nullable Anchor anchor;
+    private @Nullable String name;
+    private @Nullable String parent;
+    private @Nullable OffsetDateTime version;
     private boolean group;
 
     protected Builder() {}

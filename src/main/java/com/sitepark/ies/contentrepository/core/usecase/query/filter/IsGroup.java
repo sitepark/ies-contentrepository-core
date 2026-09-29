@@ -24,7 +24,7 @@ public final class IsGroup implements Filter {
 
   @Override
   public boolean equals(Object o) {
-    return (o instanceof IsGroup that) && Objects.equals(this.group, that.group);
+    return (o instanceof IsGroup that) && this.group == that.group;
   }
 
   @Override

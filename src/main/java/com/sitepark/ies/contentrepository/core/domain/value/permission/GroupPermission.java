@@ -114,6 +114,7 @@ public final class GroupPermission implements Permission {
 
   @JsonPOJOBuilder(withPrefix = "")
   @JsonIgnoreProperties({"type"})
+  @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static final class Builder {
 
     private String groupId;
