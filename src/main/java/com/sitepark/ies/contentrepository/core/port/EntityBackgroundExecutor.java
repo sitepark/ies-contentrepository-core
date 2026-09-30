@@ -5,6 +5,8 @@ import com.sitepark.ies.contentrepository.core.domain.entity.EntityBackgroundExe
 @SuppressWarnings("PMD.ImplicitFunctionalInterface")
 public interface EntityBackgroundExecutor {
   /**
+   * Starts the background execution.
+   *
    * @return BackgroundExecution ID that can be used to track the progress
    */
   String execute(EntityBackgroundExecution execution);

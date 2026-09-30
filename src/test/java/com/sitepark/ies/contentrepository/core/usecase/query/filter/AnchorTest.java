@@ -1,7 +1,5 @@
 package com.sitepark.ies.contentrepository.core.usecase.query.filter;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import nl.jqno.equalsverifier.EqualsVerifier;

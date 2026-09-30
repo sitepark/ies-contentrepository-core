@@ -5,7 +5,13 @@ import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
 import com.sitepark.ies.contentrepository.core.domain.entity.HistoryEntryType;
 import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItem;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityLockedException;
-import com.sitepark.ies.contentrepository.core.port.*;
+import com.sitepark.ies.contentrepository.core.port.AccessControl;
+import com.sitepark.ies.contentrepository.core.port.ContentRepository;
+import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
+import com.sitepark.ies.contentrepository.core.port.HistoryManager;
+import com.sitepark.ies.contentrepository.core.port.Publisher;
+import com.sitepark.ies.contentrepository.core.port.RecycleBin;
+import com.sitepark.ies.contentrepository.core.port.SearchIndex;
 import com.sitepark.ies.sharedkernel.security.AccessDeniedException;
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -38,6 +44,8 @@ public final class RemoveEntity {
     this.publisher = publisher;
   }
 
+  @SuppressWarnings(
+      "JavaTimeDefaultTimeZone") // history timestamps intentionally use the system zone
   public void remove(String id) {
 
     if (!this.accessControl.isEntityRemovable(id)) {

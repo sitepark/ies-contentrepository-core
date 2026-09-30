@@ -4,7 +4,11 @@ import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.domain.entity.HistoryEntryType;
 import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItem;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityNotFoundException;
-import com.sitepark.ies.contentrepository.core.port.*;
+import com.sitepark.ies.contentrepository.core.port.AccessControl;
+import com.sitepark.ies.contentrepository.core.port.ContentRepository;
+import com.sitepark.ies.contentrepository.core.port.HistoryManager;
+import com.sitepark.ies.contentrepository.core.port.RecycleBin;
+import com.sitepark.ies.contentrepository.core.port.SearchIndex;
 import com.sitepark.ies.sharedkernel.security.AccessDeniedException;
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -34,10 +38,14 @@ public class RecoverEntity {
     this.searchIndex = searchIndex;
   }
 
+  @SuppressWarnings(
+      "JavaTimeDefaultTimeZone") // history timestamps intentionally use the system zone
   public void recover(String id) {
 
     Optional<RecycleBinItem> recycleBinItem = this.recycleBin.get(id);
-    recycleBinItem.orElseThrow(() -> new EntityNotFoundException(id));
+    if (recycleBinItem.isEmpty()) {
+      throw new EntityNotFoundException(id);
+    }
 
     if (!this.accessControl.isGroupCreatable(recycleBinItem.get().getParentId())) {
       throw new AccessDeniedException(

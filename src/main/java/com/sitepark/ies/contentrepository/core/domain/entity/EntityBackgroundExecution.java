@@ -1,6 +1,11 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class EntityBackgroundExecution {
 
@@ -61,6 +66,7 @@ public class EntityBackgroundExecution {
     return new Builder();
   }
 
+  @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static class Builder {
 
     private String[] topic;

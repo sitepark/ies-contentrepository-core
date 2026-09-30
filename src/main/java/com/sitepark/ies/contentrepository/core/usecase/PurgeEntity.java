@@ -1,7 +1,16 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
 import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmptyException;
-import com.sitepark.ies.contentrepository.core.port.*;
+import com.sitepark.ies.contentrepository.core.port.AccessControl;
+import com.sitepark.ies.contentrepository.core.port.ContentRepository;
+import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
+import com.sitepark.ies.contentrepository.core.port.ExtensionsNotifier;
+import com.sitepark.ies.contentrepository.core.port.HistoryManager;
+import com.sitepark.ies.contentrepository.core.port.MediaReferenceManager;
+import com.sitepark.ies.contentrepository.core.port.Publisher;
+import com.sitepark.ies.contentrepository.core.port.RecycleBin;
+import com.sitepark.ies.contentrepository.core.port.SearchIndex;
+import com.sitepark.ies.contentrepository.core.port.VersioningManager;
 import com.sitepark.ies.sharedkernel.security.AccessDeniedException;
 import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
@@ -31,6 +40,7 @@ public final class PurgeEntity {
 
   private static final Logger LOGGER = LogManager.getLogger();
 
+  @SuppressWarnings("PMD.ExcessiveParameterList") // constructor injection of collaborators
   @Inject
   PurgeEntity(
       ContentRepository repository,

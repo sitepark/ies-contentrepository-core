@@ -2,12 +2,25 @@ package com.sitepark.ies.contentrepository.core.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityLockedException;
 import com.sitepark.ies.contentrepository.core.domain.exception.GroupNotEmptyException;
-import com.sitepark.ies.contentrepository.core.port.*;
+import com.sitepark.ies.contentrepository.core.port.AccessControl;
+import com.sitepark.ies.contentrepository.core.port.ContentRepository;
+import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
+import com.sitepark.ies.contentrepository.core.port.ExtensionsNotifier;
+import com.sitepark.ies.contentrepository.core.port.HistoryManager;
+import com.sitepark.ies.contentrepository.core.port.MediaReferenceManager;
+import com.sitepark.ies.contentrepository.core.port.Publisher;
+import com.sitepark.ies.contentrepository.core.port.RecycleBin;
+import com.sitepark.ies.contentrepository.core.port.SearchIndex;
+import com.sitepark.ies.contentrepository.core.port.VersioningManager;
 import com.sitepark.ies.sharedkernel.security.AccessDeniedException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;

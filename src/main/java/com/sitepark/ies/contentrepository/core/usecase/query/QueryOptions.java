@@ -21,7 +21,7 @@ public class QueryOptions {
 
   @Override
   public final boolean equals(Object o) {
-    return (o instanceof QueryOptions that) && Objects.equals(this.showHidden, that.showHidden);
+    return (o instanceof QueryOptions that) && this.showHidden == that.showHidden;
   }
 
   public static Builder builder() {

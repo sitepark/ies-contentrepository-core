@@ -2,12 +2,10 @@ package com.sitepark.ies.contentrepository.core.domain.value;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Locale;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
-@SuppressFBWarnings("PI_DO_NOT_REUSE_PUBLIC_IDENTIFIERS_CLASS_NAMES")
 class InheritedMetadataTest {
 
   @Test

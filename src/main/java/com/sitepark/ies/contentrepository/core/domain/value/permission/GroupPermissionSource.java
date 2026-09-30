@@ -70,6 +70,7 @@ public final class GroupPermissionSource {
   }
 
   @JsonPOJOBuilder(withPrefix = "")
+  @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static class Builder {
     private final Set<String> roleIds = new HashSet<>();
     private String privilegeId;

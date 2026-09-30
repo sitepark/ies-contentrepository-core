@@ -65,6 +65,7 @@ public class EntityBackgroundOperation {
     return new Builder();
   }
 
+  @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static class Builder {
 
     private BackgroundOperationKey key;

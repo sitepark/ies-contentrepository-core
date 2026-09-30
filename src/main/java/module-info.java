@@ -1,3 +1,6 @@
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 module com.sitepark.ies.contentrepository.core {
   exports com.sitepark.ies.contentrepository.core.domain.entity;
   exports com.sitepark.ies.contentrepository.core.domain.value;
@@ -11,8 +14,8 @@ module com.sitepark.ies.contentrepository.core {
   exports com.sitepark.ies.contentrepository.core.usecase;
   exports com.sitepark.ies.contentrepository.core.api;
 
+  requires static org.jspecify;
   requires jakarta.inject;
-  requires com.github.spotbugs.annotations;
   requires com.fasterxml.jackson.datatype.jdk8;
   requires com.fasterxml.jackson.datatype.jsr310;
   requires com.sitepark.ies.sharedkernel;

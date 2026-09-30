@@ -5,7 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter;
 import com.sitepark.ies.contentrepository.core.usecase.query.limit.Limit;
 import com.sitepark.ies.contentrepository.core.usecase.query.sort.SortCriteria;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @JsonDeserialize(builder = Query.Builder.class)
 public final class Query {
@@ -57,6 +62,8 @@ public final class Query {
   }
 
   /**
+   * Tells whether the other object may be equal to this query.
+   *
    * @see <a href="https://www.artima.com/articles/how-to-write-an-equality-method-in-java">How to
    *     Write an Equality Method in Java </a>
    */
@@ -73,6 +80,7 @@ public final class Query {
   }
 
   @JsonPOJOBuilder(withPrefix = "")
+  @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static class Builder {
 
     protected Filter filter;

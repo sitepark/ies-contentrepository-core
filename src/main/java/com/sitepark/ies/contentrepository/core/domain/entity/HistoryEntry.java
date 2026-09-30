@@ -70,7 +70,7 @@ public final class HistoryEntry implements Serializable {
     return Objects.equals(this.entityId, that.entityId)
         && Objects.equals(this.initiator, that.initiator)
         && Objects.equals(this.userId, that.userId)
-        && Objects.equals(this.timestamp, that.timestamp)
+        && this.timestamp == that.timestamp
         && Objects.equals(this.type, that.type)
         && Objects.equals(this.comment, that.comment);
   }
@@ -103,6 +103,7 @@ public final class HistoryEntry implements Serializable {
     return new Builder(this);
   }
 
+  @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static final class Builder {
 
     private String entityId;

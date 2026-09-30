@@ -1,10 +1,18 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.RecycleBinItem;
-import com.sitepark.ies.contentrepository.core.port.*;
+import com.sitepark.ies.contentrepository.core.port.AccessControl;
+import com.sitepark.ies.contentrepository.core.port.ContentRepository;
+import com.sitepark.ies.contentrepository.core.port.HistoryManager;
+import com.sitepark.ies.contentrepository.core.port.RecycleBin;
+import com.sitepark.ies.contentrepository.core.port.SearchIndex;
 import com.sitepark.ies.sharedkernel.security.AccessDeniedException;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;

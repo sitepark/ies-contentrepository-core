@@ -1,6 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.exception;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
 import org.junit.jupiter.api.Test;

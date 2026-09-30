@@ -1,14 +1,22 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
+import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings("PMD.UseConcurrentHashMap")
 public final class EntityTree {
 
-  final Map<String, Set<String>> children = new HashMap<>();
+  final Map<@Nullable String, Set<String>> children = new HashMap<>();
 
-  final Map<String, String> parents = new HashMap<>();
+  final Map<String, @Nullable String> parents = new HashMap<>();
 
   final Map<String, Entity> index = new HashMap<>();
 
@@ -16,7 +24,7 @@ public final class EntityTree {
 
   @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
   public EntityTree(EntityTree tree) {
-    for (Map.Entry<String, Set<String>> entry : tree.children.entrySet()) {
+    for (Map.Entry<@Nullable String, Set<String>> entry : tree.children.entrySet()) {
       this.children.put(entry.getKey(), new HashSet<>(entry.getValue()));
     }
     this.parents.putAll(tree.parents);
@@ -80,12 +88,13 @@ public final class EntityTree {
     this.index.put(entity.getId().get(), entity);
   }
 
-  public Entity get(String id) {
+  public @Nullable Entity get(String id) {
     return this.index.get(id);
   }
 
   public List<Entity> getChildren(String parent) {
-    Set<String> children = this.children.get(parent);
+    Set<String> children =
+        Objects.requireNonNull(this.children.get(parent), "no children for parent " + parent);
     return children.stream().map(this.index::get).collect(Collectors.toList());
   }
 

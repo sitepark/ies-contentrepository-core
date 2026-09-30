@@ -8,7 +8,13 @@ import com.sitepark.ies.contentrepository.core.domain.exception.EntityLockedExce
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityNotFoundException;
 import com.sitepark.ies.contentrepository.core.domain.exception.ParentMissingException;
 import com.sitepark.ies.contentrepository.core.domain.service.ContentDiffer;
-import com.sitepark.ies.contentrepository.core.port.*;
+import com.sitepark.ies.contentrepository.core.port.AccessControl;
+import com.sitepark.ies.contentrepository.core.port.ContentRepository;
+import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
+import com.sitepark.ies.contentrepository.core.port.HistoryManager;
+import com.sitepark.ies.contentrepository.core.port.IdGenerator;
+import com.sitepark.ies.contentrepository.core.port.SearchIndex;
+import com.sitepark.ies.contentrepository.core.port.VersioningManager;
 import com.sitepark.ies.sharedkernel.security.AccessDeniedException;
 import java.util.Optional;
 
@@ -53,7 +59,9 @@ public final class StoreEntity {
   private String create(Entity newEntity) {
 
     Optional<String> parent = newEntity.getParent();
-    parent.orElseThrow(ParentMissingException::new);
+    if (parent.isEmpty()) {
+      throw new ParentMissingException();
+    }
 
     String parentId = parent.get();
 
@@ -80,14 +88,16 @@ public final class StoreEntity {
 
   private String update(Entity updateEntity) {
 
-    updateEntity
-        .getId()
-        .orElseThrow(() -> new IllegalArgumentException("Update failed, identifier missing"));
+    if (updateEntity.getId().isEmpty()) {
+      throw new IllegalArgumentException("Update failed, identifier missing");
+    }
 
     String id = updateEntity.getId().get();
 
     Optional<Entity> existsEntity = this.repository.get(id);
-    existsEntity.orElseThrow(() -> new EntityNotFoundException(id));
+    if (existsEntity.isEmpty()) {
+      throw new EntityNotFoundException(id);
+    }
 
     if (!this.accessControl.isEntityWritable(id)) {
       throw new AccessDeniedException("Not allowed to update entity " + id);
