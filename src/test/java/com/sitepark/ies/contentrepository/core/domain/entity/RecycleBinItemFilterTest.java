@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ class RecycleBinItemFilterTest {
 
   @Test
   void testSetFrom() {
-    LocalDateTime date = LocalDateTime.of(2023, 11, 3, 9, 33);
+    Instant date = Instant.parse("2023-11-03T09:33:00Z");
     RecycleBinItemFilter filter = RecycleBinItemFilter.builder().from(date).build();
 
     assertEquals(date, filter.getFrom().get(), "unexpected from");
@@ -32,7 +32,7 @@ class RecycleBinItemFilterTest {
 
   @Test
   void testSetTo() {
-    LocalDateTime date = LocalDateTime.of(2023, 11, 3, 9, 33);
+    Instant date = Instant.parse("2023-11-03T09:33:00Z");
     RecycleBinItemFilter filter = RecycleBinItemFilter.builder().to(date).build();
 
     assertEquals(date, filter.getTo().get(), "unexpected to");
@@ -69,8 +69,8 @@ class RecycleBinItemFilterTest {
   @Test
   void testToBuilder() {
 
-    LocalDateTime from = LocalDateTime.of(2023, 11, 3, 9, 33);
-    LocalDateTime to = LocalDateTime.of(2023, 12, 3, 9, 33);
+    Instant from = Instant.parse("2023-11-03T09:33:00Z");
+    Instant to = Instant.parse("2023-12-03T09:33:00Z");
     RecycleBinItemFilter filter =
         RecycleBinItemFilter.builder().from(from).to(to).user(123).build();
 

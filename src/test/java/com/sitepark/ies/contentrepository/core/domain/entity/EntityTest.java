@@ -11,65 +11,46 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
-@SuppressFBWarnings({
-  "PI_DO_NOT_REUSE_PUBLIC_IDENTIFIERS_CLASS_NAMES",
-  "NP_NULL_PARAM_DEREF_NONVIRTUAL",
-  "NP_NULL_PARAM_DEREF_ALL_TARGETS_DANGEROUS"
-})
 class EntityTest {
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
   void testEquals() {
-    EqualsVerifier.forClass(Entity.class).verify();
+    EqualsVerifier.forClass(Entity.class).withRedefinedSubclass(Entry.class).verify();
   }
 
   @Test
-  @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-  public void testToString() {
+  void testToString() {
     ToStringVerifier.forClass(Entity.class).withClassName(NameStyle.SIMPLE_NAME).verify();
   }
 
   @Test
   void testSetId() {
     Entity entity = Entity.builder().id("123").build();
-    assertEquals("123", entity.getId().get(), "unexpected id");
+    assertEquals("123", entity.getId().orElse(""), "unexpected id");
   }
 
   @Test
   void testSetIdWithNull() {
     assertThrows(
-        NullPointerException.class,
-        () -> {
-          Entity.builder().id(null);
-        },
-        "id should not be null");
+        NullPointerException.class, () -> Entity.builder().id(null), "id should not be null");
   }
 
   @Test
   void testSetIdWithZero() {
     assertThrows(
-        IllegalArgumentException.class,
-        () -> {
-          Entity.builder().id("0");
-        },
-        "id should not be zero");
+        IllegalArgumentException.class, () -> Entity.builder().id("0"), "id should not be zero");
   }
 
   @Test
   void testSetIdWithInvalidValid() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          Entity.builder().id("0x");
-        },
+        () -> Entity.builder().id("0x"),
         "id should not be invalid");
   }
 
@@ -82,48 +63,42 @@ class EntityTest {
   @Test
   void testSetAnchorAsString() {
     Entity entity = Entity.builder().anchor("abc").build();
-    assertEquals(Anchor.ofString("abc"), entity.getAnchor().get(), "unexpected anchor");
+    assertEquals(Anchor.ofString("abc"), entity.getAnchor().orElse(null), "unexpected anchor");
   }
 
   @Test
   void testSetAnchorWithNullString() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          Entity.builder().anchor((String) null);
-        },
+        () -> Entity.builder().anchor((String) null),
         "anchor should not be allowed to be null");
   }
 
   @Test
   void testSetAnchorAsAnchor() {
     Entity entity = Entity.builder().anchor(Anchor.ofString("abc")).build();
-    assertEquals(Anchor.ofString("abc"), entity.getAnchor().get(), "unexpected anchor");
+    assertEquals(Anchor.ofString("abc"), entity.getAnchor().orElse(null), "unexpected anchor");
   }
 
   @Test
   void testSetAnchorWithNullAnchor() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          Entity.builder().anchor((String) null);
-        },
+        () -> Entity.builder().anchor((String) null),
         "anchor should not be allowed to be null");
   }
 
   @Test
   void testSetName() {
     Entity entity = Entity.builder().name("abc").build();
-    assertEquals("abc", entity.getName().get(), "unexpected name");
+    assertEquals("abc", entity.getName().orElse(""), "unexpected name");
   }
 
   @Test
   void testSetNameWithNull() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          Entity.builder().name(null);
-        },
+        () -> Entity.builder().name(null),
         "name should not be allowed to be null");
   }
 
@@ -131,25 +106,21 @@ class EntityTest {
   void testSetNameWithBlank() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          Entity.builder().name(" ");
-        },
+        () -> Entity.builder().name(" "),
         "name should not be allowed to be blank");
   }
 
   @Test
   void testSetParent() {
     Entity entity = Entity.builder().parent("123").build();
-    assertEquals("123", entity.getParent().get(), "unexpected parent");
+    assertEquals("123", entity.getParent().orElse(""), "unexpected parent");
   }
 
   @Test
   void testSetParentWithNull() {
     assertThrows(
         NullPointerException.class,
-        () -> {
-          Entity.builder().parent(null);
-        },
+        () -> Entity.builder().parent(null),
         "parent should not be null");
   }
 
@@ -157,9 +128,7 @@ class EntityTest {
   void testSetParentWithZero() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          Entity.builder().parent("0");
-        },
+        () -> Entity.builder().parent("0"),
         "parent should not be zero");
   }
 
@@ -167,9 +136,7 @@ class EntityTest {
   void testSetParentWithInvalidValid() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          Entity.builder().parent("0x");
-        },
+        () -> Entity.builder().parent("0x"),
         "parent should not be invalid");
   }
 
@@ -181,15 +148,85 @@ class EntityTest {
 
   @Test
   void testSetVersion() {
-    OffsetDateTime version = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
+    Instant version = Instant.parse("2024-05-02T10:10:00Z");
     Entity entity = Entity.builder().version(version).build();
-    assertEquals(version, entity.getVersion().get(), "unexpected version");
+    assertEquals(version, entity.getVersion().orElse(null), "unexpected version");
   }
 
   @Test
   void testGetEmptyVersion() {
     Entity entity = Entity.builder().build();
     assertTrue(entity.getVersion().isEmpty(), "id optional should be empty");
+  }
+
+  @Test
+  void testSetCreated() {
+    Instant created = Instant.parse("2024-05-02T10:10:00Z");
+    Entity entity = Entity.builder().created(created).build();
+    assertEquals(created, entity.getCreated().orElse(null), "unexpected created");
+  }
+
+  @Test
+  void testSetCreatedBy() {
+    Entity entity = Entity.builder().createdBy("123").build();
+    assertEquals("123", entity.getCreatedBy().orElse(null), "unexpected createdBy");
+  }
+
+  @Test
+  void testSetChanged() {
+    Instant changed = Instant.parse("2024-05-03T10:10:00Z");
+    Entity entity = Entity.builder().changed(changed).build();
+    assertEquals(changed, entity.getChanged().orElse(null), "unexpected changed");
+  }
+
+  @Test
+  void testSetChangedBy() {
+    Entity entity = Entity.builder().changedBy("456").build();
+    assertEquals("456", entity.getChangedBy().orElse(null), "unexpected changedBy");
+  }
+
+  @Test
+  void testSetCreatedByWithInvalidId() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> Entity.builder().createdBy("x"),
+        "createdBy should be an id");
+  }
+
+  @Test
+  void testSetChangedByWithInvalidId() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> Entity.builder().changedBy("x"),
+        "changedBy should be an id");
+  }
+
+  @Test
+  void testDeserialize() throws JsonProcessingException {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new Jdk8Module());
+    mapper.registerModule(new JavaTimeModule());
+
+    String json =
+        """
+        {"id":"100560100000014842","name":"060 Town hall","parent":"100560100000014840",
+        "version":"2024-05-02T10:10:00Z","created":"2024-05-01T08:00:00Z","createdBy":"17",
+        "changed":"2024-05-02T10:10:00Z","changedBy":"18","group":false}
+        """;
+
+    Entity expected =
+        Entity.builder()
+            .id("100560100000014842")
+            .name("060 Town hall")
+            .parent("100560100000014840")
+            .version(Instant.parse("2024-05-02T10:10:00Z"))
+            .created(Instant.parse("2024-05-01T08:00:00Z"))
+            .createdBy("17")
+            .changed(Instant.parse("2024-05-02T10:10:00Z"))
+            .changedBy("18")
+            .build();
+
+    assertEquals(expected, mapper.readValue(json, Entity.class), "unexpected entity");
   }
 
   @Test
@@ -200,11 +237,11 @@ class EntityTest {
 
   @Test
   void testToBuilder() {
-    OffsetDateTime version = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
+    Instant version = Instant.parse("2024-05-02T10:10:00Z");
     Entity entity =
         Entity.builder()
             .id("100560100000014842")
-            .name("060 Rathaus")
+            .name("060 Town hall")
             .parent("100560100000014840")
             .version(version)
             .isGroup(false)
@@ -227,7 +264,7 @@ class EntityTest {
   @Test
   void testSerialize() throws JsonProcessingException {
 
-    OffsetDateTime version = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
+    Instant version = Instant.parse("2024-05-02T10:10:00Z");
 
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new Jdk8Module());
@@ -237,7 +274,7 @@ class EntityTest {
     Entity entity =
         Entity.builder()
             .id("100560100000014842")
-            .name("060 Rathaus")
+            .name("060 Town hall")
             .parent("100560100000014840")
             .version(version)
             .isGroup(false)
@@ -246,8 +283,8 @@ class EntityTest {
     String json = mapper.writeValueAsString(entity);
 
     String expected =
-        "{\"id\":\"100560100000014842\",\"anchor\":null,"
-            + "\"name\":\"060 Rathaus\",\"parent\":\"100560100000014840\","
+        "{\"id\":\"100560100000014842\","
+            + "\"name\":\"060 Town hall\",\"parent\":\"100560100000014840\","
             + "\"version\":\"2024-05-02T10:10:00Z\",\"group\":false}";
 
     assertEquals(expected, json, "unexpected json");

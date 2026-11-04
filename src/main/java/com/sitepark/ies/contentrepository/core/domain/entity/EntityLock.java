@@ -1,15 +1,15 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
 import java.io.Serializable;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 public final class EntityLock implements Serializable {
 
   private final String entity;
   private final String user;
-  private final OffsetDateTime created;
-  private final OffsetDateTime lastAccess;
+  private final Instant created;
+  private final Instant lastAccess;
   private final long ttl;
 
   private static final long serialVersionUID = 1L;
@@ -30,11 +30,11 @@ public final class EntityLock implements Serializable {
     return user;
   }
 
-  public OffsetDateTime getCreated() {
+  public Instant getCreated() {
     return created;
   }
 
-  public OffsetDateTime getLastAccess() {
+  public Instant getLastAccess() {
     return lastAccess;
   }
 
@@ -93,8 +93,8 @@ public final class EntityLock implements Serializable {
 
     private String entity;
     private String user;
-    private OffsetDateTime created;
-    private OffsetDateTime lastAccess;
+    private Instant created;
+    private Instant lastAccess;
     private long ttl;
 
     protected Builder() {}
@@ -125,13 +125,13 @@ public final class EntityLock implements Serializable {
       return this;
     }
 
-    public Builder created(OffsetDateTime created) {
+    public Builder created(Instant created) {
       Objects.requireNonNull(created, "created is null");
       this.created = created;
       return this;
     }
 
-    public Builder lastAccess(OffsetDateTime lastAccess) {
+    public Builder lastAccess(Instant lastAccess) {
       Objects.requireNonNull(lastAccess, "lastAccess is null");
       this.lastAccess = lastAccess;
       return this;

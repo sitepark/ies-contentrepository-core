@@ -6,8 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -107,7 +106,7 @@ class EntityLockTest {
 
   @Test
   void testSetCreated() {
-    OffsetDateTime created = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
+    Instant created = Instant.parse("2024-05-02T10:10:00Z");
     EntityLock lock = EntityLock.builder().created(created).build();
 
     assertEquals(created, lock.getCreated(), "unexpected created");
@@ -125,7 +124,7 @@ class EntityLockTest {
 
   @Test
   void testSetLastAccess() {
-    OffsetDateTime created = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
+    Instant created = Instant.parse("2024-05-02T10:10:00Z");
     EntityLock lock = EntityLock.builder().lastAccess(created).build();
 
     assertEquals(created, lock.getLastAccess(), "unexpected lastAccess");
@@ -161,9 +160,9 @@ class EntityLockTest {
   @Test
   void testToBuilder() {
 
-    OffsetDateTime created = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
+    Instant created = Instant.parse("2024-05-02T10:10:00Z");
 
-    OffsetDateTime lastAccess = OffsetDateTime.of(2024, 5, 2, 11, 10, 0, 0, ZoneOffset.UTC);
+    Instant lastAccess = Instant.parse("2024-05-02T11:10:00Z");
 
     EntityLock lock =
         EntityLock.builder()

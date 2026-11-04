@@ -1,7 +1,7 @@
 package com.sitepark.ies.contentrepository.core.port;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public interface VersioningManager {
@@ -10,11 +10,11 @@ public interface VersioningManager {
 
   Entity createNewVersion(Entity entity);
 
-  Entity revertToVersion(LocalDateTime version);
+  Entity revertToVersion(String id, Instant version);
 
-  Entity getVersion(LocalDateTime version);
+  Entity getVersion(String id, Instant version);
 
-  Entity getNextVersionSince(LocalDateTime date);
+  Entity getNextVersionSince(String id, Instant date);
 
   List<Long> getAllMediaReferences(String id);
 }

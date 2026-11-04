@@ -1,11 +1,11 @@
 package com.sitepark.ies.contentrepository.core.port;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.function.Consumer;
 
 public interface Publisher {
-  void republish(String id, LocalDateTime version);
+  void republish(String id, Instant version);
 
   void depublish(String id);
 

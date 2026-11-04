@@ -10,7 +10,7 @@ import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.HistoryManager;
 import com.sitepark.ies.contentrepository.core.port.RecycleBin;
 import com.sitepark.ies.contentrepository.core.port.SearchIndex;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Optional;
 
 public class RecoverEntity {
@@ -55,7 +55,7 @@ public class RecoverEntity {
 
     this.repository.store(entity);
 
-    this.historyManager.createEntry(id, OffsetDateTime.now(), HistoryEntryType.RESTORED);
+    this.historyManager.createEntry(id, Instant.now(), HistoryEntryType.RESTORED);
 
     this.searchIndex.index(id);
   }

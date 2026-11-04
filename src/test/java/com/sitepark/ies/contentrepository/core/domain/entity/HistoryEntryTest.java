@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.time.Instant;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -70,19 +71,19 @@ class HistoryEntryTest {
 
   @Test
   void testSetTimestamp() {
-    HistoryEntry entry = HistoryEntry.builder().timestamp(123L).build();
+    HistoryEntry entry = HistoryEntry.builder().timestamp(Instant.ofEpochMilli(123L)).build();
 
-    assertEquals(123, entry.getTimestamp(), "unexpected timestamp");
+    assertEquals(Instant.ofEpochMilli(123L), entry.getTimestamp(), "unexpected timestamp");
   }
 
   @Test
   void testSetInvalidTimestamp() {
     assertThrows(
-        IllegalArgumentException.class,
+        NullPointerException.class,
         () -> {
-          HistoryEntry.builder().timestamp(0);
+          HistoryEntry.builder().timestamp(null);
         },
-        "timestamp must be greater than 0");
+        "timestamp must not be null");
   }
 
   @Test
@@ -126,7 +127,7 @@ class HistoryEntryTest {
             .entity(123)
             .initiator("initiator")
             .user(345L)
-            .timestamp(123L)
+            .timestamp(Instant.ofEpochMilli(123L))
             .type(HistoryEntryType.CREATED)
             .comment("comment")
             .build();
@@ -138,7 +139,7 @@ class HistoryEntryTest {
             .entity(678)
             .initiator("initiator")
             .user(345L)
-            .timestamp(123L)
+            .timestamp(Instant.ofEpochMilli(123L))
             .type(HistoryEntryType.CREATED)
             .comment("comment")
             .build();

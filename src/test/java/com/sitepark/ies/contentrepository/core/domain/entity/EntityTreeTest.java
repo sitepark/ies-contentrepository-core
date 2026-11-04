@@ -130,7 +130,7 @@ class EntityTreeTest {
     tree.add(Entity.builder().id("1").build());
 
     String s = tree.toString();
-    assertTrue(s.contains("id=1,"), "entity with id 1 not found");
+    assertTrue(s.contains("id='1'"), "entity with id 1 not found");
   }
 
   @Test
