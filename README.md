@@ -3,11 +3,42 @@
 
 # Content-Repository
 
-The content repository contains the content-bearing objects and groups. These have master data and schema-less content. There are three types.
+The content repository contains entries and groups. Both have master data and content in sections.
 
-1. **Media objects** - media objects are linked to a media such as a PDF or an image file and contains master data. The media object represents this linked media file. Each media object must be assigned to exactly one group. Additionally, any content information can be stored at the media object.
-2. **Entity object** - A content object can contain any content information in addition to its master data. Each object must be assigned to exactly one group. An optional property of a content object is to provide a file name.
-3. **Group object** - objects are structured in groups. These groups can be structured hierarchically. A group object can include any content information to its master data.  An optional property of a group object is to provide a directory name. This is used for the objects within the group. Another optional property of a group object is to provide a file name.
+- **Entry** - any kind of content: pages, categories, configurations, events, services, persons, and the
+  placement of a medium. The entry type decides what an entry can do: whether it is published, whether
+  publishing creates a file (otherwise the entry is published without output, formerly a resource
+  article) and whether it can be aggregated. A medium itself is managed by the media repository; an
+  entry of the system type `ies:media` places it in a group. An optional property of an entry is a
+  file name.
+- **Group** - entries and groups are structured in groups, which can be nested. A group can carry
+  content in sections like an entry, but it is neither published nor aggregated. An optional property
+  of a group is a directory name, used for the files of the entries within it.
+
+### Sections
+
+The content of an entry or a group is an ordered list of sections. A section has
+
+- a UUID, which stays the same when the section is moved,
+- a type, the section type,
+- an optional container (e.g. `sp_main_iterate`); sections without container are fixed parts of the
+  entry,
+- its data, a JSON object.
+
+A section type may describe the data with a JSON schema; types without schema are possible. Selected
+section types name a grant (`SectionGrant`) that an editor needs to change their sections. Section
+types come from product and customer modules and the client configuration.
+
+In the data, texts are strings. Links and media are URI values: `ies:entity/<id>` for an entry or a
+group, `ies:media/<id>` for a medium, and any other URI for an external target. When an entry is
+stored, these values are extracted as references, which feed the dependencies, the media repository
+and the link checker.
+
+Single sections can be added, updated, removed and moved. Each change is based on the version of the
+entry the client has read and creates a new version of the whole entry. There is no localization in
+the content model.
+
+Points in time are `Instant`s.
 
 ## Features
 
