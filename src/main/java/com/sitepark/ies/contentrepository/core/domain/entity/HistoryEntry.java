@@ -2,6 +2,7 @@ package com.sitepark.ies.contentrepository.core.domain.entity;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -10,7 +11,7 @@ public final class HistoryEntry implements Serializable {
   private final String entityId;
   private final String initiator;
   private final String userId;
-  private final long timestamp;
+  private final Instant timestamp;
   private final HistoryEntryType type;
   private final String comment;
 
@@ -42,7 +43,7 @@ public final class HistoryEntry implements Serializable {
     return Optional.ofNullable(this.userId);
   }
 
-  public long getTimestamp() {
+  public Instant getTimestamp() {
     return timestamp;
   }
 
@@ -70,7 +71,7 @@ public final class HistoryEntry implements Serializable {
     return Objects.equals(this.entityId, that.entityId)
         && Objects.equals(this.initiator, that.initiator)
         && Objects.equals(this.userId, that.userId)
-        && this.timestamp == that.timestamp
+        && Objects.equals(this.timestamp, that.timestamp)
         && Objects.equals(this.type, that.type)
         && Objects.equals(this.comment, that.comment);
   }
@@ -109,7 +110,7 @@ public final class HistoryEntry implements Serializable {
     private String entityId;
     private String initiator;
     private String userId;
-    private long timestamp;
+    private Instant timestamp;
     private HistoryEntryType type;
     private String comment;
 
@@ -140,10 +141,8 @@ public final class HistoryEntry implements Serializable {
       return this;
     }
 
-    public Builder timestamp(long timestamp) {
-      if (timestamp <= 0) {
-        throw new IllegalArgumentException("timestamp must be greater than 0");
-      }
+    public Builder timestamp(Instant timestamp) {
+      Objects.requireNonNull(timestamp, "timestamp is null");
       this.timestamp = timestamp;
       return this;
     }
