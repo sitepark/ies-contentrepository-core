@@ -13,7 +13,7 @@ import com.sitepark.ies.contentrepository.core.port.Publisher;
 import com.sitepark.ies.contentrepository.core.port.RecycleBin;
 import com.sitepark.ies.contentrepository.core.port.SearchIndex;
 import com.sitepark.ies.sharedkernel.security.AccessDeniedException;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Optional;
 
 public final class RemoveEntity {
@@ -70,7 +70,7 @@ public final class RemoveEntity {
 
       this.repository.removeEntity(id);
 
-      this.historyManager.createEntry(id, OffsetDateTime.now(), HistoryEntryType.REMOVED);
+      this.historyManager.createEntry(id, Instant.now(), HistoryEntryType.REMOVED);
 
       RecycleBinItem recycleBinItem = RecycleBinItem.builder().build();
       this.recycleBin.add(recycleBinItem);

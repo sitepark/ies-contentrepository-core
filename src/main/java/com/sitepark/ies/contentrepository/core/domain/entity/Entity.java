@@ -1,14 +1,22 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.ies.sharedkernel.anchor.Anchor;
 import com.sitepark.ies.sharedkernel.base.Identifier;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
+/**
+ * The master data shared by all objects of the content repository: entries and groups.
+ *
+ * <p>Subclasses add their own fields and override {@link #canEqual(Object)}, so an entity is never
+ * equal to an entry or a group with the same master data.
+ */
 @JsonDeserialize(builder = Entity.EntityBuilder.class)
 public class Entity {
 
@@ -16,7 +24,11 @@ public class Entity {
   private final @Nullable Anchor anchor;
   private final @Nullable String name;
   private final @Nullable String parent;
-  private final @Nullable OffsetDateTime version;
+  private final @Nullable Instant version;
+  private final @Nullable Instant created;
+  private final @Nullable String createdBy;
+  private final @Nullable Instant changed;
+  private final @Nullable String changedBy;
   private final boolean group;
 
   protected Entity(Builder<?> builder) {
@@ -25,15 +37,15 @@ public class Entity {
     this.name = builder.name;
     this.parent = builder.parent;
     this.version = builder.version;
+    this.created = builder.created;
+    this.createdBy = builder.createdBy;
+    this.changed = builder.changed;
+    this.changedBy = builder.changedBy;
     this.group = builder.group;
   }
 
   public Optional<String> getId() {
-    if (this.id == null) {
-      return Optional.empty();
-    } else {
-      return Optional.of(this.id);
-    }
+    return Optional.ofNullable(this.id);
   }
 
   public Optional<Anchor> getAnchor() {
@@ -45,19 +57,30 @@ public class Entity {
   }
 
   public Optional<String> getParent() {
-    if (this.parent == null) {
-      return Optional.empty();
-    } else {
-      return Optional.of(this.parent);
-    }
+    return Optional.ofNullable(this.parent);
   }
 
-  public Optional<OffsetDateTime> getVersion() {
-    if (this.version == null) {
-      return Optional.empty();
-    } else {
-      return Optional.of(this.version);
-    }
+  /** The version of the object; every change creates a new version of the whole object. */
+  public Optional<Instant> getVersion() {
+    return Optional.ofNullable(this.version);
+  }
+
+  public Optional<Instant> getCreated() {
+    return Optional.ofNullable(this.created);
+  }
+
+  /** The id of the user who created the object. */
+  public Optional<String> getCreatedBy() {
+    return Optional.ofNullable(this.createdBy);
+  }
+
+  public Optional<Instant> getChanged() {
+    return Optional.ofNullable(this.changed);
+  }
+
+  /** The id of the user who changed the object last. */
+  public Optional<String> getChangedBy() {
+    return Optional.ofNullable(this.changedBy);
   }
 
   public boolean isGroup() {
@@ -73,54 +96,94 @@ public class Entity {
   }
 
   @Override
-  public final int hashCode() {
-
-    return Objects.hash(this.id, this.anchor, this.name, this.parent, this.version, this.group);
+  public int hashCode() {
+    return Objects.hash(
+        this.id,
+        this.anchor,
+        this.name,
+        this.parent,
+        this.version,
+        this.created,
+        this.createdBy,
+        this.changed,
+        this.changedBy,
+        this.group);
   }
 
   @Override
-  public final boolean equals(Object o) {
-
-    if (!(o instanceof Entity that)) {
+  public boolean equals(@Nullable Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Entity that) || !that.canEqual(this)) {
       return false;
     }
-
     return Objects.equals(this.id, that.id)
         && Objects.equals(this.anchor, that.anchor)
         && Objects.equals(this.name, that.name)
         && Objects.equals(this.parent, that.parent)
         && Objects.equals(this.version, that.version)
+        && Objects.equals(this.created, that.created)
+        && Objects.equals(this.createdBy, that.createdBy)
+        && Objects.equals(this.changed, that.changed)
+        && Objects.equals(this.changedBy, that.changedBy)
         && this.group == that.group;
+  }
+
+  /**
+   * Whether the given object may be equal to this one. Subclasses with own fields override it, so
+   * that an entity is never equal to an entry or a group with the same master data.
+   */
+  protected boolean canEqual(Object other) {
+    return other instanceof Entity;
   }
 
   @Override
   public String toString() {
-    return "Entity{"
-        + "id='"
-        + id
-        + '\''
-        + ", anchor="
-        + anchor
-        + ", name='"
-        + name
-        + '\''
-        + ", parent='"
-        + parent
-        + '\''
-        + ", version="
-        + version
-        + ", group="
-        + group
-        + '}';
+    return this.getClass().getSimpleName() + "{" + this.toStringFields() + "}";
   }
 
+  /** The fields for {@link #toString()}; subclasses append their own. */
+  protected String toStringFields() {
+    return "id='"
+        + this.id
+        + '\''
+        + ", anchor="
+        + this.anchor
+        + ", name='"
+        + this.name
+        + '\''
+        + ", parent='"
+        + this.parent
+        + '\''
+        + ", version="
+        + this.version
+        + ", created="
+        + this.created
+        + ", createdBy='"
+        + this.createdBy
+        + '\''
+        + ", changed="
+        + this.changed
+        + ", changedBy='"
+        + this.changedBy
+        + '\''
+        + ", group="
+        + this.group;
+  }
+
+  @SuppressWarnings("PMD.TooManyMethods")
   public abstract static class Builder<B extends Builder<B>> {
 
     private @Nullable String id;
     private @Nullable Anchor anchor;
     private @Nullable String name;
     private @Nullable String parent;
-    private @Nullable OffsetDateTime version;
+    private @Nullable Instant version;
+    private @Nullable Instant created;
+    private @Nullable String createdBy;
+    private @Nullable Instant changed;
+    private @Nullable String changedBy;
     private boolean group;
 
     protected Builder() {}
@@ -131,15 +194,15 @@ public class Entity {
       this.name = entity.name;
       this.parent = entity.parent;
       this.version = entity.version;
+      this.created = entity.created;
+      this.createdBy = entity.createdBy;
+      this.changed = entity.changed;
+      this.changedBy = entity.changedBy;
       this.group = entity.group;
     }
 
     public B id(String id) {
-      Objects.requireNonNull(id, "id is null");
-      if (!Identifier.isId(id)) {
-        throw new IllegalArgumentException(id + " is not an id");
-      }
-      this.id = id;
+      this.id = requireId(id, "id");
       return this.self();
     }
 
@@ -165,20 +228,40 @@ public class Entity {
     }
 
     public B parent(String parent) {
-      Objects.requireNonNull(parent, "parent is null");
-      if (!Identifier.isId(parent)) {
-        throw new IllegalArgumentException(parent + " is not an id");
-      }
-      this.parent = parent;
+      this.parent = requireId(parent, "parent");
       return this.self();
     }
 
-    public B version(OffsetDateTime version) {
+    public B version(Instant version) {
       Objects.requireNonNull(version, "version is null");
       this.version = version;
       return this.self();
     }
 
+    public B created(Instant created) {
+      Objects.requireNonNull(created, "created is null");
+      this.created = created;
+      return this.self();
+    }
+
+    public B createdBy(String createdBy) {
+      this.createdBy = requireId(createdBy, "createdBy");
+      return this.self();
+    }
+
+    public B changed(Instant changed) {
+      Objects.requireNonNull(changed, "changed is null");
+      this.changed = changed;
+      return this.self();
+    }
+
+    public B changedBy(String changedBy) {
+      this.changedBy = requireId(changedBy, "changedBy");
+      return this.self();
+    }
+
+    @JsonProperty("group")
+    @JsonAlias("isGroup")
     public B isGroup(boolean isGroup) {
       this.group = isGroup;
       return this.self();
@@ -188,6 +271,14 @@ public class Entity {
 
     public Entity build() {
       return new Entity(this);
+    }
+
+    private static String requireId(String value, String name) {
+      Objects.requireNonNull(value, name + " is null");
+      if (!Identifier.isId(value)) {
+        throw new IllegalArgumentException(value + " is not an id");
+      }
+      return value;
     }
   }
 

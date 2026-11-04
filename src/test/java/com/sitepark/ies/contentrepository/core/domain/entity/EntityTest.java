@@ -12,9 +12,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import com.sitepark.ies.sharedkernel.anchor.Anchor;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
@@ -22,7 +22,7 @@ class EntityTest {
 
   @Test
   void testEquals() {
-    EqualsVerifier.forClass(Entity.class).verify();
+    EqualsVerifier.forClass(Entity.class).suppress(Warning.STRICT_INHERITANCE).verify();
   }
 
   @Test
@@ -150,7 +150,7 @@ class EntityTest {
 
   @Test
   void testSetVersion() {
-    OffsetDateTime version = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
+    Instant version = Instant.parse("2024-05-02T10:10:00Z");
     Entity entity = Entity.builder().version(version).build();
     assertEquals(version, entity.getVersion().orElse(null), "unexpected version");
   }
@@ -162,6 +162,76 @@ class EntityTest {
   }
 
   @Test
+  void testSetCreated() {
+    Instant created = Instant.parse("2024-05-02T10:10:00Z");
+    Entity entity = Entity.builder().created(created).build();
+    assertEquals(created, entity.getCreated().orElse(null), "unexpected created");
+  }
+
+  @Test
+  void testSetCreatedBy() {
+    Entity entity = Entity.builder().createdBy("123").build();
+    assertEquals("123", entity.getCreatedBy().orElse(null), "unexpected createdBy");
+  }
+
+  @Test
+  void testSetChanged() {
+    Instant changed = Instant.parse("2024-05-03T10:10:00Z");
+    Entity entity = Entity.builder().changed(changed).build();
+    assertEquals(changed, entity.getChanged().orElse(null), "unexpected changed");
+  }
+
+  @Test
+  void testSetChangedBy() {
+    Entity entity = Entity.builder().changedBy("456").build();
+    assertEquals("456", entity.getChangedBy().orElse(null), "unexpected changedBy");
+  }
+
+  @Test
+  void testSetCreatedByWithInvalidId() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> Entity.builder().createdBy("x"),
+        "createdBy should be an id");
+  }
+
+  @Test
+  void testSetChangedByWithInvalidId() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> Entity.builder().changedBy("x"),
+        "changedBy should be an id");
+  }
+
+  @Test
+  void testDeserialize() throws JsonProcessingException {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new Jdk8Module());
+    mapper.registerModule(new JavaTimeModule());
+
+    String json =
+        """
+        {"id":"100560100000014842","name":"060 Town hall","parent":"100560100000014840",
+        "version":"2024-05-02T10:10:00Z","created":"2024-05-01T08:00:00Z","createdBy":"17",
+        "changed":"2024-05-02T10:10:00Z","changedBy":"18","group":false}
+        """;
+
+    Entity expected =
+        Entity.builder()
+            .id("100560100000014842")
+            .name("060 Town hall")
+            .parent("100560100000014840")
+            .version(Instant.parse("2024-05-02T10:10:00Z"))
+            .created(Instant.parse("2024-05-01T08:00:00Z"))
+            .createdBy("17")
+            .changed(Instant.parse("2024-05-02T10:10:00Z"))
+            .changedBy("18")
+            .build();
+
+    assertEquals(expected, mapper.readValue(json, Entity.class), "unexpected entity");
+  }
+
+  @Test
   void testSetIsGroup() {
     Entity entity = Entity.builder().isGroup(true).build();
     assertTrue(entity.isGroup(), "isGroup should be true");
@@ -169,7 +239,7 @@ class EntityTest {
 
   @Test
   void testToBuilder() {
-    OffsetDateTime version = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
+    Instant version = Instant.parse("2024-05-02T10:10:00Z");
     Entity entity =
         Entity.builder()
             .id("100560100000014842")
@@ -196,7 +266,7 @@ class EntityTest {
   @Test
   void testSerialize() throws JsonProcessingException {
 
-    OffsetDateTime version = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
+    Instant version = Instant.parse("2024-05-02T10:10:00Z");
 
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new Jdk8Module());
@@ -217,7 +287,8 @@ class EntityTest {
     String expected =
         "{\"id\":\"100560100000014842\",\"anchor\":null,"
             + "\"name\":\"060 Town hall\",\"parent\":\"100560100000014840\","
-            + "\"version\":\"2024-05-02T10:10:00Z\",\"group\":false}";
+            + "\"version\":\"2024-05-02T10:10:00Z\",\"created\":null,\"createdBy\":null,"
+            + "\"changed\":null,\"changedBy\":null,\"group\":false}";
 
     assertEquals(expected, json, "unexpected json");
   }

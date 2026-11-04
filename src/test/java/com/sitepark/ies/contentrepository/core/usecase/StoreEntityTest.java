@@ -23,8 +23,7 @@ import com.sitepark.ies.contentrepository.core.port.IdGenerator;
 import com.sitepark.ies.contentrepository.core.port.SearchIndex;
 import com.sitepark.ies.contentrepository.core.port.VersioningManager;
 import com.sitepark.ies.sharedkernel.security.AccessDeniedException;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
@@ -77,7 +76,7 @@ class StoreEntityTest {
 
     when(idGenerator.generate()).thenReturn("123");
 
-    OffsetDateTime version = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
+    Instant version = Instant.parse("2024-05-02T10:10:00Z");
 
     when(versioningManager.createNewVersion(any(Entity.class)))
         .thenAnswer(
@@ -183,7 +182,7 @@ class StoreEntityTest {
     when(contentDiffer.diff(any(), any())).thenReturn(changeSet);
     when(changeSet.isEmpty()).thenReturn(false);
 
-    OffsetDateTime version = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
+    Instant version = Instant.parse("2024-05-02T10:10:00Z");
 
     when(versioningManager.createNewVersion(any(Entity.class)))
         .thenAnswer(
