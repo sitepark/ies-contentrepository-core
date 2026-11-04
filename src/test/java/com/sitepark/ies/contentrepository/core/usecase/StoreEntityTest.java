@@ -36,7 +36,8 @@ class StoreEntityTest {
     Entity entity = mock();
     when(entity.getParent()).thenReturn(Optional.empty());
 
-    StoreEntity storeEntity = new StoreEntity(null, null, null, null, null, null, null, null);
+    StoreEntity storeEntity =
+        new StoreEntity(null, null, null, null, null, null, null, null, null, null, null);
 
     assertThrows(
         ParentMissingException.class, () -> storeEntity.store(entity), "entity must have a parent");
@@ -52,7 +53,7 @@ class StoreEntityTest {
     when(accessControl.isEntityCreatable(anyString())).thenReturn(false);
 
     StoreEntity storeEntity =
-        new StoreEntity(null, null, null, null, accessControl, null, null, null);
+        new StoreEntity(null, null, null, null, accessControl, null, null, null, null, null, null);
 
     assertThrows(
         AccessDeniedException.class, () -> storeEntity.store(entity), "should be access denied");
@@ -94,7 +95,10 @@ class StoreEntityTest {
             accessControl,
             idGenerator,
             searchIndex,
-            contentDiffer);
+            contentDiffer,
+            null,
+            null,
+            null);
 
     String id = storeEntity.store(entity);
 
@@ -114,7 +118,8 @@ class StoreEntityTest {
 
     when(repository.get(anyString())).thenReturn(Optional.empty());
 
-    StoreEntity storeEntity = new StoreEntity(repository, null, null, null, null, null, null, null);
+    StoreEntity storeEntity =
+        new StoreEntity(repository, null, null, null, null, null, null, null, null, null, null);
 
     assertThrows(
         EntityNotFoundException.class, () -> storeEntity.store(entity), "should be not found");
@@ -133,7 +138,8 @@ class StoreEntityTest {
     when(repository.get(anyString())).thenReturn(Optional.of(entity));
 
     StoreEntity storeEntity =
-        new StoreEntity(repository, null, null, null, accessControl, null, null, null);
+        new StoreEntity(
+            repository, null, null, null, accessControl, null, null, null, null, null, null);
 
     assertThrows(
         AccessDeniedException.class, () -> storeEntity.store(entity), "should be access denied");
@@ -155,7 +161,8 @@ class StoreEntityTest {
     when(lockManager.getLock(anyString())).thenReturn(Optional.of(entityLock));
 
     StoreEntity storeEntity =
-        new StoreEntity(repository, lockManager, null, null, accessControl, null, null, null);
+        new StoreEntity(
+            repository, lockManager, null, null, accessControl, null, null, null, null, null, null);
 
     assertThrows(
         EntityLockedException.class, () -> storeEntity.store(entity), "entity should be locked");
@@ -200,7 +207,10 @@ class StoreEntityTest {
             accessControl,
             null,
             searchIndex,
-            contentDiffer);
+            contentDiffer,
+            null,
+            null,
+            null);
 
     String id = storeEntity.store(entity);
 
