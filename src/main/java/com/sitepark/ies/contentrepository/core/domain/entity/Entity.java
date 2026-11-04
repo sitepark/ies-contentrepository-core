@@ -1,6 +1,7 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
@@ -18,6 +19,7 @@ import org.jspecify.annotations.Nullable;
  * equal to an entry or a group with the same master data.
  */
 @JsonDeserialize(builder = Entity.EntityBuilder.class)
+@JsonInclude(JsonInclude.Include.NON_ABSENT)
 public class Entity {
 
   private final @Nullable String id;

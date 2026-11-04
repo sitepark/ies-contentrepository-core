@@ -14,7 +14,6 @@ import com.jparams.verifier.tostring.ToStringVerifier;
 import com.sitepark.ies.sharedkernel.anchor.Anchor;
 import java.time.Instant;
 import nl.jqno.equalsverifier.EqualsVerifier;
-import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
@@ -22,7 +21,7 @@ class EntityTest {
 
   @Test
   void testEquals() {
-    EqualsVerifier.forClass(Entity.class).suppress(Warning.STRICT_INHERITANCE).verify();
+    EqualsVerifier.forClass(Entity.class).withRedefinedSubclass(Entry.class).verify();
   }
 
   @Test
@@ -285,10 +284,9 @@ class EntityTest {
     String json = mapper.writeValueAsString(entity);
 
     String expected =
-        "{\"id\":\"100560100000014842\",\"anchor\":null,"
+        "{\"id\":\"100560100000014842\","
             + "\"name\":\"060 Town hall\",\"parent\":\"100560100000014840\","
-            + "\"version\":\"2024-05-02T10:10:00Z\",\"created\":null,\"createdBy\":null,"
-            + "\"changed\":null,\"changedBy\":null,\"group\":false}";
+            + "\"version\":\"2024-05-02T10:10:00Z\",\"group\":false}";
 
     assertEquals(expected, json, "unexpected json");
   }
