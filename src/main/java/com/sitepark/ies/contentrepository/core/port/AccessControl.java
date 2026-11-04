@@ -17,4 +17,10 @@ public interface AccessControl {
   boolean isGroupWritable(String id);
 
   boolean isGroupRemoveable(String id);
+
+  /**
+   * Whether the current user holds a grant on an entry or a group. Section types may name a grant
+   * that is needed to change their sections.
+   */
+  boolean isSectionGrantGranted(String entityId, String grant);
 }

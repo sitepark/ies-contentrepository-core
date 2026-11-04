@@ -23,8 +23,7 @@ import com.sitepark.ies.contentrepository.core.port.HistoryManager;
 import com.sitepark.ies.contentrepository.core.port.IdGenerator;
 import com.sitepark.ies.contentrepository.core.port.SearchIndex;
 import com.sitepark.ies.contentrepository.core.port.VersioningManager;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.Instant;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +36,8 @@ class StoreEntityTest {
     Entity entity = mock();
     when(entity.getParent()).thenReturn(Optional.empty());
 
-    StoreEntity storeEntity = new StoreEntity(null, null, null, null, null, null, null, null);
+    StoreEntity storeEntity =
+        new StoreEntity(null, null, null, null, null, null, null, null, null, null, null);
 
     assertThrows(
         ParentMissingException.class,
@@ -57,7 +57,7 @@ class StoreEntityTest {
     when(accessControl.isEntityCreateable(anyString())).thenReturn(false);
 
     StoreEntity storeEntity =
-        new StoreEntity(null, null, null, null, accessControl, null, null, null);
+        new StoreEntity(null, null, null, null, accessControl, null, null, null, null, null, null);
 
     assertThrows(
         AccessDeniedException.class,
@@ -85,7 +85,7 @@ class StoreEntityTest {
 
     when(idGenerator.generate()).thenReturn("123");
 
-    OffsetDateTime version = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
+    Instant version = Instant.parse("2024-05-02T10:10:00Z");
 
     when(versioningManager.createNewVersion(any(Entity.class)))
         .thenAnswer(
@@ -103,7 +103,10 @@ class StoreEntityTest {
             accessControl,
             idGenerator,
             searchIndex,
-            contentDiffer);
+            contentDiffer,
+            null,
+            null,
+            null);
 
     String id = storeEntity.store(entity);
 
@@ -123,7 +126,8 @@ class StoreEntityTest {
 
     when(repository.get(anyString())).thenReturn(Optional.empty());
 
-    StoreEntity storeEntity = new StoreEntity(repository, null, null, null, null, null, null, null);
+    StoreEntity storeEntity =
+        new StoreEntity(repository, null, null, null, null, null, null, null, null, null, null);
 
     assertThrows(
         EntityNotFoundException.class,
@@ -146,7 +150,8 @@ class StoreEntityTest {
     when(repository.get(anyString())).thenReturn(Optional.of(entity));
 
     StoreEntity storeEntity =
-        new StoreEntity(repository, null, null, null, accessControl, null, null, null);
+        new StoreEntity(
+            repository, null, null, null, accessControl, null, null, null, null, null, null);
 
     assertThrows(
         AccessDeniedException.class,
@@ -172,7 +177,8 @@ class StoreEntityTest {
     when(lockManager.getLock(anyString())).thenReturn(Optional.of(entityLock));
 
     StoreEntity storeEntity =
-        new StoreEntity(repository, lockManager, null, null, accessControl, null, null, null);
+        new StoreEntity(
+            repository, lockManager, null, null, accessControl, null, null, null, null, null, null);
 
     assertThrows(
         EntityLockedException.class,
@@ -203,7 +209,7 @@ class StoreEntityTest {
     when(contentDiffer.diff(any(), any())).thenReturn(changeSet);
     when(changeSet.isEmpty()).thenReturn(false);
 
-    OffsetDateTime version = OffsetDateTime.of(2024, 5, 2, 10, 10, 0, 0, ZoneOffset.UTC);
+    Instant version = Instant.parse("2024-05-02T10:10:00Z");
 
     when(versioningManager.createNewVersion(any(Entity.class)))
         .thenAnswer(
@@ -221,7 +227,10 @@ class StoreEntityTest {
             accessControl,
             null,
             searchIndex,
-            contentDiffer);
+            contentDiffer,
+            null,
+            null,
+            null);
 
     String id = storeEntity.store(entity);
 
