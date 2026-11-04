@@ -29,5 +29,6 @@ module com.sitepark.ies.contentrepository.core {
   opens com.sitepark.ies.contentrepository.core.usecase.query.sort;
   opens com.sitepark.ies.contentrepository.core.usecase.query.limit;
   opens com.sitepark.ies.contentrepository.core.usecase.query;
+  opens com.sitepark.ies.contentrepository.core.domain.value;
   opens com.sitepark.ies.contentrepository.core.domain.value.permission;
 }
