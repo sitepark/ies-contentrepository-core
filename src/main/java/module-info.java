@@ -20,6 +20,7 @@ module com.sitepark.ies.contentrepository.core {
   requires com.sitepark.ies.sharedkernel;
 
   opens com.sitepark.ies.contentrepository.core.domain.entity;
+  opens com.sitepark.ies.contentrepository.core.domain.value;
   opens com.sitepark.ies.contentrepository.core.domain.entity.query.filter;
   opens com.sitepark.ies.contentrepository.core.domain.entity.query.sort;
   opens com.sitepark.ies.contentrepository.core.domain.entity.query.limit;
