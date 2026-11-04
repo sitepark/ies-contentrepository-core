@@ -1,14 +1,14 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
 
 public final class RecycleBinItemFilter {
 
-  private final LocalDateTime from;
+  private final Instant from;
 
-  private final LocalDateTime to;
+  private final Instant to;
 
   private final String userId;
 
@@ -18,11 +18,11 @@ public final class RecycleBinItemFilter {
     this.userId = builder.userId;
   }
 
-  public Optional<LocalDateTime> getFrom() {
+  public Optional<Instant> getFrom() {
     return Optional.ofNullable(this.from);
   }
 
-  public Optional<LocalDateTime> getTo() {
+  public Optional<Instant> getTo() {
     return Optional.ofNullable(this.to);
   }
 
@@ -58,9 +58,9 @@ public final class RecycleBinItemFilter {
   @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static final class Builder {
 
-    private LocalDateTime from;
+    private Instant from;
 
-    private LocalDateTime to;
+    private Instant to;
 
     private String userId;
 
@@ -72,13 +72,13 @@ public final class RecycleBinItemFilter {
       this.userId = recycleBinItemFilter.userId;
     }
 
-    public Builder from(LocalDateTime from) {
+    public Builder from(Instant from) {
       Objects.requireNonNull(from, "from is null");
       this.from = from;
       return this;
     }
 
-    public Builder to(LocalDateTime to) {
+    public Builder to(Instant to) {
       Objects.requireNonNull(to, "to is null");
       this.to = to;
       return this;
