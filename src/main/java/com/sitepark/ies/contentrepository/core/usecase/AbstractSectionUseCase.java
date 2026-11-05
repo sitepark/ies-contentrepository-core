@@ -3,6 +3,7 @@ package com.sitepark.ies.contentrepository.core.usecase;
 import com.sitepark.ies.contentrepository.core.domain.entity.Entry;
 import com.sitepark.ies.contentrepository.core.domain.entity.Section;
 import com.sitepark.ies.contentrepository.core.domain.exception.SectionNotFoundException;
+import com.sitepark.ies.contentrepository.core.domain.value.SectionPosition;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
@@ -51,6 +52,13 @@ abstract class AbstractSectionUseCase {
             authentication,
             clock);
     this.checks = new SectionChecks(accessControl, sectionTypes, schemaValidator);
+  }
+
+  /** Checks the grant of the parent section of a position, if the position lies in a section. */
+  protected void checkParentGrant(String entryId, Entry entry, SectionPosition position) {
+    position
+        .getParent()
+        .ifPresent(parent -> this.checks.checkGrant(entryId, existing(entry, parent)));
   }
 
   /**

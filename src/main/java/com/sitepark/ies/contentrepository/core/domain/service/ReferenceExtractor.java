@@ -16,7 +16,6 @@ import java.util.Objects;
  * group) or {@code ies:media/<id>} (a medium). The values are found without a schema, anywhere in
  * the data, in objects and arrays. Other URIs, e.g. external links, are no references.
  */
-@SuppressWarnings("PMD.LawOfDemeter")
 public final class ReferenceExtractor {
 
   static final String ENTITY_PREFIX = "ies:entity/";
@@ -24,7 +23,8 @@ public final class ReferenceExtractor {
   static final String MEDIA_PREFIX = "ies:media/";
 
   /**
-   * Returns the references in the sections of an entry or a group, in the order of the sections.
+   * Returns the references in the sections of an entry or a group, including the sections below
+   * them, in tree order.
    *
    * @param entityId the id of the entry or group holding the sections
    */
@@ -32,9 +32,12 @@ public final class ReferenceExtractor {
     Objects.requireNonNull(entityId, "entityId is null");
     Objects.requireNonNull(sections, "sections is null");
     List<Reference> references = new ArrayList<>();
-    for (Section section : sections) {
-      this.collect(entityId, section.getUuid(), "", section.getData().toJson(), references);
-    }
+    sections.stream()
+        .flatMap(Section::stream)
+        .forEach(
+            section ->
+                this.collect(
+                    entityId, section.getUuid(), "", section.getData().toJson(), references));
     return List.copyOf(references);
   }
 

@@ -72,7 +72,7 @@ public final class RemoveSection extends AbstractSectionUseCase {
   }
 
   /**
-   * Removes a section.
+   * Removes a section together with the sections below it; the grant of each of them is checked.
    *
    * @param entryId the id of the entry
    * @param expectedVersion the version of the entry the change is based on
@@ -83,7 +83,7 @@ public final class RemoveSection extends AbstractSectionUseCase {
     return this.change.apply(
         entryId,
         expectedVersion,
-        entry -> this.checks.checkGrant(entryId, existing(entry, uuid)),
+        entry -> existing(entry, uuid).stream().forEach(s -> this.checks.checkGrant(entryId, s)),
         entry -> entry.withoutSection(uuid));
   }
 }

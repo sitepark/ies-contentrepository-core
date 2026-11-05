@@ -13,6 +13,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import com.sitepark.ies.contentrepository.core.domain.exception.SectionNotFoundException;
+import com.sitepark.ies.contentrepository.core.domain.value.SectionPosition;
 import java.time.Instant;
 import java.util.List;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -47,6 +48,38 @@ class EntryTest {
         .build();
   }
 
+  private static final String NEW_SECTION = "5b6c7d8e-9f01-4a2b-8c3d-4e5f60718293";
+  private static final String COLLAPSIBLE = "6c7d8e9f-0a12-4b3c-9d4e-5f6071829304";
+  private static final String NESTED_TEXT = "7d8e9f0a-1b23-4c4d-8e5f-607182930415";
+
+  /** An entry whose main container holds a section with a collapsible holding a text. */
+  private static Entry nestedEntry() {
+    Section collapsible =
+        Section.builder()
+            .uuid(COLLAPSIBLE)
+            .type("collapsible")
+            .container("items")
+            .children("items", List.of(section(NESTED_TEXT, "text", "items")))
+            .build();
+    Section newSection =
+        Section.builder()
+            .uuid(NEW_SECTION)
+            .type("newSection")
+            .container(MAIN)
+            .children("items", List.of(collapsible))
+            .build();
+    return Entry.builder()
+        .type("page")
+        .sections(List.of(newSection, section(IMAGE, "image", MAIN)))
+        .build();
+  }
+
+  private static List<String> childUuids(Entry entry, String parent, String container) {
+    return entry.getSection(parent).orElseThrow().getChildren(container).stream()
+        .map(Section::getUuid)
+        .toList();
+  }
+
   private static List<String> uuids(Entry entry) {
     return entry.getSections().stream().map(Section::getUuid).toList();
   }
@@ -56,6 +89,10 @@ class EntryTest {
     EqualsVerifier.forClass(Entry.class)
         .withRedefinedSuperclass()
         .withPrefabValues(SectionData.class, data("a"), data("b"))
+        .withPrefabValues(
+            Section.class,
+            Section.builder().uuid("8a2e0f4c-7f1d-4c6b-9d3e-2b1a0c9d8e7f").type("a").build(),
+            Section.builder().uuid("c41b2a3c-4d5e-4f60-9a7b-8c9d0e1f2a3b").type("b").build())
         .verify();
   }
 
@@ -209,6 +246,133 @@ class EntryTest {
     assertThat(changed.getSection(TEXT).map(Section::getData))
         .as("the section should have the new data")
         .contains(data("Hello"));
+  }
+
+  @Test
+  void findsSectionDeepInTheTree() {
+    assertThat(nestedEntry().getSection(NESTED_TEXT))
+        .as("a section below other sections should be found")
+        .isPresent();
+  }
+
+  @Test
+  void rejectsDuplicateUuidDeepInTheTree() {
+    Section duplicate =
+        Section.builder()
+            .uuid(TEXT)
+            .type("newSection")
+            .container(MAIN)
+            .children("items", List.of(section(TEXT, "text", "items")))
+            .build();
+    Entry.Builder builder = Entry.builder().type("page");
+    List<Section> sections = List.of(duplicate);
+
+    assertThatThrownBy(() -> builder.sections(sections))
+        .as("a uuid must be unique in the whole tree")
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void addsSectionIntoContainerOfASection() {
+    Entry changed =
+        nestedEntry()
+            .withSection(
+                section(TEXT, "text", null), SectionPosition.within(COLLAPSIBLE, "items", 0));
+
+    assertThat(childUuids(changed, COLLAPSIBLE, "items"))
+        .as("the new section should be the first child of the collapsible")
+        .containsExactly(TEXT, NESTED_TEXT);
+  }
+
+  @Test
+  void addedSectionNamesTheContainerOfThePosition() {
+    Entry changed =
+        nestedEntry()
+            .withSection(
+                section(TEXT, "text", null), SectionPosition.within(COLLAPSIBLE, "items", 1));
+
+    assertThat(changed.getSection(TEXT).flatMap(Section::getContainer))
+        .as("the added section should name its container")
+        .contains("items");
+  }
+
+  @Test
+  void rejectsAddingIntoUnknownParent() {
+    Entry entry = nestedEntry();
+    Section text = section(TEXT, "text", null);
+    SectionPosition position = SectionPosition.within(LINKS, "items", 0);
+
+    assertThatThrownBy(() -> entry.withSection(text, position))
+        .as("adding below an unknown section should fail")
+        .isInstanceOf(SectionNotFoundException.class);
+  }
+
+  @Test
+  void rejectsAddingBehindTheEndOfAChildContainer() {
+    Entry entry = nestedEntry();
+    Section text = section(TEXT, "text", null);
+    SectionPosition position = SectionPosition.within(COLLAPSIBLE, "items", 2);
+
+    assertThatThrownBy(() -> entry.withSection(text, position))
+        .as("a position behind the end of the container should fail")
+        .isInstanceOf(IndexOutOfBoundsException.class);
+  }
+
+  @Test
+  void removesSectionTogetherWithItsChildren() {
+    Entry changed = nestedEntry().withoutSection(COLLAPSIBLE);
+
+    assertThat(changed.getSection(NESTED_TEXT))
+        .as("the children of a removed section should be removed too")
+        .isEmpty();
+  }
+
+  @Test
+  void removesSectionDeepInTheTree() {
+    Entry changed = nestedEntry().withoutSection(NESTED_TEXT);
+
+    assertThat(childUuids(changed, COLLAPSIBLE, "items"))
+        .as("the section should be removed from its container")
+        .isEmpty();
+  }
+
+  @Test
+  void movesSectionOutOfAContainerToTheTopLevel() {
+    Entry changed =
+        nestedEntry().withSectionMovedTo(NESTED_TEXT, SectionPosition.topLevel(MAIN, 1));
+
+    assertThat(uuids(changed))
+        .as("the moved section should lie between the section and the image")
+        .containsExactly(NEW_SECTION, NESTED_TEXT, IMAGE);
+  }
+
+  @Test
+  void movesSectionIntoTheContainerOfAnotherSection() {
+    Entry moved =
+        nestedEntry().withSectionMovedTo(IMAGE, SectionPosition.within(COLLAPSIBLE, "items", 1));
+
+    assertThat(childUuids(moved, COLLAPSIBLE, "items"))
+        .as("the image should be the second child of the collapsible")
+        .containsExactly(NESTED_TEXT, IMAGE);
+  }
+
+  @Test
+  void rejectsMovingSectionBelowItself() {
+    Entry entry = nestedEntry();
+    SectionPosition position = SectionPosition.within(COLLAPSIBLE, "items", 0);
+
+    assertThatThrownBy(() -> entry.withSectionMovedTo(NEW_SECTION, position))
+        .as("a section cannot be moved below itself")
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void replacesDataDeepInTheTreeAndKeepsTheChildren() {
+    Entry changed = nestedEntry().withSectionData(COLLAPSIBLE, data("Hello"));
+
+    assertThat(childUuids(changed, COLLAPSIBLE, "items"))
+        .as("the children should stay when the data of a section changes")
+        .containsExactly(NESTED_TEXT);
   }
 
   @Test

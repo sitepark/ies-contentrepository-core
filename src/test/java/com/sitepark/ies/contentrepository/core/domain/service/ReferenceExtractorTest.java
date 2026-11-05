@@ -48,6 +48,23 @@ class ReferenceExtractorTest {
   }
 
   @Test
+  void findsReferencesInSectionsBelowOtherSections() throws JsonProcessingException {
+    Section image =
+        section(IMAGE, "{\"sp_image\":\"ies:media/42\"}").toBuilder().container("items").build();
+    Section parent =
+        section(LINKS, "{\"sp_headline\":\"Images\"}").toBuilder()
+            .children("items", List.of(image))
+            .build();
+
+    List<Reference> references = new ReferenceExtractor().extract(ENTRY, List.of(parent));
+
+    assertThat(references)
+        .as("the reference should belong to the child section holding the value")
+        .containsExactly(
+            new Reference(ENTRY, IMAGE, "/sp_image", "ies:media/42", ReferenceKind.MEDIA));
+  }
+
+  @Test
   void findsMedia() throws JsonProcessingException {
     Section image =
         section(

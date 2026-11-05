@@ -1,5 +1,6 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
+import com.sitepark.ies.contentrepository.core.domain.value.SectionPosition;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
@@ -83,10 +84,26 @@ public final class MoveSection extends AbstractSectionUseCase {
    */
   public Instant move(
       String entryId, Instant expectedVersion, String uuid, String container, int index) {
+    return this.move(entryId, expectedVersion, uuid, SectionPosition.topLevel(container, index));
+  }
+
+  /**
+   * Moves a section, together with the sections below it, to a position in the tree of sections.
+   *
+   * <p>The grant of the section and the grant of the target parent section are checked.
+   *
+   * @param position the target, with the index counted without the moved section
+   * @return the new version of the entry
+   */
+  public Instant move(
+      String entryId, Instant expectedVersion, String uuid, SectionPosition position) {
     return this.change.apply(
         entryId,
         expectedVersion,
-        entry -> this.checks.checkGrant(entryId, existing(entry, uuid)),
-        entry -> entry.withSectionMovedTo(uuid, container, index));
+        entry -> {
+          this.checks.checkGrant(entryId, existing(entry, uuid));
+          this.checkParentGrant(entryId, entry, position);
+        },
+        entry -> entry.withSectionMovedTo(uuid, position));
   }
 }
