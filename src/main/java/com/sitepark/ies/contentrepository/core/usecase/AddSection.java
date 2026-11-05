@@ -1,6 +1,7 @@
 package com.sitepark.ies.contentrepository.core.usecase;
 
 import com.sitepark.ies.contentrepository.core.domain.entity.Section;
+import com.sitepark.ies.contentrepository.core.domain.value.SectionPosition;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
 import com.sitepark.ies.contentrepository.core.port.EntityLockManager;
@@ -82,10 +83,30 @@ public final class AddSection extends AbstractSectionUseCase {
    * @return the new version of the entry
    */
   public Instant add(String entryId, Instant expectedVersion, Section section, int index) {
+    return this.add(
+        entryId,
+        expectedVersion,
+        section,
+        SectionPosition.topLevel(section.getContainer().orElse(null), index));
+  }
+
+  /**
+   * Adds a section, together with the sections below it, at a position in the tree of sections.
+   *
+   * <p>Type, grant and schema of each added section are checked, and the grant of the parent
+   * section of the position.
+   *
+   * @return the new version of the entry
+   */
+  public Instant add(
+      String entryId, Instant expectedVersion, Section section, SectionPosition position) {
     return this.change.apply(
         entryId,
         expectedVersion,
-        entry -> this.checks.check(entryId, section),
-        entry -> entry.withSection(section, index));
+        entry -> {
+          this.checkParentGrant(entryId, entry, position);
+          section.stream().forEach(s -> this.checks.check(entryId, s));
+        },
+        entry -> entry.withSection(section, position));
   }
 }

@@ -26,6 +26,7 @@ import com.sitepark.ies.contentrepository.core.domain.exception.SectionTypeNotFo
 import com.sitepark.ies.contentrepository.core.domain.exception.VersionConflictException;
 import com.sitepark.ies.contentrepository.core.domain.value.Reference;
 import com.sitepark.ies.contentrepository.core.domain.value.ReferenceKind;
+import com.sitepark.ies.contentrepository.core.domain.value.SectionPosition;
 import com.sitepark.ies.contentrepository.core.domain.value.SectionType;
 import com.sitepark.ies.contentrepository.core.port.AccessControl;
 import com.sitepark.ies.contentrepository.core.port.ContentRepository;
@@ -381,6 +382,92 @@ class SectionUseCasesTest {
     assertThat(this.storedEntry().getSection(TEXT).flatMap(Section::getContainer))
         .as("the section should belong to the target container")
         .contains("sp_link_column_iterate");
+  }
+
+  private static final String SECTION = "5b6c7d8e-9f01-4a2b-8c3d-4e5f60718293";
+
+  /** The stored entry gets a section of type newSection holding the text section. */
+  private void storeNestedEntry() {
+    Section text = entry().getSections().get(0).toBuilder().container("items").build();
+    Section newSection =
+        Section.builder()
+            .uuid(SECTION)
+            .type("newSection")
+            .container(MAIN)
+            .children("items", List.of(text))
+            .build();
+    when(this.repository.getEntry(ID))
+        .thenReturn(Optional.of(entry().toBuilder().sections(List.of(newSection)).build()));
+  }
+
+  private void requireGrant(String sectionType) {
+    when(this.sectionTypes.get(sectionType))
+        .thenReturn(
+            Optional.of(
+                SectionType.builder().id(sectionType).origin("sitekit").grant("g").build()));
+    when(this.accessControl.isSectionGrantGranted(ID, "g")).thenReturn(false);
+  }
+
+  @Test
+  void addPutsTheSectionIntoTheContainerOfAParent() {
+    this.storeNestedEntry();
+
+    this.addSection().add(ID, VERSION, linkSection(), SectionPosition.within(SECTION, "items", 1));
+
+    assertThat(this.storedEntry().getSection(SECTION).orElseThrow().getChildren("items"))
+        .as("the link section should be the second child of the parent")
+        .extracting(Section::getUuid)
+        .containsExactly(TEXT, LINKS);
+  }
+
+  @Test
+  void addBelowAParentWithoutItsGrantFails() {
+    this.storeNestedEntry();
+    this.requireGrant("newSection");
+    SectionPosition position = SectionPosition.within(SECTION, "items", 0);
+
+    assertThatThrownBy(() -> this.addSection().add(ID, VERSION, linkSection(), position))
+        .as("adding below a section whose grant is missing should be rejected")
+        .isInstanceOf(AccessDeniedException.class);
+  }
+
+  @Test
+  void addChecksTheSectionsBelowTheAddedSection() {
+    this.requireGrant("text");
+    Section parent =
+        Section.builder()
+            .uuid(SECTION)
+            .type("newSection")
+            .container(MAIN)
+            .children(
+                "items",
+                List.of(Section.builder().uuid(LINKS).type("text").container("items").build()))
+            .build();
+
+    assertThatThrownBy(() -> this.addSection().add(ID, VERSION, parent, 1))
+        .as("a child whose grant is missing should not be added")
+        .isInstanceOf(AccessDeniedException.class);
+  }
+
+  @Test
+  void moveIntoAParentWithoutItsGrantFails() {
+    this.storeNestedEntry();
+    this.requireGrant("newSection");
+    SectionPosition position = SectionPosition.within(SECTION, "items", 0);
+
+    assertThatThrownBy(() -> this.moveSection().move(ID, VERSION, TEXT, position))
+        .as("moving below a section whose grant is missing should be rejected")
+        .isInstanceOf(AccessDeniedException.class);
+  }
+
+  @Test
+  void removeOfAParentWithoutTheGrantOfAChildFails() {
+    this.storeNestedEntry();
+    this.requireGrant("text");
+
+    assertThatThrownBy(() -> this.removeSection().remove(ID, VERSION, SECTION))
+        .as("removing a section whose child may not be changed should be rejected")
+        .isInstanceOf(AccessDeniedException.class);
   }
 
   @Test

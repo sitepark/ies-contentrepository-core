@@ -17,13 +17,18 @@ The content repository contains entries and groups. Both have master data and co
 
 ### Sections
 
-The content of an entry or a group is an ordered list of sections. A section has
+The content of an entry or a group is a tree of sections. A section has
 
 - a UUID, which stays the same when the section is moved,
 - a type, the section type,
 - an optional container (e.g. `sp_main_iterate`); sections without container are fixed parts of the
   entry,
-- its data, a JSON object.
+- its data, a JSON object,
+- optional named containers holding child sections, e.g. the `items` of a section or of a
+  collapsible element.
+
+A UUID is unique within the whole tree of an entry. The nesting is not checked yet; later the JSON
+schema of a section type will describe its containers and the types allowed in them.
 
 A section type may describe the data with a JSON schema; types without schema are possible. Selected
 section types name a grant (`SectionGrant`) that an editor needs to change their sections. Section
@@ -34,7 +39,9 @@ group, `ies:media/<id>` for a medium, and any other URI for an external target. 
 stored, these values are extracted as references, which feed the dependencies, the media repository
 and the link checker.
 
-Single sections can be added, updated, removed and moved. Each change is based on the version of the
+Single sections can be added, updated, removed and moved, also into and out of the containers of
+other sections (`SectionPosition`); a section is removed and moved together with the sections below
+it. Each change is based on the version of the
 entry the client has read and creates a new version of the whole entry. There is no localization in
 the content model.
 

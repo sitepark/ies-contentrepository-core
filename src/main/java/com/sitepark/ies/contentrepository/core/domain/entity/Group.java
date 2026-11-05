@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.sitepark.ies.contentrepository.core.domain.value.SectionPosition;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import org.jspecify.annotations.Nullable;
  * aggregated. A group is immutable; the {@code with…} methods return changed copies.
  */
 @JsonDeserialize(builder = Group.Builder.class)
+@SuppressWarnings("PMD.TooManyMethods") // master data plus the operations on the section tree
 public final class Group extends Entity {
 
   private final @Nullable String type;
@@ -39,11 +41,12 @@ public final class Group extends Entity {
     return Optional.ofNullable(this.directory);
   }
 
-  /** The sections in their order. */
+  /** The top-level sections in their order; each section holds the sections below it. */
   public List<Section> getSections() {
     return this.sections;
   }
 
+  /** Finds a section anywhere in the tree of sections. */
   public Optional<Section> getSection(String uuid) {
     return Sections.find(this.sections, uuid);
   }
@@ -57,7 +60,18 @@ public final class Group extends Entity {
     return this.toBuilder().sections(Sections.insert(this.sections, section, index)).build();
   }
 
-  /** Returns a copy without the section. */
+  /**
+   * Returns a copy with an additional section at a position in the tree of sections.
+   *
+   * @throws IllegalArgumentException if a section of the inserted subtree exists already
+   * @throws com.sitepark.ies.contentrepository.core.domain.exception.SectionNotFoundException if
+   *     the parent of the position does not exist
+   */
+  public Group withSection(Section section, SectionPosition position) {
+    return this.toBuilder().sections(Sections.insert(this.sections, section, position)).build();
+  }
+
+  /** Returns a copy without the section and the sections below it. */
   public Group withoutSection(String uuid) {
     return this.toBuilder().sections(Sections.remove(this.sections, uuid)).build();
   }
@@ -70,6 +84,17 @@ public final class Group extends Entity {
    */
   public Group withSectionMovedTo(String uuid, @Nullable String container, int index) {
     return this.toBuilder().sections(Sections.move(this.sections, uuid, container, index)).build();
+  }
+
+  /**
+   * Returns a copy in which the section, together with the sections below it, is moved to a
+   * position in the tree of sections.
+   *
+   * @param position the target, with the index counted without the moved section
+   * @throws IllegalArgumentException if the target parent is the section itself or below it
+   */
+  public Group withSectionMovedTo(String uuid, SectionPosition position) {
+    return this.toBuilder().sections(Sections.move(this.sections, uuid, position)).build();
   }
 
   /** Returns a copy in which the section has the given data. */

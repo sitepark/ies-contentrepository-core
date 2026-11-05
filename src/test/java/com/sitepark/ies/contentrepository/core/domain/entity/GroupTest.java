@@ -41,6 +41,10 @@ class GroupTest {
     EqualsVerifier.forClass(Group.class)
         .withRedefinedSuperclass()
         .withPrefabValues(SectionData.class, data("a"), data("b"))
+        .withPrefabValues(
+            Section.class,
+            Section.builder().uuid("8a2e0f4c-7f1d-4c6b-9d3e-2b1a0c9d8e7f").type("a").build(),
+            Section.builder().uuid("c41b2a3c-4d5e-4f60-9a7b-8c9d0e1f2a3b").type("b").build())
         .verify();
   }
 

@@ -5,6 +5,7 @@ import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
 import com.sitepark.ies.contentrepository.core.domain.entity.Entry;
 import com.sitepark.ies.contentrepository.core.domain.entity.HistoryEntryType;
+import com.sitepark.ies.contentrepository.core.domain.entity.Section;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityLockedException;
 import com.sitepark.ies.contentrepository.core.domain.exception.EntityNotFoundException;
 import com.sitepark.ies.contentrepository.core.domain.exception.ParentMissingException;
@@ -151,14 +152,16 @@ public final class StoreEntity {
   }
 
   /**
-   * Checks type, grant and schema of the sections of an entry.
+   * Checks type, grant and schema of all sections of an entry, including the sections below others.
    *
    * @param grantScope the id the grants are checked on: the parent for a new entry, the entry
    *     itself otherwise
    */
   private void checkSections(String grantScope, Entity entity) {
     if (entity instanceof Entry entry) {
-      entry.getSections().forEach(section -> this.sectionChecks.check(grantScope, section));
+      entry.getSections().stream()
+          .flatMap(Section::stream)
+          .forEach(section -> this.sectionChecks.check(grantScope, section));
     }
   }
 
