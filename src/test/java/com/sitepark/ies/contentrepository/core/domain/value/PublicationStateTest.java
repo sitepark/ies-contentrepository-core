@@ -26,21 +26,18 @@ class PublicationStateTest {
 
   @Test
   void rejectsMissingVersion() {
-    assertThatThrownBy(() -> new PublicationState("1", "www", true, null, null, VERSION, "17"))
+    assertThatThrownBy(() -> new PublicationState("1", "www", true, null, VERSION, "17"))
         .as("the published version is required")
         .isInstanceOf(NullPointerException.class);
   }
 
   @Test
-  void templateUserAndTimeAreOptional() {
-    PublicationState state = new PublicationState("1", "www", false, VERSION, null, null, null);
+  void userAndTimeAreOptional() {
+    PublicationState state = new PublicationState("1", "www", false, VERSION, null, null);
 
     assertThat(state)
-        .as("a state without template, time and user should report them as absent")
-        .extracting(
-            s -> s.getTemplate().isPresent(),
-            s -> s.getPublishedAt().isPresent(),
-            s -> s.getPublishedBy().isPresent())
-        .containsExactly(false, false, false);
+        .as("a state without time and user should report them as absent")
+        .extracting(s -> s.getPublishedAt().isPresent(), s -> s.getPublishedBy().isPresent())
+        .containsExactly(false, false);
   }
 }
