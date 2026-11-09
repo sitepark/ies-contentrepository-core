@@ -10,7 +10,12 @@ public final class Anchor implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  public static final String VALID_CHARS_REGEX = "[a-zA-Z0-9_.\\-]+";
+  /**
+   * The characters of an anchor: letters of all languages, digits, underscore, dot and hyphen.
+   * Anchors of the former world use letters such as umlauts, e.g. {@code
+   * jobOffer.categories.grade.außertarifliche_vergütung}.
+   */
+  public static final String VALID_CHARS_REGEX = "[\\p{L}0-9_.\\-]+";
 
   private static final Pattern VALIDATOR_PATTERN = Pattern.compile(VALID_CHARS_REGEX);
 
@@ -56,7 +61,7 @@ public final class Anchor implements Serializable {
 
     if (!VALIDATOR_PATTERN.matcher(name).matches()) {
       throw new InvalidAnchorException(
-          name, "Anchor contains invalid characters. Allowd are: " + VALID_CHARS_REGEX);
+          name, "Anchor contains invalid characters. Allowed are: " + VALID_CHARS_REGEX);
     }
   }
 

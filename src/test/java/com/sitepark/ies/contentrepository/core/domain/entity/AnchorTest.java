@@ -86,4 +86,13 @@ class AnchorTest {
         },
         "anchor must not contain special characters");
   }
+
+  @Test
+  void testOfStringWithLettersOfOtherLanguages() {
+    Anchor anchor = Anchor.ofString("jobOffer.categories.grade.außertarifliche_vergütung");
+    assertEquals(
+        "jobOffer.categories.grade.außertarifliche_vergütung",
+        anchor.getName(),
+        "letters such as umlauts should be allowed");
+  }
 }
