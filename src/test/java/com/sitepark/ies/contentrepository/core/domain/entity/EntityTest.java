@@ -112,6 +112,38 @@ class EntityTest {
   }
 
   @Test
+  void testSetDescription() {
+    Entity entity = Entity.builder().description("The town hall").build();
+    assertEquals("The town hall", entity.getDescription().orElse(""), "unexpected description");
+  }
+
+  @Test
+  void testSetDescriptionWithNull() {
+    assertThrows(
+        NullPointerException.class,
+        () -> Entity.builder().description(null),
+        "description should not be allowed to be null");
+  }
+
+  @Test
+  void testSetDescriptionWithBlank() {
+    Entity entity = Entity.builder().description(" ").build();
+    assertTrue(entity.getDescription().isEmpty(), "a blank description should be no description");
+  }
+
+  @Test
+  void testDescriptionSurvivesJson() throws JsonProcessingException {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new Jdk8Module());
+    mapper.registerModule(new JavaTimeModule());
+    Entity entity = Entity.builder().id("100560100000014842").description("Town hall").build();
+
+    Entity read = mapper.readValue(mapper.writeValueAsString(entity), Entity.class);
+
+    assertEquals(entity, read, "the description should be written and read back");
+  }
+
+  @Test
   void testSetParent() {
     Entity entity = Entity.builder().parent("123").build();
     assertEquals("123", entity.getParent().orElse(""), "unexpected parent");

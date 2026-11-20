@@ -25,6 +25,7 @@ public class Entity {
   private final @Nullable String id;
   private final @Nullable Anchor anchor;
   private final @Nullable String name;
+  private final @Nullable String description;
   private final @Nullable String parent;
   private final @Nullable Instant version;
   private final @Nullable Instant created;
@@ -37,6 +38,7 @@ public class Entity {
     this.id = builder.id;
     this.anchor = builder.anchor;
     this.name = builder.name;
+    this.description = builder.description;
     this.parent = builder.parent;
     this.version = builder.version;
     this.created = builder.created;
@@ -56,6 +58,11 @@ public class Entity {
 
   public Optional<String> getName() {
     return Optional.ofNullable(this.name);
+  }
+
+  /** A description of the object for the editors, e.g. the comment of the former world. */
+  public Optional<String> getDescription() {
+    return Optional.ofNullable(this.description);
   }
 
   public Optional<String> getParent() {
@@ -103,6 +110,7 @@ public class Entity {
         this.id,
         this.anchor,
         this.name,
+        this.description,
         this.parent,
         this.version,
         this.created,
@@ -123,6 +131,7 @@ public class Entity {
     return Objects.equals(this.id, that.id)
         && Objects.equals(this.anchor, that.anchor)
         && Objects.equals(this.name, that.name)
+        && Objects.equals(this.description, that.description)
         && Objects.equals(this.parent, that.parent)
         && Objects.equals(this.version, that.version)
         && Objects.equals(this.created, that.created)
@@ -155,6 +164,9 @@ public class Entity {
         + ", name='"
         + this.name
         + '\''
+        + ", description='"
+        + this.description
+        + '\''
         + ", parent='"
         + this.parent
         + '\''
@@ -180,6 +192,7 @@ public class Entity {
     private @Nullable String id;
     private @Nullable Anchor anchor;
     private @Nullable String name;
+    private @Nullable String description;
     private @Nullable String parent;
     private @Nullable Instant version;
     private @Nullable Instant created;
@@ -194,6 +207,7 @@ public class Entity {
       this.id = entity.id;
       this.anchor = entity.anchor;
       this.name = entity.name;
+      this.description = entity.description;
       this.parent = entity.parent;
       this.version = entity.version;
       this.created = entity.created;
@@ -226,6 +240,14 @@ public class Entity {
         throw new IllegalArgumentException("name is blank");
       }
       this.name = name;
+      return this.self();
+    }
+
+    /** Sets the description; a blank one removes it (also on a copy with {@code toBuilder}). */
+    @SuppressWarnings("PMD.NullAssignment") // a blank description means none
+    public B description(String description) {
+      Objects.requireNonNull(description, "description is null");
+      this.description = description.isBlank() ? null : description;
       return this.self();
     }
 
