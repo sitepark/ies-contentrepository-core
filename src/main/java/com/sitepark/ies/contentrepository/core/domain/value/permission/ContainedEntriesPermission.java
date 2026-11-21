@@ -1,15 +1,12 @@
 package com.sitepark.ies.contentrepository.core.domain.value.permission;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@JsonDeserialize(builder = ContainedEntriesPermission.Builder.class)
 public final class ContainedEntriesPermission {
 
   private final boolean create;
@@ -96,7 +93,6 @@ public final class ContainedEntriesPermission {
         + '}';
   }
 
-  @JsonPOJOBuilder(withPrefix = "")
   @SuppressWarnings("PMD.TooManyMethods")
   public static final class Builder {
 

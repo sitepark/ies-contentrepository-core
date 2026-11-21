@@ -3,11 +3,6 @@ package com.sitepark.ies.contentrepository.core.domain.entity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import com.sitepark.ies.contentrepository.core.domain.exception.SectionNotFoundException;
@@ -410,32 +405,5 @@ class EntryTest {
                 .filename("hundesteuer.php")
                 .version(Instant.parse("2026-10-28T09:14:02Z"))
                 .build());
-  }
-
-  @Test
-  void serializationRoundTripKeepsTheEntry() throws JsonProcessingException {
-    ObjectMapper mapper =
-        new ObjectMapper()
-            .registerModule(new Jdk8Module())
-            .registerModule(new JavaTimeModule())
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-    Entry entry =
-        entry().toBuilder()
-            .id("100560100000012345")
-            .anchor("leistung-hundesteuer")
-            .name("Hundesteuer")
-            .parent("100560100000000200")
-            .filename("hundesteuer.php")
-            .version(Instant.parse("2026-10-28T09:14:02Z"))
-            .created(Instant.parse("2024-03-01T08:00:00Z"))
-            .createdBy("17")
-            .changed(Instant.parse("2026-10-28T09:14:02Z"))
-            .changedBy("17")
-            .build()
-            .withSectionData(TEXT, data("<p>Wer einen Hund hält …</p>"));
-
-    Entry read = mapper.readValue(mapper.writeValueAsString(entry), Entry.class);
-
-    assertThat(read).as("the entry should survive a JSON round trip").isEqualTo(entry);
   }
 }

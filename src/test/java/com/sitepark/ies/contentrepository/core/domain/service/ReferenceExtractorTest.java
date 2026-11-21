@@ -2,8 +2,6 @@ package com.sitepark.ies.contentrepository.core.domain.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sitepark.ies.contentrepository.core.domain.entity.Section;
 import com.sitepark.ies.contentrepository.core.domain.entity.SectionData;
 import com.sitepark.ies.contentrepository.core.domain.value.Reference;
@@ -11,6 +9,8 @@ import com.sitepark.ies.contentrepository.core.domain.value.ReferenceKind;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 class ReferenceExtractorTest {
 
@@ -18,14 +18,18 @@ class ReferenceExtractorTest {
   private static final String LINKS = "c41b2a3c-4d5e-4f60-9a7b-8c9d0e1f2a3b";
   private static final String IMAGE = "e9d0a1b2-c3d4-4e5f-8a6b-7c8d9e0f1a2b";
 
-  private static Section section(String uuid, String json) throws JsonProcessingException {
+  private static Section section(String uuid, String json) {
     @SuppressWarnings("unchecked")
-    Map<String, Object> data = new ObjectMapper().readValue(json, Map.class);
+    Map<String, Object> data =
+        JsonMapper.builder()
+            .disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY)
+            .build()
+            .readValue(json, Map.class);
     return Section.builder().uuid(uuid).type("t").data(SectionData.of(data)).build();
   }
 
   @Test
-  void findsLinksInArraysOfObjects() throws JsonProcessingException {
+  void findsLinksInArraysOfObjects() {
     Section links =
         section(
             LINKS,
@@ -49,7 +53,7 @@ class ReferenceExtractorTest {
   }
 
   @Test
-  void findsReferencesInSectionsBelowOtherSections() throws JsonProcessingException {
+  void findsReferencesInSectionsBelowOtherSections() {
     Section image =
         section(IMAGE, "{\"sp_image\":\"ies:media/42\"}").toBuilder().container("items").build();
     Section parent =
@@ -66,7 +70,7 @@ class ReferenceExtractorTest {
   }
 
   @Test
-  void findsMedia() throws JsonProcessingException {
+  void findsMedia() {
     Section image =
         section(
             IMAGE, "{\"sp_image\":\"ies:media/100560100000008800\",\"sp_imageAlign\":\"left\"}");
@@ -81,7 +85,7 @@ class ReferenceExtractorTest {
   }
 
   @Test
-  void findsReferencesInMultiValuedFields() throws JsonProcessingException {
+  void findsReferencesInMultiValuedFields() {
     Section image = section(IMAGE, "{\"sp_tags\":[\"ies:entity/1\",\"ies:entity/2\"]}");
 
     List<Reference> references = new ReferenceExtractor().extract(ENTRY, List.of(image));
@@ -93,7 +97,7 @@ class ReferenceExtractorTest {
   }
 
   @Test
-  void escapesFieldNamesInPointer() throws JsonProcessingException {
+  void escapesFieldNamesInPointer() {
     Section image = section(IMAGE, "{\"a/b\":{\"c~d\":\"ies:entity/1\"}}");
 
     List<Reference> references = new ReferenceExtractor().extract(ENTRY, List.of(image));
@@ -105,7 +109,7 @@ class ReferenceExtractorTest {
   }
 
   @Test
-  void ignoresPrefixWithoutId() throws JsonProcessingException {
+  void ignoresPrefixWithoutId() {
     Section image = section(IMAGE, "{\"sp_url\":\"ies:entity/\",\"sp_text\":\"ies:media\"}");
 
     List<Reference> references = new ReferenceExtractor().extract(ENTRY, List.of(image));

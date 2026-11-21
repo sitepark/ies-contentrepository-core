@@ -1,8 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,7 +22,6 @@ import org.jspecify.annotations.Nullable;
  * <p>A section can hold other sections in named containers, e.g. a section of a page holds the
  * sections of its {@code items}. Each child names the container it lies in.
  */
-@JsonDeserialize(builder = Section.Builder.class)
 public final class Section {
 
   private final String uuid;
@@ -120,7 +117,6 @@ public final class Section {
         + '}';
   }
 
-  @JsonPOJOBuilder(withPrefix = "")
   @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static final class Builder {
 

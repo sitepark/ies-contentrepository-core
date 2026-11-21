@@ -3,8 +3,6 @@ package com.sitepark.ies.contentrepository.core.domain.entity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import java.util.LinkedHashMap;
@@ -12,6 +10,8 @@ import java.util.Map;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 @SuppressWarnings("PMD.UseConcurrentHashMap") // JSON objects of the tests
 class SectionDataTest {
@@ -72,10 +72,14 @@ class SectionDataTest {
   }
 
   @Test
-  void serializesAsPlainJsonObject() throws JsonProcessingException {
+  void serializesAsPlainJsonObject() {
     SectionData data = SectionData.of(json("sp_text", "Hello"));
 
-    String json = new ObjectMapper().writeValueAsString(data);
+    String json =
+        JsonMapper.builder()
+            .disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY)
+            .build()
+            .writeValueAsString(data);
 
     assertThat(json)
         .as("the data should be written as the JSON object itself")
@@ -83,16 +87,24 @@ class SectionDataTest {
   }
 
   @Test
-  void deserializesFromPlainJsonObject() throws JsonProcessingException {
+  void deserializesFromPlainJsonObject() {
     String json =
         """
         {"sp_link_iterate":[{"sp_linkText":"Satzung","sp_url":"ies:entity/123"}],"sp_count":2}
         """;
 
-    SectionData data = new ObjectMapper().readValue(json, SectionData.class);
+    SectionData data =
+        JsonMapper.builder()
+            .disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY)
+            .build()
+            .readValue(json, SectionData.class);
 
     assertThat(data.toMap())
         .as("nested objects and arrays should be read unchanged")
-        .isEqualTo(new ObjectMapper().readValue(json, Map.class));
+        .isEqualTo(
+            JsonMapper.builder()
+                .disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY)
+                .build()
+                .readValue(json, Map.class));
   }
 }

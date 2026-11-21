@@ -1,6 +1,5 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.ies.sharedkernel.domain.UrlMappingMode;
 
 public record UrlMapping(
@@ -63,7 +62,6 @@ public record UrlMapping(
     return new Builder(this);
   }
 
-  @JsonPOJOBuilder(withPrefix = "")
   @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static class Builder {
     private String id;

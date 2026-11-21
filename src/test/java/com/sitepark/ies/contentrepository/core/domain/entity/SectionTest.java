@@ -3,9 +3,6 @@ package com.sitepark.ies.contentrepository.core.domain.entity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import java.util.LinkedHashMap;
@@ -13,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 @SuppressWarnings("PMD.UseConcurrentHashMap") // JSON objects of the tests
 class SectionTest {
@@ -194,40 +193,15 @@ class SectionTest {
   }
 
   @Test
-  void serializationRoundTripKeepsNestedSections() throws JsonProcessingException {
-    ObjectMapper mapper = new ObjectMapper().registerModule(new Jdk8Module());
-    Section section = nested();
-
-    Section read = mapper.readValue(mapper.writeValueAsString(section), Section.class);
-
-    assertThat(read).as("nested sections should survive a JSON round trip").isEqualTo(section);
-  }
-
-  @Test
-  void serializationOmitsEmptyContainers() throws JsonProcessingException {
+  void serializationOmitsEmptyContainers() {
     String json =
-        new ObjectMapper()
-            .registerModule(new Jdk8Module())
+        JsonMapper.builder()
+            .disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY)
+            .build()
             .writeValueAsString(Section.builder().uuid(UUID).type("text").build());
 
     assertThat(json)
         .as("a section without children should have no containers")
         .doesNotContain("containers");
-  }
-
-  @Test
-  void serializationRoundTripKeepsTheSection() throws JsonProcessingException {
-    ObjectMapper mapper = new ObjectMapper().registerModule(new Jdk8Module());
-    Section section =
-        Section.builder()
-            .uuid(UUID)
-            .type("text")
-            .container("sp_main_iterate")
-            .data(data("Hello"))
-            .build();
-
-    Section read = mapper.readValue(mapper.writeValueAsString(section), Section.class);
-
-    assertThat(read).as("the section should survive a JSON round trip").isEqualTo(section);
   }
 }

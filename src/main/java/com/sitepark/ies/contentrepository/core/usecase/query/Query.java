@@ -1,7 +1,5 @@
 package com.sitepark.ies.contentrepository.core.usecase.query;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.ies.contentrepository.core.usecase.query.filter.Filter;
 import com.sitepark.ies.contentrepository.core.usecase.query.limit.Limit;
 import com.sitepark.ies.contentrepository.core.usecase.query.sort.SortCriteria;
@@ -12,7 +10,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@JsonDeserialize(builder = Query.Builder.class)
 public final class Query {
 
   private final Filter filter;
@@ -79,7 +76,6 @@ public final class Query {
     return new Builder(this);
   }
 
-  @JsonPOJOBuilder(withPrefix = "")
   @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static class Builder {
 
