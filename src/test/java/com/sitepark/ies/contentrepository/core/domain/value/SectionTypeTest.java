@@ -3,26 +3,26 @@ package com.sitepark.ies.contentrepository.core.domain.value;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("PMD.UseConcurrentHashMap") // JSON objects of the tests
 class SectionTypeTest {
 
-  private static ObjectNode schema(String type) {
-    ObjectNode node = JsonNodeFactory.instance.objectNode();
-    node.put("type", type);
-    return node;
+  private static Map<String, Object> schema(String type) {
+    Map<String, Object> object = new LinkedHashMap<>();
+    object.put("type", type);
+    return object;
   }
 
   @Test
   void testEquals() {
     EqualsVerifier.forClass(SectionType.class)
-        .withPrefabValues(JsonNode.class, schema("object"), schema("string"))
+        .withPrefabValues(Map.class, schema("object"), schema("string"))
         .verify();
   }
 
@@ -30,7 +30,7 @@ class SectionTypeTest {
   void testToString() {
     ToStringVerifier.forClass(SectionType.class)
         .withClassName(NameStyle.SIMPLE_NAME)
-        .withPrefabValue(JsonNode.class, schema("object"))
+        .withPrefabValue(Map.class, schema("object"))
         .verify();
   }
 
@@ -45,12 +45,12 @@ class SectionTypeTest {
 
   @Test
   void changesOfTheSchemaDoNotAffectTheType() {
-    ObjectNode schema = schema("object");
+    Map<String, Object> schema = schema("object");
     SectionType type = SectionType.builder().id("text").origin("sitekit").schema(schema).build();
 
     schema.put("type", "string");
 
-    assertThat(type.getSchema().map(s -> s.get("type").asText()))
+    assertThat(type.getSchema().map(s -> s.get("type")))
         .as("the type should keep the schema it was created with")
         .contains("object");
   }

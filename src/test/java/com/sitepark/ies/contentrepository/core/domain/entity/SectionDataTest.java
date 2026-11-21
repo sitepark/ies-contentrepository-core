@@ -1,29 +1,31 @@
 package com.sitepark.ies.contentrepository.core.domain.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("PMD.UseConcurrentHashMap") // JSON objects of the tests
 class SectionDataTest {
 
-  private static ObjectNode json(String field, String value) {
-    ObjectNode node = JsonNodeFactory.instance.objectNode();
-    node.put(field, value);
-    return node;
+  private static Map<String, Object> json(String field, String value) {
+    Map<String, Object> object = new LinkedHashMap<>();
+    object.put(field, value);
+    return object;
   }
 
   @Test
   void testEquals() {
     EqualsVerifier.forClass(SectionData.class)
-        .withPrefabValues(ObjectNode.class, json("sp_text", "first"), json("sp_title", "second"))
+        .withPrefabValues(Map.class, json("sp_text", "first"), json("sp_title", "second"))
         .suppress(Warning.NULL_FIELDS)
         .verify();
   }
@@ -32,31 +34,36 @@ class SectionDataTest {
   void testToString() {
     ToStringVerifier.forClass(SectionData.class)
         .withClassName(NameStyle.SIMPLE_NAME)
-        .withPrefabValue(ObjectNode.class, json("a", "1"))
+        .withPrefabValue(Map.class, json("a", "1"))
         .verify();
   }
 
   @Test
   void changesOfTheSourceDoNotAffectTheData() {
-    ObjectNode source = json("sp_text", "before");
+    Map<String, Object> source = json("sp_text", "before");
     SectionData data = SectionData.of(source);
 
     source.put("sp_text", "after");
 
-    assertThat(data.toJson().get("sp_text").asText())
+    assertThat(data.toMap().get("sp_text"))
         .as("the data should keep the value it was created with")
         .isEqualTo("before");
   }
 
   @Test
-  void changesOfTheHandedOutJsonDoNotAffectTheData() {
+  void theHandedOutJsonCannotBeChanged() {
     SectionData data = SectionData.of(json("sp_text", "before"));
 
-    data.toJson().put("sp_text", "after");
+    assertThatThrownBy(() -> data.toMap().put("sp_text", "after"))
+        .as("the handed out object should be immutable")
+        .isInstanceOf(UnsupportedOperationException.class);
+  }
 
-    assertThat(data.toJson().get("sp_text").asText())
-        .as("changing a handed out copy should not change the data")
-        .isEqualTo("before");
+  @Test
+  void rejectsValuesThatAreNoJsonValues() {
+    assertThatThrownBy(() -> SectionData.of(Map.of("date", new Object())))
+        .as("only JSON values should be accepted")
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
@@ -84,8 +91,8 @@ class SectionDataTest {
 
     SectionData data = new ObjectMapper().readValue(json, SectionData.class);
 
-    assertThat(data.toJson())
+    assertThat(data.toMap())
         .as("nested objects and arrays should be read unchanged")
-        .isEqualTo(new ObjectMapper().readTree(json));
+        .isEqualTo(new ObjectMapper().readValue(json, Map.class));
   }
 }

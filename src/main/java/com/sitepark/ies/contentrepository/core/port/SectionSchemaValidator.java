@@ -1,8 +1,8 @@
 package com.sitepark.ies.contentrepository.core.port;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.sitepark.ies.contentrepository.core.domain.entity.SectionData;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Validates section data against the JSON schema of its section type. The JSON schema library is
@@ -16,5 +16,5 @@ public interface SectionSchemaValidator {
    *
    * @return the violations; empty if the data matches the schema
    */
-  List<String> validate(JsonNode schema, SectionData data);
+  List<String> validate(Map<String, Object> schema, SectionData data);
 }

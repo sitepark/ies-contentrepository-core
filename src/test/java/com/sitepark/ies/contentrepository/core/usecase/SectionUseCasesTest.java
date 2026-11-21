@@ -9,9 +9,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sitepark.ies.contentrepository.core.domain.entity.Entity;
 import com.sitepark.ies.contentrepository.core.domain.entity.EntityLock;
 import com.sitepark.ies.contentrepository.core.domain.entity.Entry;
@@ -45,13 +42,20 @@ import jakarta.inject.Provider;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-@SuppressWarnings({"PMD.TooManyMethods", "PMD.CouplingBetweenObjects", "PMD.ExcessiveImports"})
+@SuppressWarnings({
+  "PMD.TooManyMethods",
+  "PMD.CouplingBetweenObjects",
+  "PMD.ExcessiveImports",
+  "PMD.UseConcurrentHashMap"
+})
 class SectionUseCasesTest {
 
   private static final String ID = "100560100000012345";
@@ -76,7 +80,7 @@ class SectionUseCasesTest {
   private final Clock clock = Clock.fixed(NOW, ZoneOffset.UTC);
 
   private static SectionData data(String field, String value) {
-    ObjectNode node = JsonNodeFactory.instance.objectNode();
+    Map<String, Object> node = new LinkedHashMap<>();
     node.put(field, value);
     return SectionData.of(node);
   }
@@ -330,7 +334,7 @@ class SectionUseCasesTest {
 
   @Test
   void changeWithDataViolatingTheSchemaFails() {
-    JsonNode schema = JsonNodeFactory.instance.objectNode();
+    Map<String, Object> schema = new LinkedHashMap<>();
     when(this.sectionTypes.get("text"))
         .thenReturn(
             Optional.of(SectionType.builder().id("text").origin("sitekit").schema(schema).build()));

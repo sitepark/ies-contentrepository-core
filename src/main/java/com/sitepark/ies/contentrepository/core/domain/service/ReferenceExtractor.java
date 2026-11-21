@@ -1,6 +1,5 @@
 package com.sitepark.ies.contentrepository.core.domain.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.sitepark.ies.contentrepository.core.domain.entity.Section;
 import com.sitepark.ies.contentrepository.core.domain.value.Reference;
 import com.sitepark.ies.contentrepository.core.domain.value.ReferenceKind;
@@ -38,23 +37,30 @@ public final class ReferenceExtractor {
         .forEach(
             section ->
                 this.collect(
-                    entityId, section.getUuid(), "", section.getData().toJson(), references));
+                    entityId, section.getUuid(), "", section.getData().toMap(), references));
     return List.copyOf(references);
   }
 
   private void collect(
-      String entityId, String sectionUuid, String path, JsonNode node, List<Reference> result) {
-    if (node.isObject()) {
-      for (Map.Entry<String, JsonNode> field : node.properties()) {
+      String entityId,
+      String sectionUuid,
+      String path,
+      @Nullable Object node,
+      List<Reference> result) {
+    if (node instanceof Map<?, ?> object) {
+      for (Map.Entry<?, ?> field : object.entrySet()) {
         this.collect(
-            entityId, sectionUuid, path + "/" + escape(field.getKey()), field.getValue(), result);
+            entityId,
+            sectionUuid,
+            path + "/" + escape(String.valueOf(field.getKey())),
+            field.getValue(),
+            result);
       }
-    } else if (node.isArray()) {
-      for (int i = 0; i < node.size(); i++) {
-        this.collect(entityId, sectionUuid, path + "/" + i, node.get(i), result);
+    } else if (node instanceof List<?> array) {
+      for (int i = 0; i < array.size(); i++) {
+        this.collect(entityId, sectionUuid, path + "/" + i, array.get(i), result);
       }
-    } else if (node.isTextual()) {
-      String value = node.asText();
+    } else if (node instanceof String value) {
       ReferenceKind kind = kindOf(value);
       if (kind != null) {
         result.add(new Reference(entityId, sectionUuid, path, value, kind));

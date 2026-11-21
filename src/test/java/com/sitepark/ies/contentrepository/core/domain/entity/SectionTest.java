@@ -5,15 +5,16 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("PMD.UseConcurrentHashMap") // JSON objects of the tests
 class SectionTest {
 
   private static final String UUID = "8a2e0f4c-7f1d-4c6b-9d3e-2b1a0c9d8e7f";
@@ -41,7 +42,7 @@ class SectionTest {
   }
 
   private static SectionData data(String text) {
-    ObjectNode node = JsonNodeFactory.instance.objectNode();
+    Map<String, Object> node = new LinkedHashMap<>();
     node.put("sp_text", text);
     return SectionData.of(node);
   }

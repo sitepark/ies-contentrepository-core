@@ -1,6 +1,6 @@
 package com.sitepark.ies.contentrepository.core.domain.value;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
@@ -18,7 +18,7 @@ import org.jspecify.annotations.Nullable;
 public final class SectionType {
 
   private final String id;
-  private final @Nullable JsonNode schema;
+  private final @Nullable Map<String, Object> schema;
   private final @Nullable String grant;
   private final String origin;
 
@@ -33,9 +33,9 @@ public final class SectionType {
     return this.id;
   }
 
-  /** The JSON schema of the data; a copy, changes to it do not affect the type. */
-  public Optional<JsonNode> getSchema() {
-    return Optional.ofNullable(this.schema).map(JsonNode::deepCopy);
+  /** The JSON schema of the data, immutable ({@link JsonValues}). */
+  public Optional<Map<String, Object>> getSchema() {
+    return Optional.ofNullable(this.schema);
   }
 
   /** The id of the grant an editor needs to change sections of this type. */
@@ -91,7 +91,7 @@ public final class SectionType {
   public static final class Builder {
 
     private String id;
-    private @Nullable JsonNode schema;
+    private @Nullable Map<String, Object> schema;
     private @Nullable String grant;
     private String origin;
 
@@ -114,9 +114,9 @@ public final class SectionType {
      *
      * @param schema the schema; it is copied, later changes to it do not affect the type
      */
-    public Builder schema(JsonNode schema) {
+    public Builder schema(Map<String, ?> schema) {
       Objects.requireNonNull(schema, "schema is null");
-      this.schema = schema.deepCopy();
+      this.schema = JsonValues.copyObject(schema);
       return this;
     }
 

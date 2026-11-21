@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sitepark.ies.contentrepository.core.domain.entity.Section;
 import com.sitepark.ies.contentrepository.core.domain.entity.SectionData;
 import com.sitepark.ies.contentrepository.core.domain.value.Reference;
 import com.sitepark.ies.contentrepository.core.domain.value.ReferenceKind;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 class ReferenceExtractorTest {
@@ -19,7 +19,8 @@ class ReferenceExtractorTest {
   private static final String IMAGE = "e9d0a1b2-c3d4-4e5f-8a6b-7c8d9e0f1a2b";
 
   private static Section section(String uuid, String json) throws JsonProcessingException {
-    ObjectNode data = (ObjectNode) new ObjectMapper().readTree(json);
+    @SuppressWarnings("unchecked")
+    Map<String, Object> data = new ObjectMapper().readValue(json, Map.class);
     return Section.builder().uuid(uuid).type("t").data(SectionData.of(data)).build();
   }
 
