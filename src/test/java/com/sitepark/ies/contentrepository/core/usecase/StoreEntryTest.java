@@ -7,8 +7,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sitepark.ies.contentrepository.core.domain.entity.ChangeSet;
 import com.sitepark.ies.contentrepository.core.domain.entity.Entry;
 import com.sitepark.ies.contentrepository.core.domain.entity.Section;
@@ -29,12 +27,14 @@ import com.sitepark.ies.contentrepository.core.port.SectionSchemaValidator;
 import com.sitepark.ies.contentrepository.core.port.SectionTypeProvider;
 import com.sitepark.ies.contentrepository.core.port.VersioningManager;
 import java.time.Instant;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("PMD.ExcessiveImports")
+@SuppressWarnings({"PMD.ExcessiveImports", "PMD.UseConcurrentHashMap"})
 class StoreEntryTest {
 
   private static final String ID = "100560100000012345";
@@ -45,7 +45,7 @@ class StoreEntryTest {
   private StoreEntity storeEntity;
 
   private static Entry entry() {
-    ObjectNode data = JsonNodeFactory.instance.objectNode();
+    Map<String, Object> data = new LinkedHashMap<>();
     data.put("sp_url", "ies:entity/4711");
     return Entry.builder()
         .id(ID)

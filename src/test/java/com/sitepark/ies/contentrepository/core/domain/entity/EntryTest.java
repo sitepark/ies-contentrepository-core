@@ -6,8 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jparams.verifier.tostring.NameStyle;
@@ -15,10 +13,13 @@ import com.jparams.verifier.tostring.ToStringVerifier;
 import com.sitepark.ies.contentrepository.core.domain.exception.SectionNotFoundException;
 import com.sitepark.ies.contentrepository.core.domain.value.SectionPosition;
 import java.time.Instant;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("PMD.UseConcurrentHashMap") // JSON objects of the tests
 class EntryTest {
 
   private static final String TITLE = "3f1c0e2a-1b2c-4d3e-8f40-5a6b7c8d9e01";
@@ -28,7 +29,7 @@ class EntryTest {
   private static final String MAIN = "sp_main_iterate";
 
   private static SectionData data(String text) {
-    ObjectNode node = JsonNodeFactory.instance.objectNode();
+    Map<String, Object> node = new LinkedHashMap<>();
     node.put("sp_text", text);
     return SectionData.of(node);
   }

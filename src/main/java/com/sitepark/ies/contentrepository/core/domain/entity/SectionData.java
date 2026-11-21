@@ -2,8 +2,8 @@ package com.sitepark.ies.contentrepository.core.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.sitepark.ies.contentrepository.core.domain.value.JsonValues;
+import java.util.Map;
 import java.util.Objects;
 import org.jspecify.annotations.Nullable;
 
@@ -15,17 +15,17 @@ import org.jspecify.annotations.Nullable;
  * external target. A section type may describe the data with a JSON schema; without one the data
  * is free.
  *
- * <p>The data is immutable: the JSON object is copied when the data is created and whenever it is
- * handed out.
+ * <p>The JSON object is a map of JSON values without a JSON library ({@link JsonValues}): nested
+ * objects are maps, arrays are lists. The data is immutable: the object is copied when the data is
+ * created.
  */
 public final class SectionData {
 
-  private static final SectionData NO_FIELDS =
-      new SectionData(JsonNodeFactory.instance.objectNode());
+  private static final SectionData NO_FIELDS = new SectionData(Map.of());
 
-  private final ObjectNode json;
+  private final Map<String, Object> json;
 
-  private SectionData(ObjectNode json) {
+  private SectionData(Map<String, Object> json) {
     this.json = json;
   }
 
@@ -38,17 +38,18 @@ public final class SectionData {
    * Creates the data from a JSON object.
    *
    * @param json the JSON object; it is copied, later changes to it do not affect the data
+   * @throws IllegalArgumentException if it contains a value that is no JSON value
    */
   @JsonCreator
-  public static SectionData of(ObjectNode json) {
+  public static SectionData of(Map<String, ?> json) {
     Objects.requireNonNull(json, "json is null");
-    return new SectionData(json.deepCopy());
+    return new SectionData(JsonValues.copyObject(json));
   }
 
-  /** Returns a copy of the JSON object; changes to it do not affect the data. */
+  /** The JSON object, immutable. */
   @JsonValue
-  public ObjectNode toJson() {
-    return this.json.deepCopy();
+  public Map<String, Object> toMap() {
+    return this.json;
   }
 
   public boolean isEmpty() {

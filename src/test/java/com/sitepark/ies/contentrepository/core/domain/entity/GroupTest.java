@@ -6,22 +6,23 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("PMD.UseConcurrentHashMap") // JSON objects of the tests
 class GroupTest {
 
   private static final String CONTACT = "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d";
 
   private static SectionData data(String text) {
-    ObjectNode node = JsonNodeFactory.instance.objectNode();
+    Map<String, Object> node = new LinkedHashMap<>();
     node.put("sp_text", text);
     return SectionData.of(node);
   }
