@@ -2,8 +2,6 @@ package com.sitepark.ies.contentrepository.core.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.ies.contentrepository.core.domain.value.SectionPosition;
 import java.util.List;
 import java.util.Objects;
@@ -18,7 +16,6 @@ import org.jspecify.annotations.Nullable;
  * file). The content is an ordered list of sections. An entry is immutable; the {@code with…}
  * methods return changed copies.
  */
-@JsonDeserialize(builder = Entry.Builder.class)
 @SuppressWarnings("PMD.TooManyMethods") // master data plus the operations on the section tree
 public final class Entry extends Entity {
 
@@ -151,7 +148,6 @@ public final class Entry extends Entity {
   }
 
   @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
-  @JsonPOJOBuilder(withPrefix = "")
   public static final class Builder extends Entity.Builder<Builder> {
 
     private String type;

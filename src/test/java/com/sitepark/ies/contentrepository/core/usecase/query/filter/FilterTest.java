@@ -11,11 +11,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 class FilterTest {
@@ -136,7 +137,8 @@ class FilterTest {
             anchor(com.sitepark.ies.sharedkernel.anchor.Anchor.ofString("abc")),
             and(root("5"), parent("7"), not(parent("9"))));
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    JsonMapper objectMapper =
+        JsonMapper.builder().disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY).build();
     String json = objectMapper.writeValueAsString(filter);
 
     assertEquals(

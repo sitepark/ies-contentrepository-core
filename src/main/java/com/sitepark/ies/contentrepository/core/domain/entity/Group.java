@@ -2,8 +2,6 @@ package com.sitepark.ies.contentrepository.core.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.ies.contentrepository.core.domain.value.SectionPosition;
 import java.util.List;
 import java.util.Objects;
@@ -16,7 +14,6 @@ import org.jspecify.annotations.Nullable;
  * <p>A group can carry content in sections like an entry, but it is neither published nor
  * aggregated. A group is immutable; the {@code with…} methods return changed copies.
  */
-@JsonDeserialize(builder = Group.Builder.class)
 @SuppressWarnings("PMD.TooManyMethods") // master data plus the operations on the section tree
 public final class Group extends Entity {
 
@@ -148,7 +145,6 @@ public final class Group extends Entity {
         + this.sections;
   }
 
-  @JsonPOJOBuilder(withPrefix = "")
   public static final class Builder extends Entity.Builder<Builder> {
 
     private @Nullable String type;

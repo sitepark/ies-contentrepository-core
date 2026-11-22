@@ -2,14 +2,14 @@ package com.sitepark.ies.contentrepository.core.domain.value.permission;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import java.util.List;
 import java.util.Set;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 class GroupPermissionSourceTest {
 
@@ -103,29 +103,7 @@ class GroupPermissionSourceTest {
   }
 
   @Test
-  void testDeserialization() throws JsonProcessingException {
-
-    String json =
-        """
-        {"roleIds":["123"],"privilegeId":"345","groupPermission":{"groupId":"456","recursive":false,"read":true,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]},"type":"CONTENT_GROUP"}}\
-        """;
-
-    ObjectMapper mapper = new ObjectMapper();
-    GroupPermissionSource groupPermissionSource =
-        mapper.readValue(json, GroupPermissionSource.class);
-
-    GroupPermissionSource expected =
-        GroupPermissionSource.builder()
-            .roleId("123")
-            .privilegeId("345")
-            .groupPermission(GroupPermission.builder().groupId("456").read(true).build())
-            .build();
-
-    assertEquals(expected, groupPermissionSource, "unexpected group permission source");
-  }
-
-  @Test
-  void testSerialization() throws JsonProcessingException {
+  void testSerialization() {
     GroupPermissionSource groupPermissionSource =
         GroupPermissionSource.builder()
             .roleId("123")
@@ -133,7 +111,8 @@ class GroupPermissionSourceTest {
             .groupPermission(GroupPermission.builder().groupId("456").read(true).build())
             .build();
 
-    ObjectMapper mapper = new ObjectMapper();
+    JsonMapper mapper =
+        JsonMapper.builder().disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY).build();
     String json = mapper.writeValueAsString(groupPermissionSource);
 
     String expected =

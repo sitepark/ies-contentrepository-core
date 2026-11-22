@@ -3,11 +3,6 @@ package com.sitepark.ies.contentrepository.core.domain.entity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import java.util.LinkedHashMap;
@@ -95,18 +90,5 @@ class GroupTest {
     Group group = Group.builder().id("123").build();
 
     assertThat(group).as("a group should never equal an entry").isNotEqualTo(entry);
-  }
-
-  @Test
-  void serializationRoundTripKeepsTheGroup() throws JsonProcessingException {
-    ObjectMapper mapper =
-        new ObjectMapper()
-            .registerModule(new Jdk8Module())
-            .registerModule(new JavaTimeModule())
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-    Group read = mapper.readValue(mapper.writeValueAsString(group()), Group.class);
-
-    assertThat(read).as("the group should survive a JSON round trip").isEqualTo(group());
   }
 }

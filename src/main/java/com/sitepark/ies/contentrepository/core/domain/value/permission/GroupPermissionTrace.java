@@ -1,12 +1,9 @@
 package com.sitepark.ies.contentrepository.core.domain.value.permission;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@JsonDeserialize(builder = GroupPermissionTrace.Builder.class)
 @SuppressWarnings("PMD.LawOfDemeter")
 public final class GroupPermissionTrace {
 
@@ -58,7 +55,6 @@ public final class GroupPermissionTrace {
     return new Builder(this);
   }
 
-  @JsonPOJOBuilder(withPrefix = "")
   @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static class Builder {
     private GroupPermission resolvedPermission;

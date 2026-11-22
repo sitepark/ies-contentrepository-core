@@ -16,12 +16,9 @@ module com.sitepark.ies.contentrepository.core {
 
   requires static org.jspecify;
   requires jakarta.inject;
-  requires com.fasterxml.jackson.datatype.jdk8;
-  requires com.fasterxml.jackson.datatype.jsr310;
   requires com.sitepark.ies.sharedkernel;
   requires org.apache.logging.log4j;
   requires jdk.compiler;
-  requires com.fasterxml.jackson.databind;
   requires com.fasterxml.jackson.annotation;
 
   opens com.sitepark.ies.contentrepository.core.domain.entity;

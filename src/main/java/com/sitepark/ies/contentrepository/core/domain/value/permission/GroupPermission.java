@@ -2,12 +2,9 @@ package com.sitepark.ies.contentrepository.core.domain.value.permission;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.sitepark.ies.sharedkernel.security.Permission;
 import java.util.Objects;
 
-@JsonDeserialize(builder = GroupPermission.Builder.class)
 @JsonPropertyOrder({"type", "groupId", "recursive", "read", "write", "hidden", "groups", "entries"})
 @SuppressWarnings("PMD.LawOfDemeter")
 public final class GroupPermission implements Permission {
@@ -112,7 +109,6 @@ public final class GroupPermission implements Permission {
         + '}';
   }
 
-  @JsonPOJOBuilder(withPrefix = "")
   @JsonIgnoreProperties({"type"})
   @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static final class Builder {

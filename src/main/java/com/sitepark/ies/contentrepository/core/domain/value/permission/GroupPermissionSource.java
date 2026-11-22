@@ -1,14 +1,11 @@
 package com.sitepark.ies.contentrepository.core.domain.value.permission;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@JsonDeserialize(builder = GroupPermissionSource.Builder.class)
 @SuppressWarnings("PMD.LawOfDemeter")
 public final class GroupPermissionSource {
 
@@ -69,7 +66,6 @@ public final class GroupPermissionSource {
     return new Builder(this);
   }
 
-  @JsonPOJOBuilder(withPrefix = "")
   @SuppressWarnings("NullAway.Init") // fields are set via fluent setters and validated in build()
   public static class Builder {
     private final Set<String> roleIds = new HashSet<>();

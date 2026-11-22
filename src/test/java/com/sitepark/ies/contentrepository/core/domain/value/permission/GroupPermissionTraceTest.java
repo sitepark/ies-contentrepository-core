@@ -2,13 +2,13 @@ package com.sitepark.ies.contentrepository.core.domain.value.permission;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import java.util.List;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 class GroupPermissionTraceTest {
   @Test
@@ -95,35 +95,7 @@ class GroupPermissionTraceTest {
   }
 
   @Test
-  void testDeserialization() throws JsonProcessingException {
-
-    String json =
-        """
-        {"resolvedPermission":{"groupId":"789","recursive":false,"read":false,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]},"type":"CONTENT_GROUP"},"sourcePermissions":[{"roleIds":[],"privilegeId":"123","groupPermission":{"groupId":"123","recursive":false,"read":false,"write":false,"hidden":false,"groups":{"create":false,"delete":false},"entries":{"create":false,"read":false,"write":false,"delete":false,"sectionGrants":[],"channels":[]},"type":"CONTENT_GROUP"}}]}\
-        """;
-
-    ObjectMapper mapper = new ObjectMapper();
-    GroupPermissionTrace groupPermissionTrace = mapper.readValue(json, GroupPermissionTrace.class);
-
-    GroupPermissionTrace expected =
-        GroupPermissionTrace.builder()
-            .resolvedPermission(GroupPermission.builder().groupId("123").build())
-            .sourcePermissions(
-                List.of(
-                    GroupPermissionSource.builder()
-                        .privilegeId("123")
-                        .groupPermission(GroupPermission.builder().groupId("123").build())
-                        .build()))
-            .build()
-            .toBuilder()
-            .resolvedPermission(GroupPermission.builder().groupId("789").build())
-            .build();
-
-    assertEquals(expected, groupPermissionTrace, "unexpected group permission trace");
-  }
-
-  @Test
-  void testSerialization() throws JsonProcessingException {
+  void testSerialization() {
     GroupPermissionTrace groupPermissionTrace =
         GroupPermissionTrace.builder()
             .resolvedPermission(GroupPermission.builder().groupId("123").build())
@@ -138,7 +110,8 @@ class GroupPermissionTraceTest {
             .resolvedPermission(GroupPermission.builder().groupId("789").build())
             .build();
 
-    ObjectMapper mapper = new ObjectMapper();
+    JsonMapper mapper =
+        JsonMapper.builder().disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY).build();
     String json = mapper.writeValueAsString(groupPermissionTrace);
 
     String expected =

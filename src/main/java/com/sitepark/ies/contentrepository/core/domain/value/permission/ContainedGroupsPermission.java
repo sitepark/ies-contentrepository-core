@@ -1,11 +1,8 @@
 package com.sitepark.ies.contentrepository.core.domain.value.permission;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import java.util.Objects;
 
-@JsonDeserialize(builder = ContainedGroupsPermission.Builder.class)
 public final class ContainedGroupsPermission {
 
   private final boolean create;
@@ -50,7 +47,6 @@ public final class ContainedGroupsPermission {
     return "ContainedGroupsPermission{" + "create=" + create + ", delete=" + delete + '}';
   }
 
-  @JsonPOJOBuilder(withPrefix = "")
   public static final class Builder {
 
     private boolean create;

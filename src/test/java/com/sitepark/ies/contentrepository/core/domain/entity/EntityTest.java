@@ -4,17 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jparams.verifier.tostring.NameStyle;
 import com.jparams.verifier.tostring.ToStringVerifier;
 import com.sitepark.ies.sharedkernel.anchor.Anchor;
 import java.time.Instant;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 class EntityTest {
@@ -132,18 +129,6 @@ class EntityTest {
   }
 
   @Test
-  void testDescriptionSurvivesJson() throws JsonProcessingException {
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.registerModule(new Jdk8Module());
-    mapper.registerModule(new JavaTimeModule());
-    Entity entity = Entity.builder().id("100560100000014842").description("Town hall").build();
-
-    Entity read = mapper.readValue(mapper.writeValueAsString(entity), Entity.class);
-
-    assertEquals(entity, read, "the description should be written and read back");
-  }
-
-  @Test
   void testSetParent() {
     Entity entity = Entity.builder().parent("123").build();
     assertEquals("123", entity.getParent().orElse(""), "unexpected parent");
@@ -235,34 +220,6 @@ class EntityTest {
   }
 
   @Test
-  void testDeserialize() throws JsonProcessingException {
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.registerModule(new Jdk8Module());
-    mapper.registerModule(new JavaTimeModule());
-
-    String json =
-        """
-        {"id":"100560100000014842","name":"060 Town hall","parent":"100560100000014840",
-        "version":"2024-05-02T10:10:00Z","created":"2024-05-01T08:00:00Z","createdBy":"17",
-        "changed":"2024-05-02T10:10:00Z","changedBy":"18","group":false}
-        """;
-
-    Entity expected =
-        Entity.builder()
-            .id("100560100000014842")
-            .name("060 Town hall")
-            .parent("100560100000014840")
-            .version(Instant.parse("2024-05-02T10:10:00Z"))
-            .created(Instant.parse("2024-05-01T08:00:00Z"))
-            .createdBy("17")
-            .changed(Instant.parse("2024-05-02T10:10:00Z"))
-            .changedBy("18")
-            .build();
-
-    assertEquals(expected, mapper.readValue(json, Entity.class), "unexpected entity");
-  }
-
-  @Test
   void testSetIsGroup() {
     Entity entity = Entity.builder().isGroup(true).build();
     assertTrue(entity.isGroup(), "isGroup should be true");
@@ -295,14 +252,12 @@ class EntityTest {
   }
 
   @Test
-  void testSerialize() throws JsonProcessingException {
+  void testSerialize() {
 
     Instant version = Instant.parse("2024-05-02T10:10:00Z");
 
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.registerModule(new Jdk8Module());
-    mapper.registerModule(new JavaTimeModule());
-    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    JsonMapper mapper =
+        JsonMapper.builder().disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY).build();
 
     Entity entity =
         Entity.builder()
